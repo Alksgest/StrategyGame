@@ -1,0 +1,6 @@
+Invoke Build Menu : right click on terrain
+Place Building : left click on terrain
+Select unit : left click
+Send unit : right click on terrain or building
+Select building : left click
+
