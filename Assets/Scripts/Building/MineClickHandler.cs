@@ -1,9 +1,11 @@
-using System.Linq;
 using UnityEngine;
+
+using System;
+using System.Linq;
+using System.Collections.Generic;
 
 using StrategyGame.Assets.Scripts.Util;
 using StrategyGame.Assets.Scripts.Unit;
-using System;
 
 namespace StrategyGame.Assets.Scripts.Building
 {
@@ -29,6 +31,8 @@ namespace StrategyGame.Assets.Scripts.Building
 
         private void OnMineLeftClick(RaycastHit hit)
         {
+            _mineUI.SetActive(false);
+
             if (hit.transform.tag == "Mine" || hit.transform.tag == "MineEdge")
             {
                 _mineUI.SetActive(!_mineUI.activeSelf);
@@ -41,15 +45,27 @@ namespace StrategyGame.Assets.Scripts.Building
             if (hit.transform.tag == "MineEdge")
             {
                 // var edge = _edges.FirstOrDefault((e) => e.gameObject == hit.transform.gameObject);
-                var edge = _edges.FirstOrDefault((e) => e.IsBusy == false);
-
-                if (edge != null)
-                {
-                    edge.SetBusy();
-                    _unitManager.MoveUnitsToPoint(edge.GetUnitPosition());
-                    Debug.Log(edge.GetUnitPosition());
-                }
+                SendUnitsToEdge();
             }
+        }
+
+        private void SendUnitsToEdge()
+        {
+            var edges = _edges.Where(e => !e.IsBusy).ToList();
+            var selected = _unitManager.SelectedUnits;
+
+            if (edges.Count < selected.Count)
+            {
+                selected = new List<UnitController>(_unitManager.SelectedUnits.GetRange(0, edges.Count));
+            }
+
+            for (int i = 0; i < selected.Count; ++i)
+            {
+                selected[i].AskToMove(edges[i].GetUnitPosition());
+
+                edges[i].AttacheUnit(selected[i]);
+            }
+
         }
     }
 }

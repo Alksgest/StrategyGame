@@ -1,5 +1,6 @@
-using System;
 using UnityEngine;
+
+using StrategyGame.Assets.Scripts.Building;
 
 namespace StrategyGame.Assets.Scripts.Unit
 {
@@ -17,6 +18,8 @@ namespace StrategyGame.Assets.Scripts.Unit
 
         private bool _isMoving = false;
         private Vector3 _pointToMove;
+
+        public GameObject ObjectAttachedTo { get; set; }
 
         private void FixedUpdate()
         {
@@ -36,6 +39,14 @@ namespace StrategyGame.Assets.Scripts.Unit
             Debug.Log(point);
             _pointToMove = point;
             _isMoving = true;
+
+            if (this.tag == "AttachedToMineUnit")
+            {
+                if (ObjectAttachedTo != null)
+                {
+                    ObjectAttachedTo.GetComponent<MineEdgeController>().DeatachUnit();
+                }
+            }
         }
 
         private void Move()

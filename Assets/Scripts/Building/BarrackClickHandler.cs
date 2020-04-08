@@ -10,7 +10,7 @@ namespace StrategyGame.Assets.Scripts.Building
     {
         [SerializeField]
         private GameObject _barrackUI;
-        
+
         private void Awake()
         {
             var gch = FindObjectOfType<GlobalClickHandler>();
@@ -19,15 +19,12 @@ namespace StrategyGame.Assets.Scripts.Building
 
         private void OnLeftClick(RaycastHit hit)
         {
+            _barrackUI.SetActive(false);
+
             if (hit.transform.tag == this.tag || hit.transform.parent.tag == this.tag)
             {
-                MakeVisibleUI();
+                _barrackUI.SetActive(!_barrackUI.activeSelf);
             }
-        }
-
-        private void MakeVisibleUI()
-        {
-            _barrackUI.SetActive(!_barrackUI.activeSelf);
         }
     }
 }
