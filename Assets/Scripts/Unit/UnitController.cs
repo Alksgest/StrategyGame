@@ -38,6 +38,9 @@ namespace StrategyGame.Assets.Scripts.Unit
         {
             Debug.Log(point);
             _pointToMove = point;
+
+            _pointToMove.y = this.transform.position.y;
+
             _isMoving = true;
 
             if (this.tag == "AttachedToMineUnit")
@@ -55,7 +58,8 @@ namespace StrategyGame.Assets.Scripts.Unit
             delta.Normalize();
             transform.position = transform.position + (delta * _speed * Time.deltaTime);
 
-            if (this.transform.position == _pointToMove)
+            var vec = this.transform.position - _pointToMove;
+            if (Mathf.Abs(vec.x) <= 0.1 && Mathf.Abs(vec.z) <= 0.1)
                 _isMoving = false;
         }
     }

@@ -44,7 +44,7 @@ RenderSettings:
 LightmapSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 11
-  m_GIWorkflowMode: 0
+  m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -96,7 +96,8 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: 5f83a2fe2be4bba45b7b743764f3f73a,
+    type: 2}
   m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
@@ -231,7 +232,7 @@ PrefabInstance:
     - target: {fileID: 5900883766375947567, guid: a112b9a2317f8ce4381f3af751069e58,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.5
+      value: -14.6
       objectReference: {fileID: 0}
     - target: {fileID: 5900883766375947567, guid: a112b9a2317f8ce4381f3af751069e58,
         type: 3}
@@ -241,7 +242,7 @@ PrefabInstance:
     - target: {fileID: 5900883766375947567, guid: a112b9a2317f8ce4381f3af751069e58,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 4.9
+      value: 15.7
       objectReference: {fileID: 0}
     - target: {fileID: 5900883766375947567, guid: a112b9a2317f8ce4381f3af751069e58,
         type: 3}
@@ -526,7 +527,7 @@ PrefabInstance:
     - target: {fileID: 263217844969951883, guid: b9abedd4a09f72f4b98eb315cd30c337,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 33.3
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 263217844969951883, guid: b9abedd4a09f72f4b98eb315cd30c337,
         type: 3}
@@ -536,7 +537,7 @@ PrefabInstance:
     - target: {fileID: 263217844969951883, guid: b9abedd4a09f72f4b98eb315cd30c337,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -26.6
+      value: -12
       objectReference: {fileID: 0}
     - target: {fileID: 263217844969951883, guid: b9abedd4a09f72f4b98eb315cd30c337,
         type: 3}
@@ -765,7 +766,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 44.269257
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
