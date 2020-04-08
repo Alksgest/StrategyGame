@@ -834,10 +834,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd4aded48adf567459fa2453ab7a81af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _camera: {fileID: 0}
-  _scrollCoefficient: 3
-  _moveCoefficient: 3
-  _rotateCoefficient: 2
+  _camera: {fileID: 1883878300}
+  _scrollCoefficient: 100
+  _moveCoefficient: 100
+  _rotateCoefficient: 100
 --- !u!81 &1883878299
 AudioListener:
   m_ObjectHideFlags: 0

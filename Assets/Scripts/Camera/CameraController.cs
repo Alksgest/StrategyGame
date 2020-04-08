@@ -11,11 +11,14 @@ namespace StrategyGame.Assets.Scripts.UI
         private Camera _camera;
 
         [SerializeField]
-        private float _scrollCoefficient = 3.0f;
+        private float _scrollCoefficient = 100.0f;
         [SerializeField]
-        private float _moveCoefficient = 3.0f;
+        private float _moveCoefficient = 100.0f;
         [SerializeField]
-        private float _rotateCoefficient = 2.0f;
+        private float _rotateCoefficient = 100.0f;
+
+        private float _rotationX = 45f;
+        private float _rotationY = 180f;
 
         private void Start()
         {
@@ -34,12 +37,12 @@ namespace StrategyGame.Assets.Scripts.UI
             if (Input.GetMouseButton((int)MouseButton.LeftMouseButton) &&
                 Input.GetMouseButton((int)MouseButton.RightMouseButton))
             {
-                var x = Input.GetAxis("Mouse Y") * _rotateCoefficient;
+                _rotationY += (Input.GetAxis("Mouse X") * _rotateCoefficient * Time.deltaTime);
+                _rotationX += (Input.GetAxis("Mouse Y") * _rotateCoefficient * Time.deltaTime * -1);
 
-                var cameraRotationX = _camera.transform.rotation.eulerAngles.x;
+                _rotationX = Mathf.Clamp(_rotationX, 20, 90);
+                _camera.transform.localEulerAngles = new Vector3(_rotationX, _rotationY, 0);
 
-                if ((cameraRotationX + x >= 20 && cameraRotationX + x <= 90))
-                    _camera.transform.Rotate(x, 0, 0);
             }
         }
 
@@ -47,8 +50,8 @@ namespace StrategyGame.Assets.Scripts.UI
         {
             if (Input.GetMouseButton((int)MouseButton.MiddleMouseButton))
             {
-                var x = Input.GetAxis("Mouse X") * _moveCoefficient;
-                var y = Input.GetAxis("Mouse Y") * _moveCoefficient;
+                var x = Input.GetAxis("Mouse X") * _moveCoefficient * Time.deltaTime;
+                var y = Input.GetAxis("Mouse Y") * _moveCoefficient * Time.deltaTime;
 
                 _camera.transform.Translate(-x, -y, 0);
             }
@@ -58,7 +61,7 @@ namespace StrategyGame.Assets.Scripts.UI
         {
             if (Input.mouseScrollDelta.y != 0)
             {
-                var newY = _camera.transform.position.y - (Input.mouseScrollDelta.y * _scrollCoefficient);
+                var newY = _camera.transform.position.y - (Input.mouseScrollDelta.y * _scrollCoefficient * Time.deltaTime);
                 newY = Mathf.Clamp(newY, 20, 300);
                 _camera.transform.position =
                 new Vector3(_camera.transform.position.x,
