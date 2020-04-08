@@ -7,6 +7,9 @@ namespace StrategyGame.Assets.Scripts.Terrain
 {
     public class TerrainClickHandler : MonoBehaviour
     {
+        [SerializeField]
+        private GameObject _buildingPanelUI;
+        
         private UnitManager _unitManager;
 
         private void Awake()
@@ -30,11 +33,14 @@ namespace StrategyGame.Assets.Scripts.Terrain
         {
             if (hit.transform.tag == this.tag)
             {
-                _unitManager.MoveUnitsToPoint(hit.point);
+                if (_unitManager.SelectedUnits.Count > 0)
+                    _unitManager.MoveUnitsToPoint(hit.point);
+                else
+                {
+                    _buildingPanelUI.SetActive(!_buildingPanelUI.activeSelf);
+                }
             }
 
         }
-
-
     }
 }

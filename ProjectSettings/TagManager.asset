@@ -9,6 +9,7 @@ TagManager:
   - Barrack
   - Mine
   - MineEdge
+  - AttachedToMineUnit
   layers:
   - Default
   - TransparentFX
