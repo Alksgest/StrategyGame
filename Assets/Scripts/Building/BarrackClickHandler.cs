@@ -21,7 +21,7 @@ namespace StrategyGame.Assets.Scripts.Building
         {
             _barrackUI.SetActive(false);
 
-            if (hit.transform.tag == this.tag || hit.transform.parent.tag == this.tag)
+            if (hit.transform.parent.tag == this.tag && hit.transform.parent.gameObject == this.gameObject)
             {
                 _barrackUI.SetActive(!_barrackUI.activeSelf);
             }

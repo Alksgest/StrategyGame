@@ -468,6 +468,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f83f46dd30fe8c84da086728af03b178, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _barrackPrefab: {fileID: 263217844969951882, guid: b9abedd4a09f72f4b98eb315cd30c337,
+    type: 3}
+  _minePrefab: {fileID: 5900883766375947566, guid: a112b9a2317f8ce4381f3af751069e58,
+    type: 3}
+  _buildingsParent: {fileID: 0}
 --- !u!1 &9068704938528380038
 GameObject:
   m_ObjectHideFlags: 0

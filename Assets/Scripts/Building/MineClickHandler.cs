@@ -32,8 +32,7 @@ namespace StrategyGame.Assets.Scripts.Building
         private void OnMineLeftClick(RaycastHit hit)
         {
             _mineUI.SetActive(false);
-
-            if (hit.transform.tag == "Mine" || hit.transform.tag == "MineEdge")
+            if (hit.transform.tag == "MineEdge" && hit.transform.parent.gameObject == this.gameObject)
             {
                 _mineUI.SetActive(!_mineUI.activeSelf);
             }
@@ -41,8 +40,7 @@ namespace StrategyGame.Assets.Scripts.Building
 
         private void OnMineRightClick(RaycastHit hit)
         {
-            // hit.transform.tag == "Mine" ||
-            if (hit.transform.tag == "MineEdge")
+            if (hit.transform.tag == "MineEdge" && hit.transform.parent.gameObject == this.gameObject)
             {
                 // var edge = _edges.FirstOrDefault((e) => e.gameObject == hit.transform.gameObject);
                 SendUnitsToEdge();

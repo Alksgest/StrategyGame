@@ -1,5 +1,6 @@
 using UnityEngine;
 
+using StrategyGame.Assets.Scripts.UI;
 using StrategyGame.Assets.Scripts.Unit;
 using StrategyGame.Assets.Scripts.Util;
 
@@ -9,8 +10,21 @@ namespace StrategyGame.Assets.Scripts.Terrain
     {
         [SerializeField]
         private GameObject _buildingPanelUI;
-        
+
         private UnitManager _unitManager;
+
+        private void FixedUpdate()
+        {
+            if (_buildingPanelUI.GetComponent<BuildingsPanelManager>().ObjectToCreate != null)
+            {
+                var x = Input.GetAxis("Mouse X") * 3;
+                var z = Input.GetAxis("Mouse Y") * 3;
+
+                var created = _buildingPanelUI.GetComponent<BuildingsPanelManager>().ObjectToCreate;
+
+                created.transform.position += new Vector3(-x, 0, -z);
+            }
+        }
 
         private void Awake()
         {
@@ -25,7 +39,15 @@ namespace StrategyGame.Assets.Scripts.Terrain
         {
             if (hit.transform.tag == this.tag)
             {
-                _unitManager.DeselectAll();
+                var manager = _buildingPanelUI.GetComponent<BuildingsPanelManager>();
+                if (manager.ObjectToCreate != null && manager.CanPlaceBuilding)
+                {
+                    manager.SetBuildingOnPlace();
+                }
+                else
+                {
+                    _unitManager.DeselectAll();
+                }
             }
         }
 
