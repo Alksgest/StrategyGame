@@ -21,6 +21,8 @@ namespace StrategyGame.Assets.Scripts.Unit
 
         public GameObject ObjectAttachedTo { get; set; }
 
+        private bool _canMove = false;
+
         private void FixedUpdate()
         {
             if (_isMoving) Move();
@@ -54,13 +56,32 @@ namespace StrategyGame.Assets.Scripts.Unit
 
         private void Move()
         {
-            var delta = _pointToMove - transform.position;
-            delta.Normalize();
-            transform.position = transform.position + (delta * _speed * Time.deltaTime);
+            if (_canMove)
+            {
+                var delta = _pointToMove - transform.position;
+                delta.Normalize();
+                transform.position = transform.position + (delta * _speed * Time.deltaTime);
 
-            var vec = this.transform.position - _pointToMove;
-            if (Mathf.Abs(vec.x) <= 0.1 && Mathf.Abs(vec.z) <= 0.1)
-                _isMoving = false;
+                var vec = this.transform.position - _pointToMove;
+                if (Mathf.Abs(vec.x) <= 0.1 && Mathf.Abs(vec.z) <= 0.1)
+                    _isMoving = false;
+            }
+        }
+
+        private void OnCollisionEnter(Collision other)
+        {
+            if (other.transform.tag == "Terrain" && !_canMove)
+            {
+                _canMove = true;
+            }
+        }
+
+        private void OnCollisionExit(Collision other)
+        {
+            if (other.transform.tag == "Terrain" && _canMove)
+            {
+                _canMove = false;
+            }
         }
     }
 }
