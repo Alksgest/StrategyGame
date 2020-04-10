@@ -63,7 +63,17 @@ namespace StrategyGame.Assets.Scripts.Building
 
                 edges[i].AttacheUnit(selected[i]);
             }
+        }
 
+        private void OnDestroy()
+        {
+            var gch = FindObjectOfType<GlobalClickHandler>();
+
+            if (gch != null)
+            {
+                gch.GameObjectRightClick -= OnMineRightClick;
+                gch.GameObjectLeftClick -= OnMineLeftClick;
+            }
         }
     }
 }

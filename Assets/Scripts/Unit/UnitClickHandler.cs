@@ -25,5 +25,12 @@ namespace StrategyGame.Assets.Scripts.Unit
                 _unitController.Select();
             }
         }
+
+        private void OnDestroy()
+        {
+            var gch = FindObjectOfType<GlobalClickHandler>();
+            if (gch != null)
+                gch.GameObjectLeftClick -= OnLeftClick;
+        }
     }
 }

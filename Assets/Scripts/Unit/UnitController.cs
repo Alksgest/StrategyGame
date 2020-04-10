@@ -19,6 +19,7 @@ namespace StrategyGame.Assets.Scripts.Unit
 
         private bool _isMoving = false;
         private Vector3 _pointToMove;
+        private Vector3 _pointToRotate;
 
         public GameObject ObjectAttachedTo { get; set; }
 
@@ -44,6 +45,7 @@ namespace StrategyGame.Assets.Scripts.Unit
             // Debug.Log(this.transform.position);
 
             _pointToMove = point;
+            _pointToRotate = point;
 
             _pointToMove.y = this.transform.position.y;
 
@@ -61,9 +63,9 @@ namespace StrategyGame.Assets.Scripts.Unit
 
         private void Rotate()
         {
-            if (_pointToMove != null)
+            if (_pointToRotate != null)
             {
-                var targetRotation = Quaternion.LookRotation(_pointToMove - transform.position);
+                var targetRotation = Quaternion.LookRotation(_pointToRotate - transform.position);
                 var angles = targetRotation.eulerAngles;
                 angles.y += 180;
                 targetRotation.eulerAngles = angles;
