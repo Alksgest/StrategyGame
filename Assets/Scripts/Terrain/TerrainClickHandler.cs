@@ -13,19 +13,6 @@ namespace StrategyGame.Assets.Scripts.Terrain
 
         private UnitManager _unitManager;
 
-        private void FixedUpdate()
-        {
-            if (_buildingPanelUI.GetComponent<BuildingsPanelManager>().ObjectToCreate != null)
-            {
-                var x = Input.GetAxis("Mouse X") * 3;
-                var z = Input.GetAxis("Mouse Y") * 3;
-
-                var created = _buildingPanelUI.GetComponent<BuildingsPanelManager>().ObjectToCreate;
-
-                created.transform.position += new Vector3(-x, 0, -z);
-            }
-        }
-
         private void Awake()
         {
             _unitManager = FindObjectOfType<UnitManager>();
@@ -37,6 +24,7 @@ namespace StrategyGame.Assets.Scripts.Terrain
 
         private void OnLeftClick(RaycastHit hit)
         {
+            Debug.Log(hit.transform.tag);
             if (hit.transform.tag == this.tag)
             {
                 var manager = _buildingPanelUI.GetComponent<BuildingsPanelManager>();
@@ -53,16 +41,33 @@ namespace StrategyGame.Assets.Scripts.Terrain
 
         private void OnRightClick(RaycastHit hit)
         {
+            Debug.Log(hit.transform.tag);
             if (hit.transform.tag == this.tag)
             {
                 if (_unitManager.SelectedUnits.Count > 0)
+                {
                     _unitManager.MoveUnitsToPoint(hit.point);
+                }
                 else
                 {
-                    _buildingPanelUI.SetActive(!_buildingPanelUI.activeSelf);
+                    ManageBuildingPlacement();
                 }
             }
 
+        }
+
+        private void ManageBuildingPlacement()
+        {
+            if (_buildingPanelUI.activeSelf)
+            {
+                var manager = _buildingPanelUI.GetComponent<BuildingsPanelManager>();
+                manager.RemoveUnsettedBuilding();
+                _buildingPanelUI.SetActive(false);
+            }
+            else
+            {
+                _buildingPanelUI.SetActive(true);
+            }
         }
     }
 }

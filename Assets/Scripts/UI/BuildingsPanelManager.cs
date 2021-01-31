@@ -14,19 +14,46 @@ namespace StrategyGame.Assets.Scripts.UI
         [SerializeField]
         private Transform _buildingsParent;
 
+
+        [SerializeField]
+        private Camera _camera;
+
         public bool CanPlaceBuilding { get; private set; } = false;
 
         public GameObject ObjectToCreate { get; private set; }
 
+        private Vector3 _screenPoint;
+        private Vector3 _offset;
+
+        private void FixedUpdate()
+        {
+            if (ObjectToCreate != null)
+            {
+                var mouse = Input.mousePosition;
+                var castPoint = Camera.main.ScreenPointToRay(mouse);
+
+                if (Physics.Raycast(castPoint, out RaycastHit hit, Mathf.Infinity))
+                {
+                    ObjectToCreate.transform.position = new Vector3(hit.point.x, 0, hit.point.z);
+                }
+            }
+        }
+
         public void CreateBaracks()
         {
-            ObjectToCreate = Instantiate(_barrackPrefab, new Vector3(0, 5, 0), new Quaternion(), _buildingsParent);
+            var x = Input.GetAxis("Mouse X");
+            var z = Input.GetAxis("Mouse Y");
+
+            ObjectToCreate = Instantiate(_barrackPrefab, new Vector3(x, 5, z), new Quaternion(), _buildingsParent);
             StartCoroutine(WaitForPlaceBuilding(0.5f));
         }
 
         public void CreateMine()
         {
-            ObjectToCreate = Instantiate(_minePrefab, new Vector3(0, 4, 0), new Quaternion(), _buildingsParent);
+            var x = Input.GetAxis("Mouse X");
+            var z = Input.GetAxis("Mouse Y");
+
+            ObjectToCreate = Instantiate(_minePrefab, new Vector3(x, 4, z), new Quaternion(), _buildingsParent);
             StartCoroutine(WaitForPlaceBuilding(0.5f));
         }
 
@@ -34,6 +61,16 @@ namespace StrategyGame.Assets.Scripts.UI
         {
             ObjectToCreate = null;
             CanPlaceBuilding = false;
+        }
+
+        public void RemoveUnsettedBuilding()
+        {
+            if (ObjectToCreate != null)
+            {
+                Destroy(ObjectToCreate.gameObject);
+                ObjectToCreate = null;
+                CanPlaceBuilding = false;
+            }
         }
 
         private IEnumerator WaitForPlaceBuilding(float seconds)

@@ -11,9 +11,9 @@ namespace StrategyGame.Assets.Scripts.UI
         private Camera _camera;
 
         [SerializeField]
-        private float _scrollCoefficient = 100.0f;
+        private float _scrollCoefficient = 500.0f;
         [SerializeField]
-        private float _moveCoefficient = 100.0f;
+        private float _moveCoefficient = 300.0f;
         [SerializeField]
         private float _rotateCoefficient = 100.0f;
 
@@ -63,10 +63,7 @@ namespace StrategyGame.Assets.Scripts.UI
             {
                 var newY = _camera.transform.position.y - (Input.mouseScrollDelta.y * _scrollCoefficient * Time.deltaTime);
                 newY = Mathf.Clamp(newY, 20, 300);
-                _camera.transform.position =
-                new Vector3(_camera.transform.position.x,
-                newY,
-                _camera.transform.position.z);
+                _camera.transform.position = new Vector3(_camera.transform.position.x, newY, _camera.transform.position.z);
             }
         }
     }

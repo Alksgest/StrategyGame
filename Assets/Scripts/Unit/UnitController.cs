@@ -59,7 +59,10 @@ namespace StrategyGame.Assets.Scripts.Unit
             _isMoving = true;
             _isRotating = true;
 
-            _animator.SetBool("IsRuning", _isMoving);
+            if (_animator != null)
+            {
+                _animator.SetBool("IsRuning", _isMoving);
+            }
 
             if (this.tag == "AttachedToMineUnit")
             {
@@ -99,7 +102,10 @@ namespace StrategyGame.Assets.Scripts.Unit
                 if (Mathf.Abs(vec.x) <= 0.1 && Mathf.Abs(vec.z) <= 0.1)
                 {
                     _isMoving = false;
-                    _animator.SetBool("IsRuning", _isMoving);
+                    if (_animator != null)
+                    {
+                        _animator.SetBool("IsRuning", _isMoving);
+                    }
                 }
             }
         }
