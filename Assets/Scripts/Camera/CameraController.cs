@@ -30,6 +30,31 @@ namespace StrategyGame.Assets.Scripts.UI
             ScrollCamera();
             MoveCamera();
             RotateCamera();
+            HandleInput();
+        }
+
+        private void HandleInput()
+        {
+            if (Input.GetKey(KeyCode.W))
+            {
+                var z = _moveCoefficient * Time.deltaTime;
+                _camera.transform.Translate(0, z, 0);
+            }
+            if (Input.GetKey(KeyCode.S))
+            {
+                var z = _moveCoefficient * Time.deltaTime;
+                _camera.transform.Translate(0, -z, 0);
+            }
+            if (Input.GetKey(KeyCode.A))
+            {
+                var x = _moveCoefficient * Time.deltaTime;
+                _camera.transform.Translate(-x, 0, 0);
+            }
+            if (Input.GetKey(KeyCode.D))
+            {
+                var x = _moveCoefficient * Time.deltaTime;
+                _camera.transform.Translate(x, 0, 0);
+            }
         }
 
         private void RotateCamera()

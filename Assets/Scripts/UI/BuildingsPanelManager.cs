@@ -1,6 +1,8 @@
 using UnityEngine;
 
 using System.Collections;
+using StrategyGame.Assets.Scripts.Building;
+using StrategyGame.Assets.Scripts.Util;
 
 namespace StrategyGame.Assets.Scripts.UI
 {
@@ -18,12 +20,27 @@ namespace StrategyGame.Assets.Scripts.UI
         [SerializeField]
         private Camera _camera;
 
-        public bool CanPlaceBuilding { get; private set; } = false;
+        public bool IsBuildSelected { get; private set; } = false;
 
         public GameObject ObjectToCreate { get; private set; }
 
         private Vector3 _screenPoint;
         private Vector3 _offset;
+
+        private void Awake()
+        {
+            var gch = FindObjectOfType<GlobalClickHandler>();
+            gch.GameObjectLeftClick += OnLeftClick;
+            gch.GameObjectRightClick += OnRightClick;
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                RotateBuilding();
+            }
+        }
 
         private void FixedUpdate()
         {
@@ -34,9 +51,14 @@ namespace StrategyGame.Assets.Scripts.UI
 
                 if (Physics.Raycast(castPoint, out RaycastHit hit, Mathf.Infinity))
                 {
-                    ObjectToCreate.transform.position = new Vector3(hit.point.x, 0, hit.point.z);
+                    ObjectToCreate.transform.position = new Vector3(hit.point.x, ObjectToCreate.transform.position.y, hit.point.z);
                 }
             }
+        }
+
+        private void RotateBuilding()
+        {
+            ObjectToCreate.transform.Rotate(new Vector3(0, ObjectToCreate.transform.rotation.y + 30, 0));
         }
 
         public void CreateBaracks()
@@ -57,10 +79,11 @@ namespace StrategyGame.Assets.Scripts.UI
             StartCoroutine(WaitForPlaceBuilding(0.5f));
         }
 
-        public void SetBuildingOnPlace()
+        public void SetBuildingOnPlace(BuildingBase building)
         {
+            building.Instantiate();
             ObjectToCreate = null;
-            CanPlaceBuilding = false;
+            IsBuildSelected = false;
         }
 
         public void RemoveUnsettedBuilding()
@@ -69,7 +92,7 @@ namespace StrategyGame.Assets.Scripts.UI
             {
                 Destroy(ObjectToCreate.gameObject);
                 ObjectToCreate = null;
-                CanPlaceBuilding = false;
+                IsBuildSelected = false;
             }
         }
 
@@ -77,7 +100,25 @@ namespace StrategyGame.Assets.Scripts.UI
         {
             yield return new WaitForSeconds(seconds);
 
-            CanPlaceBuilding = true;
+            IsBuildSelected = true;
+        }
+
+        private void OnLeftClick(RaycastHit hit)
+        {
+            if (ObjectToCreate != null && IsBuildSelected)
+            {
+                var building = ObjectToCreate.GetComponent<BuildingBase>();
+
+                if (building != null && building.CanBePlaced)
+                {
+                    SetBuildingOnPlace(building);
+                }
+            }
+        }
+
+        private void OnRightClick(RaycastHit hit)
+        {
+            RemoveUnsettedBuilding();
         }
     }
 }

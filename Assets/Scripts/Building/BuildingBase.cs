@@ -7,6 +7,8 @@ namespace StrategyGame.Assets.Scripts.Building
         [SerializeField]
         protected bool _isInstantiated = false;
 
+        public bool CanBePlaced { get; private set; } = true;
+
         public void Instantiate()
         {
             if (!_isInstantiated)
@@ -15,7 +17,38 @@ namespace StrategyGame.Assets.Scripts.Building
             }
             else
             {
-                Debug.Log("Smth went wrong. Trying to instantiate already instantiated object");
+                Debug.LogError("Smth went wrong. Trying to instantiate already instantiated object");
+            }
+        }
+
+        public void Destroy()
+        {
+            Destroy(gameObject);
+        }
+
+        private void OnCollisionEnter(Collision other)
+        {
+            if (_isInstantiated)
+            {
+                CanBePlaced = false;
+                // if (other.gameObject.tag == "Terraine")
+                // {
+                //     Debug.Log("in true");
+                //     CanBePlaced = true;
+                // }
+                // else
+                // {
+                //     Debug.Log("in false");
+                //     CanBePlaced = false;
+                // }
+            }
+        }
+
+        private void OnCollisionExit(Collision other)
+        {
+            if (_isInstantiated)
+            {
+                CanBePlaced = true;
             }
         }
     }

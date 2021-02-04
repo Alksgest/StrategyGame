@@ -1,8 +1,9 @@
 using UnityEngine;
 
-using StrategyGame.Assets.Scripts.UI;
+using System.Linq;
 using StrategyGame.Assets.Scripts.Unit;
 using StrategyGame.Assets.Scripts.Util;
+using StrategyGame.Assets.Scripts.UI;
 
 namespace StrategyGame.Assets.Scripts.Terrain
 {
@@ -12,10 +13,12 @@ namespace StrategyGame.Assets.Scripts.Terrain
         private GameObject _buildingPanelUI;
 
         private UnitManager _unitManager;
+        private BuildingsPanelManager _buildingsPanelManager;
 
         private void Awake()
         {
             _unitManager = FindObjectOfType<UnitManager>();
+            _buildingsPanelManager = FindObjectOfType<BuildingsPanelManager>();
 
             var gch = FindObjectOfType<GlobalClickHandler>();
             gch.GameObjectLeftClick += OnLeftClick;
@@ -24,44 +27,24 @@ namespace StrategyGame.Assets.Scripts.Terrain
 
         private void OnLeftClick(RaycastHit hit)
         {
-            Debug.Log(hit.transform.tag);
-            if (hit.transform.tag == this.tag)
-            {
-                var manager = _buildingPanelUI.GetComponent<BuildingsPanelManager>();
-                if (manager.ObjectToCreate != null && manager.CanPlaceBuilding)
-                {
-                    manager.SetBuildingOnPlace();
-                }
-                else
-                {
-                    _unitManager.DeselectAll();
-                }
-            }
+            // if (hit.transform.tag == this.tag && !_unitManager.SelectedUnits.Any() && _buildingsPanelManager?.CanPlaceBuilding == false)
+            // {
+            //     _buildingPanelUI.SetActive(false);
+            // }
         }
 
         private void OnRightClick(RaycastHit hit)
         {
-            Debug.Log(hit.transform.tag);
-            if (hit.transform.tag == this.tag)
+            if (hit.transform.tag == this.tag && !_unitManager.SelectedUnits.Any())
             {
-                if (_unitManager.SelectedUnits.Count > 0)
-                {
-                    _unitManager.MoveUnitsToPoint(hit.point);
-                }
-                else
-                {
-                    ManageBuildingPlacement();
-                }
+                ManageEmptyRightClick();
             }
-
         }
 
-        private void ManageBuildingPlacement()
+        private void ManageEmptyRightClick()
         {
             if (_buildingPanelUI.activeSelf)
             {
-                var manager = _buildingPanelUI.GetComponent<BuildingsPanelManager>();
-                manager.RemoveUnsettedBuilding();
                 _buildingPanelUI.SetActive(false);
             }
             else

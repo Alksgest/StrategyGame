@@ -1,36 +1,37 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 using StrategyGame.Assets.Scripts.Building;
-using System;
+using StrategyGame.Assets.Scripts.Util;
 
 namespace StrategyGame.Assets.Scripts.Unit
 {
-    public class UnitController : MonoBehaviour
+    public class UnitController : UnitBase
     {
         public bool Selected { get; private set; } = false;
-
-        [SerializeField]
-        private float _speed = 0.01f;
-
-        [SerializeField]
-        private Material _defaultMaterial;
-        [SerializeField]
-        private Material _selectedMaterial;
-
-        private Animator _animator;
-
-        private bool _isMoving = false;
-        private Vector3 _pointToMove;
-        private Vector3 _pointToRotate;
-
         public GameObject ObjectAttachedTo { get; set; }
 
-        private bool _canMove = false;
-        private bool _isRotating = true;
+        [SerializeField]
+        private GameObject _unitUI;
+
+
+        [SerializeField]
+        private Text _speedText;
 
         private void Start()
         {
             _animator = GetComponent<Animator>();
+        }
+
+        private void Awake()
+        {
+            var gch = FindObjectOfType<GlobalClickHandler>();
+            gch.GameObjectLeftClick += OnLeftClick;
+
+            if (_speedText != null)
+            {
+                _speedText.text = $"{_speed}";
+            }
         }
 
         private void FixedUpdate()
@@ -44,13 +45,11 @@ namespace StrategyGame.Assets.Scripts.Unit
             Selected = !Selected;
             var renderer = GetComponentInChildren<MeshRenderer>();
             renderer.material = Selected ? _selectedMaterial : _defaultMaterial;
+            _unitUI.SetActive(Selected);
         }
 
         public void AskToMove(Vector3 point)
         {
-            // Debug.Log(point);
-            // Debug.Log(this.transform.position);
-
             _pointToMove = point;
             _pointToRotate = point;
 
@@ -73,43 +72,6 @@ namespace StrategyGame.Assets.Scripts.Unit
             }
         }
 
-        private void Rotate()
-        {
-            if (_pointToRotate != null)
-            {
-                var targetRotation = Quaternion.LookRotation(_pointToRotate - transform.position);
-                var angles = targetRotation.eulerAngles;
-                angles.y += 180;
-                targetRotation.eulerAngles = angles;
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 10 * Time.deltaTime);
-
-                if (Mathf.Abs(targetRotation.eulerAngles.y - transform.rotation.eulerAngles.y) <= 2)
-                {
-                    _isRotating = false;
-                }
-            }
-        }
-
-        private void Move()
-        {
-            if (_canMove)
-            {
-                var delta = _pointToMove - transform.position;
-                delta.Normalize();
-                transform.position = transform.position + (delta * _speed * Time.deltaTime);
-
-                var vec = this.transform.position - _pointToMove;
-                if (Mathf.Abs(vec.x) <= 0.1 && Mathf.Abs(vec.z) <= 0.1)
-                {
-                    _isMoving = false;
-                    if (_animator != null)
-                    {
-                        _animator.SetBool("IsRuning", _isMoving);
-                    }
-                }
-            }
-        }
-
         private void OnCollisionEnter(Collision other)
         {
             if (other.transform.tag == "Terrain" && !_canMove)
@@ -124,6 +86,21 @@ namespace StrategyGame.Assets.Scripts.Unit
             {
                 _canMove = false;
             }
+        }
+
+        private void OnLeftClick(RaycastHit hit)
+        {
+            if (hit.transform.gameObject == this.gameObject)
+            {
+                Select();
+            }
+        }
+
+        private void OnDestroy()
+        {
+            var gch = FindObjectOfType<GlobalClickHandler>();
+            if (gch != null)
+                gch.GameObjectLeftClick -= OnLeftClick;
         }
     }
 }

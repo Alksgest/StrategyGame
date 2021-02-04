@@ -5,7 +5,7 @@ using StrategyGame.Assets.Scripts.Unit;
 
 namespace StrategyGame.Assets.Scripts.Building
 {
-    public class MineEdgeController : MonoBehaviour
+    public class MineEdgeController : BuildingBase
     {
         public bool IsBusy { get; private set; } = false;
 
@@ -25,8 +25,6 @@ namespace StrategyGame.Assets.Scripts.Building
             unit.ObjectAttachedTo = this.gameObject;
 
             SetBusy();
-
-            Debug.Log("Attached");
         }
 
         public void DeatachUnit()
@@ -37,8 +35,6 @@ namespace StrategyGame.Assets.Scripts.Building
                 AttachedUnit.ObjectAttachedTo = null;
                 AttachedUnit = null;
                 SetBusy();
-
-                Debug.Log("Deattached");
             }
         }
 

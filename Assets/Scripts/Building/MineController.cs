@@ -9,7 +9,7 @@ using StrategyGame.Assets.Scripts.Unit;
 
 namespace StrategyGame.Assets.Scripts.Building
 {
-    public class MineClickHandler : MonoBehaviour
+    public class MineController : BuildingBase
     {
         private UnitManager _unitManager;
 
@@ -59,8 +59,9 @@ namespace StrategyGame.Assets.Scripts.Building
 
             for (int i = 0; i < selected.Count; ++i)
             {
-                selected[i].AskToMove(edges[i].GetUnitPosition());
-
+                var position = edges[i].GetUnitPosition();
+                
+                selected[i].AskToMove(position);
                 edges[i].AttacheUnit(selected[i]);
             }
         }

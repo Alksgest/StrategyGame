@@ -11,6 +11,8 @@ namespace StrategyGame.Assets.Scripts.Building
         private GameObject _unitPrefab;
         [SerializeField]
         private GameObject _barrackUI;
+        [SerializeField]
+        private GameObject _spawnPoint;
 
         private UnitManager _unitManager;
 
@@ -19,6 +21,7 @@ namespace StrategyGame.Assets.Scripts.Building
             _unitManager = FindObjectOfType<UnitManager>();
 
             var gch = FindObjectOfType<GlobalClickHandler>();
+            _isInstantiated = false;
             gch.GameObjectLeftClick += OnLeftClick;
         }
 
@@ -26,7 +29,7 @@ namespace StrategyGame.Assets.Scripts.Building
         {
             _barrackUI.SetActive(true);
 
-            _unitManager.CreateUnit(_unitPrefab, this.transform.position + new Vector3(0, 0, 10));
+            _unitManager.CreateUnit(_unitPrefab, _spawnPoint.transform.position);
         }
 
 
@@ -46,6 +49,7 @@ namespace StrategyGame.Assets.Scripts.Building
         private void OnDestroy()
         {
             var gch = FindObjectOfType<GlobalClickHandler>();
+            _isInstantiated = false;
             if (gch != null)
                 gch.GameObjectLeftClick -= OnLeftClick;
         }
