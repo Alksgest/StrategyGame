@@ -19,6 +19,9 @@ namespace StrategyGame.Assets.Scripts.Unit
         private void Start()
         {
             _animator = GetComponent<Animator>();
+
+            var renderer = GetComponentInChildren<MeshRenderer>();
+            renderer.material = _defaultMaterial;
         }
 
         private void Awake()

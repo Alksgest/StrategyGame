@@ -7,6 +7,8 @@ namespace StrategyGame.Assets.Scripts.Building
         [SerializeField]
         protected bool _isInstantiated = false;
 
+        public string Owner { get; private set; } = "mainPlayer";
+
         public bool CanBePlaced { get; private set; } = true;
 
         public void Instantiate()

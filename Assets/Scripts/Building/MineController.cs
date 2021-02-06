@@ -1,11 +1,12 @@
 using UnityEngine;
 
-using System;
 using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
 
 using StrategyGame.Assets.Scripts.Util;
 using StrategyGame.Assets.Scripts.Unit;
+using StrategyGame.Assets.Scripts.WorldState;
 
 namespace StrategyGame.Assets.Scripts.Building
 {
@@ -19,6 +20,9 @@ namespace StrategyGame.Assets.Scripts.Building
         [SerializeField]
         private MineEdgeController[] _edges;
 
+        [SerializeField]
+        private GameManager _gameManager;
+
         private void Awake()
         {
             var gch = FindObjectOfType<GlobalClickHandler>();
@@ -27,8 +31,23 @@ namespace StrategyGame.Assets.Scripts.Building
             gch.GameObjectLeftClick += OnMineLeftClick;
 
             _unitManager = FindObjectOfType<UnitManager>();
+            _gameManager = FindObjectOfType<GameManager>();
+
+            InvokeRepeating("AddIron", .01f, 1.0f);
         }
 
+
+        private void AddIron()
+        {
+            var bisyEdges = _edges.Where(e => e.IsBusy).Count();
+            if (bisyEdges > 0)
+            {
+                for (int i = 0; i < bisyEdges; ++i)
+                {
+                    _gameManager.AddIron(Owner, 5);
+                }
+            }
+        }
         private void OnMineLeftClick(RaycastHit hit)
         {
             _mineUI.SetActive(false);
@@ -60,7 +79,7 @@ namespace StrategyGame.Assets.Scripts.Building
             for (int i = 0; i < selected.Count; ++i)
             {
                 var position = edges[i].GetUnitPosition();
-                
+
                 selected[i].AskToMove(position);
                 edges[i].AttacheUnit(selected[i]);
             }
@@ -69,6 +88,11 @@ namespace StrategyGame.Assets.Scripts.Building
         private void OnDestroy()
         {
             var gch = FindObjectOfType<GlobalClickHandler>();
+
+            foreach (var edge in _edges)
+            {
+                edge.DeatachUnit();
+            }
 
             if (gch != null)
             {
