@@ -8,15 +8,20 @@ namespace StrategyGame.Assets.Scripts.Unit
 {
     public class UnitManager : MonoBehaviour
     {
-        private List<UnitController> _controllers;
+        private List<UnitBase> _controllers;
 
-        public List<UnitController> SelectedUnits => _controllers.Where(unit => unit.Selected).ToList();
+        public List<UnitBase> SelectedUnits => _controllers.Where(unit => unit.Selected).ToList();
+
+        public List<WokerController> SelectedWorkers => SelectedUnits
+                                                        .Where(unit => unit is WokerController)
+                                                        .Select(unit => unit as WokerController)
+                                                        .ToList();
 
         private void Start()
         {
-            var units = Resources.FindObjectsOfTypeAll(typeof(UnitController));
+            var units = Resources.FindObjectsOfTypeAll(typeof(UnitBase));
 
-            _controllers = new List<UnitController>(units as UnitController[]);
+            _controllers = new List<UnitBase>(units as UnitBase[]);
 
             var gch = FindObjectOfType<GlobalClickHandler>();
             gch.GameObjectLeftClick += OnLeftClick;
@@ -39,10 +44,10 @@ namespace StrategyGame.Assets.Scripts.Unit
             }
         }
 
-        public void CreateUnit(GameObject prefab, Vector3 creatorPosition)
+        public void CreateWorker(GameObject prefab, Vector3 creatorPosition)
         {
             var unit = GameObject.Instantiate(prefab, creatorPosition, new Quaternion(0, 0, 0, 0), this.transform);
-            _controllers.Add(unit.GetComponent<UnitController>());
+            _controllers.Add(unit.GetComponent<WokerController>());
         }
 
         private void OnLeftClick(RaycastHit hit)
@@ -51,6 +56,13 @@ namespace StrategyGame.Assets.Scripts.Unit
             if (unit == null)
             {
                 DeselectAll();
+            }
+            if (unit != null && SelectedUnits.Count > 1)
+            {
+                foreach (var u in SelectedUnits)
+                {
+                    u.HideUI();
+                }
             }
         }
 

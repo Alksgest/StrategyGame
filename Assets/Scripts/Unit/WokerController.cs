@@ -6,7 +6,7 @@ using StrategyGame.Assets.Scripts.Util;
 
 namespace StrategyGame.Assets.Scripts.Unit
 {
-    public class UnitController : UnitBase
+    public class WokerController : UnitBase
     {
         public GameObject ObjectAttachedTo { get; set; }
 

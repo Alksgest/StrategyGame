@@ -241,7 +241,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isInstantiated: 1
-  _unitPrefab: {fileID: 4695825492272960227, guid: 317976e60f6456d4986ce17c00e503ae,
+  _unitPrefab: {fileID: 4695825492272960227, guid: b289dd46dbc1d6e43b5b0ba6f933b029,
     type: 3}
   _barrackUI: {fileID: 4428716598567582133}
   _spawnPoint: {fileID: 8936739303693359084}

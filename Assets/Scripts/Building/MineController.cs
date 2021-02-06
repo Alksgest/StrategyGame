@@ -50,11 +50,11 @@ namespace StrategyGame.Assets.Scripts.Building
         private void SendUnitsToEdge()
         {
             var edges = _edges.Where(e => !e.IsBusy).ToList();
-            var selected = _unitManager.SelectedUnits;
+            var selected = _unitManager.SelectedWorkers;
 
             if (edges.Count < selected.Count)
             {
-                selected = new List<UnitController>(_unitManager.SelectedUnits.GetRange(0, edges.Count));
+                selected = new List<WokerController>(_unitManager.SelectedWorkers.GetRange(0, edges.Count));
             }
 
             for (int i = 0; i < selected.Count; ++i)

@@ -29,17 +29,15 @@ namespace StrategyGame.Assets.Scripts.Building
         {
             _barrackUI.SetActive(true);
 
-            _unitManager.CreateUnit(_unitPrefab, _spawnPoint.transform.position);
+            _unitManager.CreateWorker(_unitPrefab, _spawnPoint.transform.position);
         }
-
 
         private void OnLeftClick(RaycastHit hit)
         {
             if (_isInstantiated)
             {
                 _barrackUI.SetActive(false);
-
-                if (hit.transform.parent.tag == this.tag && hit.transform.parent.gameObject == this.gameObject)
+                if (hit.transform.tag == this.tag && hit.transform.gameObject == this.gameObject)
                 {
                     _barrackUI.SetActive(!_barrackUI.activeSelf);
                 }

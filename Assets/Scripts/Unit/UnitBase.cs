@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace StrategyGame.Assets.Scripts.Unit
 {
-    public class UnitBase : MonoBehaviour
+    public abstract class UnitBase : MonoBehaviour
     {
         [SerializeField]
         protected float _speed = 0.01f;
@@ -19,8 +19,13 @@ namespace StrategyGame.Assets.Scripts.Unit
         protected Vector3 _pointToMove;
         protected Vector3 _pointToRotate;
 
-        
         protected Animator _animator;
+
+        public bool Selected { get; protected set; } = false;
+
+        public abstract void HideUI();
+        public abstract void AskToMove(Vector3 point);
+        public abstract void Select();
 
         protected virtual void Rotate()
         {

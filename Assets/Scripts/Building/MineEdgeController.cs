@@ -9,7 +9,7 @@ namespace StrategyGame.Assets.Scripts.Building
     {
         public bool IsBusy { get; private set; } = false;
 
-        public UnitController AttachedUnit { get; private set; }
+        public WokerController AttachedUnit { get; private set; }
 
         [SerializeField]
         private Text _edgeText;
@@ -17,7 +17,7 @@ namespace StrategyGame.Assets.Scripts.Building
         [SerializeField]
         private GameObject _unitPlace;
 
-        public void AttacheUnit(UnitController unit)
+        public void AttacheUnit(WokerController unit)
         {
             AttachedUnit = unit;
 
