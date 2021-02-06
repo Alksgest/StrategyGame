@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections;
 using StrategyGame.Assets.Scripts.Building;
 using StrategyGame.Assets.Scripts.Util;
+using StrategyGame.Assets.Scripts.WorldState;
 
 namespace StrategyGame.Assets.Scripts.UI
 {
@@ -27,11 +28,15 @@ namespace StrategyGame.Assets.Scripts.UI
         private Vector3 _screenPoint;
         private Vector3 _offset;
 
+        private GameManager _gameManager;
+
         private void Awake()
         {
             var gch = FindObjectOfType<GlobalClickHandler>();
             gch.GameObjectLeftClick += OnLeftClick;
             gch.GameObjectRightClick += OnRightClick;
+
+            _gameManager = FindObjectOfType<GameManager>();
         }
 
         private void Update()
@@ -61,22 +66,23 @@ namespace StrategyGame.Assets.Scripts.UI
             ObjectToCreate.transform.Rotate(new Vector3(0, ObjectToCreate.transform.rotation.y + 30, 0));
         }
 
-        public void CreateBaracks()
+        private void CreateBuilding(GameObject prefab, float y)
         {
             var x = Input.GetAxis("Mouse X");
             var z = Input.GetAxis("Mouse Y");
 
-            ObjectToCreate = Instantiate(_barrackPrefab, new Vector3(x, 5, z), new Quaternion(), _buildingsParent);
+            ObjectToCreate = Instantiate(prefab, new Vector3(x, 5, z), new Quaternion(), _buildingsParent);
             StartCoroutine(WaitForPlaceBuilding(0.5f));
+        }
+
+        public void CreateBaracks()
+        {
+            CreateBuilding(_barrackPrefab, 5);
         }
 
         public void CreateMine()
         {
-            var x = Input.GetAxis("Mouse X");
-            var z = Input.GetAxis("Mouse Y");
-
-            ObjectToCreate = Instantiate(_minePrefab, new Vector3(x, 4, z), new Quaternion(), _buildingsParent);
-            StartCoroutine(WaitForPlaceBuilding(0.5f));
+            CreateBuilding(_minePrefab, 4);
         }
 
         public void SetBuildingOnPlace(BuildingBase building)
@@ -108,10 +114,14 @@ namespace StrategyGame.Assets.Scripts.UI
             if (ObjectToCreate != null && IsBuildSelected)
             {
                 var building = ObjectToCreate.GetComponent<BuildingBase>();
-
-                if (building != null && building.CanBePlaced)
+                var buildingTag = building.tag;
+                if (
+                    building != null &&
+                    building.CanBePlaced &&
+                    _gameManager.CanPlaceBuilding("mainPlayer", buildingTag))
                 {
                     SetBuildingOnPlace(building);
+                    _gameManager.BuyBuilding("mainPlayer", buildingTag);
                 }
             }
         }
