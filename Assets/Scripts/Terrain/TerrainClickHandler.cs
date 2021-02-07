@@ -27,10 +27,6 @@ namespace StrategyGame.Assets.Scripts.Terrain
 
         private void OnLeftClick(RaycastHit hit)
         {
-            // if (hit.transform.tag == this.tag && !_unitManager.SelectedUnits.Any() && _buildingsPanelManager?.CanPlaceBuilding == false)
-            // {
-            //     _buildingPanelUI.SetActive(false);
-            // }
         }
 
         private void OnRightClick(RaycastHit hit)
