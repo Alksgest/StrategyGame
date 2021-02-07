@@ -11,9 +11,6 @@ namespace StrategyGame.Assets.Scripts.Unit
         public GameObject ObjectAttachedTo { get; set; }
 
         [SerializeField]
-        private GameObject _unitUI;
-
-        [SerializeField]
         private Text _speedText;
 
         private void Start()

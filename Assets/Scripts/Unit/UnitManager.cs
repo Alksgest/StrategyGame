@@ -9,9 +9,9 @@ namespace StrategyGame.Assets.Scripts.Unit
 {
     public class UnitManager : MonoBehaviour
     {
-        private List<UnitBase> _controllers;
+        private List<UnitBase> _unitControllers;
 
-        public List<UnitBase> SelectedUnits => _controllers.Where(unit => unit.Selected).ToList();
+        public List<UnitBase> SelectedUnits => _unitControllers.Where(unit => unit.Selected).ToList();
 
         public List<WokerController> SelectedWorkers => SelectedUnits
                                                         .Where(unit => unit is WokerController)
@@ -22,12 +22,13 @@ namespace StrategyGame.Assets.Scripts.Unit
         private GameObject _selectCanvas = null;
         private GameObject _selectImage = null;
         private Vector3 _startHitPoint;
+        private bool _isUnitSelectedBySelector = false;
 
         private void Start()
         {
-            var units = Resources.FindObjectsOfTypeAll(typeof(UnitBase));
+            var units = Resources.FindObjectsOfTypeAll<UnitBase>();
 
-            _controllers = new List<UnitBase>(units as UnitBase[]);
+            _unitControllers = new List<UnitBase>(units);
 
             var gch = FindObjectOfType<GlobalClickHandler>();
             gch.GameObjectLeftClick += OnLeftClick;
@@ -58,24 +59,11 @@ namespace StrategyGame.Assets.Scripts.Unit
 
         private void DrowRect(Image image, Vector3 right)
         {
-            var left = _startHitPoint;
 
-            var lN = new Vector3(right.x, left.y, left.z);
-            var rN = new Vector3(left.x, right.y, right.z);
-
-            var lrN = new Vector3(left.x, left.y, right.z); ;
-            var rlN = new Vector3(right.x, right.y, left.z); ;
-
-            var width = Mathf.Sqrt(Mathf.Pow(lN.x - rN.x, 2) + Mathf.Pow(lN.y - rN.y, 2) + Mathf.Pow(lN.z - rN.z, 2));
-            var height = Mathf.Sqrt(Mathf.Pow(lN.x - rN.x, 2) + Mathf.Pow(lN.y - rN.y, 2) + Mathf.Pow(lN.z - rN.z, 2));
-
-            image.rectTransform.sizeDelta = new Vector2(width, height);
-
-            var deltaX = width / 2 * -1;
-            var deltaZ = height / 2;
-
-
-            image.transform.position = new Vector3(_selectCanvas.transform.position.x + deltaX, 5, _selectCanvas.transform.position.z + deltaZ);
+            image.rectTransform.sizeDelta =
+                CalculationHelper.CalculateRectangleSize(_startHitPoint, right);
+            image.transform.position =
+                CalculationHelper.CalculateRectanglePosition(_selectCanvas.transform.position, image.rectTransform.sizeDelta);
         }
 
         private void CreateSelectCanvas(Vector3 position)
@@ -117,14 +105,14 @@ namespace StrategyGame.Assets.Scripts.Unit
         {
             foreach (var unit in SelectedUnits)
             {
-                unit.Select();
+                unit.Deselect();
             }
         }
 
         public void CreateWorker(GameObject prefab, Vector3 creatorPosition)
         {
             var unit = GameObject.Instantiate(prefab, creatorPosition, new Quaternion(0, 0, 0, 0), this.transform);
-            _controllers.Add(unit.GetComponent<WokerController>());
+            _unitControllers.Add(unit.GetComponent<WokerController>());
         }
 
         private void OnLeftClick(RaycastHit hit)
@@ -132,11 +120,24 @@ namespace StrategyGame.Assets.Scripts.Unit
             FinalizeSelection();
 
             var unit = hit.transform.gameObject.GetComponent<UnitBase>();
-            if (unit == null)
+            if (_isUnitSelectedBySelector)
+            {
+                _isUnitSelectedBySelector = false;
+            }
+            else if (unit == null)
             {
                 DeselectAll();
             }
-            if (unit != null && SelectedUnits.Count > 1)
+
+            if (unit != null)
+            {
+                HideUnitsUI();
+            }
+        }
+
+        private void HideUnitsUI()
+        {
+            if (SelectedUnits.Count > 1)
             {
                 foreach (var u in SelectedUnits)
                 {
@@ -145,9 +146,37 @@ namespace StrategyGame.Assets.Scripts.Unit
             }
         }
 
+        private void SelectAllUnitsInArea()
+        {
+            var image = _selectImage.GetComponent<Image>();
+
+            var selectorPosition = image.transform.position;
+            var selectorSize = image.rectTransform.sizeDelta;
+
+            foreach (var unit in _unitControllers)
+            {
+                if (CalculationHelper.IsInArea(unit.transform.position, selectorPosition, selectorSize))
+                {
+                    unit.Select();
+                    _isUnitSelectedBySelector = true;
+                }
+            }
+            if (_isUnitSelectedBySelector && SelectedUnits.Count > 1)
+            {
+                HideUnitsUI();
+            }
+        }
+
         private void FinalizeSelection()
         {
+            SelectAllUnitsInArea();
+            DestroyCanvas();
+
             _isLeftMouseHold = false;
+        }
+
+        private void DestroyCanvas()
+        {
             _startHitPoint = Vector3.zero;
             Destroy(_selectCanvas);
             _selectCanvas = null;

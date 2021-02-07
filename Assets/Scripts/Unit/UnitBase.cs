@@ -12,6 +12,9 @@ namespace StrategyGame.Assets.Scripts.Unit
         [SerializeField]
         protected Material _selectedMaterial;
 
+        [SerializeField]
+        protected GameObject _unitUI;
+
         protected bool _canMove = false;
         protected bool _isRotating = true;
 
@@ -25,7 +28,28 @@ namespace StrategyGame.Assets.Scripts.Unit
 
         public abstract void HideUI();
         public abstract void AskToMove(Vector3 point);
-        public abstract void Select();
+
+        public virtual void Select()
+        {
+            if (!Selected)
+            {
+                Selected = true;
+                var renderer = GetComponentInChildren<MeshRenderer>();
+                renderer.material = _selectedMaterial;
+                _unitUI.SetActive(true);
+            }
+        }
+
+        public virtual void Deselect()
+        {
+            if (Selected)
+            {
+                Selected = false;
+                var renderer = GetComponentInChildren<MeshRenderer>();
+                renderer.material = _defaultMaterial;
+                _unitUI.SetActive(false);
+            }
+        }
 
         protected virtual void Rotate()
         {
