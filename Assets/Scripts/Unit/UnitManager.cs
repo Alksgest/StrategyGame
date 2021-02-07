@@ -185,7 +185,10 @@ namespace StrategyGame.Assets.Scripts.Unit
 
         private void OnRightClick(RaycastHit hit)
         {
-            MoveUnitsToPoint(hit.point);
+            if (hit.transform.root.tag != "BuildingManager")
+            {
+                MoveUnitsToPoint(hit.point);
+            }
         }
 
     }

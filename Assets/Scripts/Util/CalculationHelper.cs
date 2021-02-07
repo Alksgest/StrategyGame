@@ -6,6 +6,13 @@ namespace StrategyGame.Assets.Scripts.Util
     {
         public static Vector2 CalculateRectangleSize(Vector3 left, Vector3 right)
         {
+            if (left.x < right.x)
+            {
+                var temp = right;
+                right = left;
+                left = temp;
+            }
+            
             var lN = new Vector3(right.x, left.y, left.z);
             var rN = new Vector3(left.x, right.y, right.z);
 
@@ -32,10 +39,7 @@ namespace StrategyGame.Assets.Scripts.Util
             var ap = areaPosition;
             var s = areaSize;
             bool x = op.x <= ap.x + s.x && op.x >= ap.x;
-            bool z = op.z <= ap.z  && op.z >= ap.z - s.y;
-            // Debug.Log($"op: {op}");
-            // Debug.Log($"ap: {ap}");
-            // Debug.Log($"s: {s}");
+            bool z = op.z <= ap.z && op.z >= ap.z - s.y;
 
             return x && z;
         }
