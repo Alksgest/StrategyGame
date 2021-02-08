@@ -6,7 +6,7 @@ using StrategyGame.Assets.Scripts.Util;
 
 namespace StrategyGame.Assets.Scripts.Unit
 {
-    public class WokerController : UnitBase
+    public class WorkerController : UnitBase
     {
         public GameObject ObjectAttachedTo { get; set; }
 
@@ -58,7 +58,7 @@ namespace StrategyGame.Assets.Scripts.Unit
             {
                 if (ObjectAttachedTo != null)
                 {
-                    ObjectAttachedTo.GetComponent<MineEdgeController>().DeatachUnit();
+                    ObjectAttachedTo.GetComponent<MineController>().DeatachUnit(this);
                 }
             }
         }

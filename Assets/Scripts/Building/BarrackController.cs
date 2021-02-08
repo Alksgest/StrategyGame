@@ -9,8 +9,7 @@ namespace StrategyGame.Assets.Scripts.Building
     {
         [SerializeField]
         private GameObject _unitPrefab;
-        [SerializeField]
-        private GameObject _barrackUI;
+
         [SerializeField]
         private GameObject _spawnPoint;
 
@@ -20,36 +19,37 @@ namespace StrategyGame.Assets.Scripts.Building
         {
             _unitManager = FindObjectOfType<UnitManager>();
 
-            var gch = FindObjectOfType<GlobalClickHandler>();
             _isInstantiated = false;
-            gch.LeftMouseButtonUp += OnLeftClick;
         }
 
         public void CreateNewUnit()
         {
-            _barrackUI.SetActive(true);
-
             _unitManager.CreateWorker(_unitPrefab, _spawnPoint.transform.position);
-        }
-
-        private void OnLeftClick(RaycastHit hit)
-        {
-            if (_isInstantiated)
-            {
-                _barrackUI.SetActive(false);
-                if (hit.transform.tag == this.tag && hit.transform.gameObject == this.gameObject)
-                {
-                    _barrackUI.SetActive(!_barrackUI.activeSelf);
-                }
-            }
         }
 
         private void OnDestroy()
         {
             var gch = FindObjectOfType<GlobalClickHandler>();
             _isInstantiated = false;
-            if (gch != null)
-                gch.LeftMouseButtonUp -= OnLeftClick;
+        }
+
+        public override void LeftClick(object obj)
+        {
+            if (_isInstantiated)
+            {
+                if (obj is RaycastHit hit)
+                {
+                    if (hit.transform.tag == this.tag && hit.transform.gameObject == this.gameObject)
+                    {
+                        base.LeftClick(hit);
+                    }
+                }
+            }
+        }
+
+        public override void RightClick(object obj)
+        {
+            base.RightClick(obj);
         }
     }
 }

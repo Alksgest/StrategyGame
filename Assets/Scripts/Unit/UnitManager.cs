@@ -13,9 +13,9 @@ namespace StrategyGame.Assets.Scripts.Unit
 
         public List<UnitBase> SelectedUnits => _unitControllers.Where(unit => unit.Selected).ToList();
 
-        public List<WokerController> SelectedWorkers => SelectedUnits
-                                                        .Where(unit => unit is WokerController)
-                                                        .Select(unit => unit as WokerController)
+        public List<WorkerController> SelectedWorkers => SelectedUnits
+                                                        .Where(unit => unit is WorkerController)
+                                                        .Select(unit => unit as WorkerController)
                                                         .ToList();
 
         private bool _isLeftMouseHold = false;
@@ -117,7 +117,7 @@ namespace StrategyGame.Assets.Scripts.Unit
         public void CreateWorker(GameObject prefab, Vector3 creatorPosition)
         {
             var unit = GameObject.Instantiate(prefab, creatorPosition, new Quaternion(0, 0, 0, 0), this.transform);
-            _unitControllers.Add(unit.GetComponent<WokerController>());
+            _unitControllers.Add(unit.GetComponent<WorkerController>());
         }
 
         private void OnLeftClick(RaycastHit hit)

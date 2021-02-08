@@ -2,14 +2,19 @@ using UnityEngine;
 
 namespace StrategyGame.Assets.Scripts.Building
 {
-    public class BuildingBase : MonoBehaviour
+    public abstract class BuildingBase : MonoBehaviour
     {
         [SerializeField]
         protected bool _isInstantiated = false;
 
-        public string Owner { get; private set; } = "mainPlayer";
+        [SerializeField]
+        protected GameObject _UI;
 
-        public bool CanBePlaced { get; private set; } = true;
+        public string Owner { get; protected set; } = "mainPlayer";
+
+        public bool CanBePlaced { get; protected set; } = true;
+
+        public bool Selected { get; protected set; } = false;
 
         public void Instantiate()
         {
@@ -23,9 +28,36 @@ namespace StrategyGame.Assets.Scripts.Building
             }
         }
 
+        public virtual void LeftClick(object obj)
+        {
+            SetUIActive();
+            Selected = true;
+        }
+
+        public void Deselect()
+        {
+            SetUIInactive();
+            Selected = false;
+        }
+
+        public virtual void RightClick(object obj)
+        {
+
+        }
+
         public void Destroy()
         {
             Destroy(gameObject);
+        }
+
+        public void SetUIActive()
+        {
+            _UI.SetActive(true);
+        }
+
+        public void SetUIInactive()
+        {
+            _UI.SetActive(false);
         }
 
         private void OnCollisionEnter(Collision other)
@@ -33,16 +65,6 @@ namespace StrategyGame.Assets.Scripts.Building
             if (_isInstantiated)
             {
                 CanBePlaced = false;
-                // if (other.gameObject.tag == "Terraine")
-                // {
-                //     Debug.Log("in true");
-                //     CanBePlaced = true;
-                // }
-                // else
-                // {
-                //     Debug.Log("in false");
-                //     CanBePlaced = false;
-                // }
             }
         }
 

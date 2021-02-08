@@ -30,6 +30,7 @@ namespace StrategyGame.Assets.Scripts.UI
         private Vector3 _offset;
 
         private GameManager _gameManager;
+        private BuildingManager _buildingManager;
 
         [SerializeField]
         private NavMeshSurface _surface;
@@ -41,6 +42,7 @@ namespace StrategyGame.Assets.Scripts.UI
             gch.RightMouseButtonUp += OnRightClick;
 
             _gameManager = FindObjectOfType<GameManager>();
+            _buildingManager = FindObjectOfType<BuildingManager>();
         }
 
         private void Update()
@@ -95,6 +97,7 @@ namespace StrategyGame.Assets.Scripts.UI
             building.Instantiate();
             ObjectToCreate = null;
             IsBuildSelected = false;
+            _buildingManager.AddBuilding(building);
         }
 
         public void RemoveUnsettedBuilding()
