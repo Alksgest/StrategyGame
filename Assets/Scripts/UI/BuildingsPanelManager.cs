@@ -4,6 +4,7 @@ using System.Collections;
 using StrategyGame.Assets.Scripts.Building;
 using StrategyGame.Assets.Scripts.Util;
 using StrategyGame.Assets.Scripts.WorldState;
+using UnityEngine.AI;
 
 namespace StrategyGame.Assets.Scripts.UI
 {
@@ -30,11 +31,14 @@ namespace StrategyGame.Assets.Scripts.UI
 
         private GameManager _gameManager;
 
+        [SerializeField]
+        private NavMeshSurface _surface;
+
         private void Awake()
         {
             var gch = FindObjectOfType<GlobalClickHandler>();
-            gch.GameObjectLeftClick += OnLeftClick;
-            gch.GameObjectRightClick += OnRightClick;
+            gch.LeftMouseButtonUp += OnLeftClick;
+            gch.RightMouseButtonUp += OnRightClick;
 
             _gameManager = FindObjectOfType<GameManager>();
         }
@@ -72,6 +76,7 @@ namespace StrategyGame.Assets.Scripts.UI
             var z = Input.GetAxis("Mouse Y");
 
             ObjectToCreate = Instantiate(prefab, new Vector3(x, 5, z), new Quaternion(), _buildingsParent);
+            ObjectToCreate.layer = 8;
             StartCoroutine(WaitForPlaceBuilding(0.5f));
         }
 
@@ -122,6 +127,8 @@ namespace StrategyGame.Assets.Scripts.UI
                 {
                     SetBuildingOnPlace(building);
                     _gameManager.BuyBuilding("mainPlayer", buildingTag);
+
+                    _surface.BuildNavMesh();
                 }
             }
         }

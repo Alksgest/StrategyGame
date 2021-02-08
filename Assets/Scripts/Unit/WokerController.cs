@@ -24,18 +24,12 @@ namespace StrategyGame.Assets.Scripts.Unit
         private void Awake()
         {
             var gch = FindObjectOfType<GlobalClickHandler>();
-            gch.GameObjectLeftClick += OnLeftClick;
+            gch.LeftMouseButtonUp += OnLeftClick;
 
             if (_speedText != null)
             {
                 _speedText.text = $"{_speed}";
             }
-        }
-
-        private void FixedUpdate()
-        {
-            if (_isMoving) Move();
-            if (_isRotating) Rotate();
         }
 
         public override void Select()
@@ -53,17 +47,11 @@ namespace StrategyGame.Assets.Scripts.Unit
 
         public override void AskToMove(Vector3 point)
         {
-            _pointToMove = point;
-            _pointToRotate = point;
-
-            _pointToMove.y = this.transform.position.y;
-
-            _isMoving = true;
-            _isRotating = true;
+            _agent.SetDestination(point);
 
             if (_animator != null)
             {
-                _animator.SetBool("IsRuning", _isMoving);
+                _animator.SetBool("IsRuning", true);
             }
 
             if (this.tag == "AttachedToMineUnit")
@@ -103,7 +91,7 @@ namespace StrategyGame.Assets.Scripts.Unit
         {
             var gch = FindObjectOfType<GlobalClickHandler>();
             if (gch != null)
-                gch.GameObjectLeftClick -= OnLeftClick;
+                gch.LeftMouseButtonUp -= OnLeftClick;
         }
     }
 }

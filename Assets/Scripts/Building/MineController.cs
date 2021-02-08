@@ -27,8 +27,8 @@ namespace StrategyGame.Assets.Scripts.Building
         {
             var gch = FindObjectOfType<GlobalClickHandler>();
 
-            gch.GameObjectRightClick += OnMineRightClick;
-            gch.GameObjectLeftClick += OnMineLeftClick;
+            gch.RightMouseButtonUp += OnMineRightClick;
+            gch.LeftMouseButtonUp += OnMineLeftClick;
 
             _unitManager = FindObjectOfType<UnitManager>();
             _gameManager = FindObjectOfType<GameManager>();
@@ -96,8 +96,8 @@ namespace StrategyGame.Assets.Scripts.Building
 
             if (gch != null)
             {
-                gch.GameObjectRightClick -= OnMineRightClick;
-                gch.GameObjectLeftClick -= OnMineLeftClick;
+                gch.RightMouseButtonUp -= OnMineRightClick;
+                gch.LeftMouseButtonUp -= OnMineLeftClick;
             }
         }
     }

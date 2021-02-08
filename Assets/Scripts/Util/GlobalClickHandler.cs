@@ -6,18 +6,36 @@ namespace StrategyGame.Assets.Scripts.Util
 {
     public class GlobalClickHandler : MonoBehaviour
     {
-        public event Action<RaycastHit> GameObjectLeftClick;
-        public event Action<RaycastHit> GameObjectRightClick;
-        public event Action<RaycastHit> GameObjectLeftClickClickAndHold;
+        public event Action<RaycastHit> LeftMouseButtonUp;
+        public event Action<RaycastHit> LeftMouseButtonHold;
+        public event Action<RaycastHit> LeftMouseButtonDown;
+        public event Action<RaycastHit> RightMouseButtonUp;
 
         private void Update()
         {
-            HandleLeftMouseClick();
-            HandleRightMouseClick();
-            HandleLeftMouseKeyHold();
+            HandleLeftMouseButtonUp();
+            HandleLeftMouseButtonHold();
+            HandleLeftMouseButtonDown();
+            HandleRightMouseButtonUp();
+        }
+        
+        private void HandleLeftMouseButtonDown()
+        {
+            if (Input.GetMouseButtonDown((int)MouseButton.LeftMouseButton))
+            {
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+                if (Physics.Raycast(ray, out RaycastHit hit))
+                {
+                    if (hit.transform != null)
+                    {
+                        LeftMouseButtonDown?.Invoke(hit);
+                    }
+                }
+            }
         }
 
-        private void HandleLeftMouseKeyHold()
+        private void HandleLeftMouseButtonHold()
         {
             if (Input.GetMouseButton((int)MouseButton.LeftMouseButton))
             {
@@ -27,13 +45,13 @@ namespace StrategyGame.Assets.Scripts.Util
                 {
                     if (hit.transform != null)
                     {
-                        GameObjectLeftClickClickAndHold?.Invoke(hit);
+                        LeftMouseButtonHold?.Invoke(hit);
                     }
                 }
             }
         }
 
-        private void HandleRightMouseClick()
+        private void HandleRightMouseButtonUp()
         {
             if (Input.GetMouseButtonUp((int)MouseButton.RightMouseButton))
             {
@@ -43,13 +61,13 @@ namespace StrategyGame.Assets.Scripts.Util
                 {
                     if (hit.transform != null)
                     {
-                        GameObjectRightClick?.Invoke(hit);
+                        RightMouseButtonUp?.Invoke(hit);
                     }
                 }
             }
         }
 
-        private void HandleLeftMouseClick()
+        private void HandleLeftMouseButtonUp()
         {
             if (Input.GetMouseButtonUp((int)MouseButton.LeftMouseButton))
             {
@@ -59,7 +77,7 @@ namespace StrategyGame.Assets.Scripts.Util
                 {
                     if (hit.transform != null)
                     {
-                        GameObjectLeftClick?.Invoke(hit);
+                        LeftMouseButtonUp?.Invoke(hit);
                     }
                 }
             }

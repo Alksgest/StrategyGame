@@ -21,8 +21,8 @@ namespace StrategyGame.Assets.Scripts.Terrain
             _buildingsPanelManager = FindObjectOfType<BuildingsPanelManager>();
 
             var gch = FindObjectOfType<GlobalClickHandler>();
-            gch.GameObjectLeftClick += OnLeftClick;
-            gch.GameObjectRightClick += OnRightClick;
+            gch.LeftMouseButtonUp += OnLeftClick;
+            gch.RightMouseButtonUp += OnRightClick;
         }
 
         private void OnLeftClick(RaycastHit hit)

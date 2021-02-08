@@ -31,9 +31,14 @@ namespace StrategyGame.Assets.Scripts.Unit
             _unitControllers = new List<UnitBase>(units);
 
             var gch = FindObjectOfType<GlobalClickHandler>();
-            gch.GameObjectLeftClick += OnLeftClick;
-            gch.GameObjectRightClick += OnRightClick;
-            gch.GameObjectLeftClickClickAndHold += OnLeftMouseKeyHold;
+            gch.LeftMouseButtonUp += OnLeftClick;
+            gch.RightMouseButtonUp += OnRightClick;
+            gch.LeftMouseButtonHold += OnLeftMouseKeyHold;
+            gch.LeftMouseButtonDown += OnLeftMousButtonDown;
+        }
+
+        private void OnLeftMousButtonDown(RaycastHit obj)
+        {
         }
 
         private void FixedUpdate()
@@ -190,6 +195,5 @@ namespace StrategyGame.Assets.Scripts.Unit
                 MoveUnitsToPoint(hit.point);
             }
         }
-
     }
 }

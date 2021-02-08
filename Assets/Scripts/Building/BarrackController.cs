@@ -22,7 +22,7 @@ namespace StrategyGame.Assets.Scripts.Building
 
             var gch = FindObjectOfType<GlobalClickHandler>();
             _isInstantiated = false;
-            gch.GameObjectLeftClick += OnLeftClick;
+            gch.LeftMouseButtonUp += OnLeftClick;
         }
 
         public void CreateNewUnit()
@@ -49,7 +49,7 @@ namespace StrategyGame.Assets.Scripts.Building
             var gch = FindObjectOfType<GlobalClickHandler>();
             _isInstantiated = false;
             if (gch != null)
-                gch.GameObjectLeftClick -= OnLeftClick;
+                gch.LeftMouseButtonUp -= OnLeftClick;
         }
     }
 }

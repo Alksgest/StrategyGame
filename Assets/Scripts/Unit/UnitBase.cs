@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace StrategyGame.Assets.Scripts.Unit
 {
@@ -16,18 +17,15 @@ namespace StrategyGame.Assets.Scripts.Unit
         protected GameObject _unitUI;
 
         protected bool _canMove = false;
-        protected bool _isRotating = true;
-
-        protected bool _isMoving = false;
-        protected Vector3 _pointToMove;
-        protected Vector3 _pointToRotate;
-
         protected Animator _animator;
 
         public bool Selected { get; protected set; } = false;
 
         public abstract void HideUI();
         public abstract void AskToMove(Vector3 point);
+
+        [SerializeField]
+        protected NavMeshAgent _agent;
 
         public virtual void Select()
         {
@@ -51,41 +49,41 @@ namespace StrategyGame.Assets.Scripts.Unit
             }
         }
 
-        protected virtual void Rotate()
-        {
-            if (_pointToRotate != null)
-            {
-                var targetRotation = Quaternion.LookRotation(_pointToRotate - transform.position);
-                var angles = targetRotation.eulerAngles;
-                angles.y += 180;
-                targetRotation.eulerAngles = angles;
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 10 * Time.deltaTime);
+        // protected virtual void Rotate()
+        // {
+        //     if (_pointToRotate != null)
+        //     {
+        //         var targetRotation = Quaternion.LookRotation(_pointToRotate - transform.position);
+        //         var angles = targetRotation.eulerAngles;
+        //         angles.y += 180;
+        //         targetRotation.eulerAngles = angles;
+        //         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 10 * Time.deltaTime);
 
-                if (Mathf.Abs(targetRotation.eulerAngles.y - transform.rotation.eulerAngles.y) <= 2)
-                {
-                    _isRotating = false;
-                }
-            }
-        }
+        //         if (Mathf.Abs(targetRotation.eulerAngles.y - transform.rotation.eulerAngles.y) <= 2)
+        //         {
+        //             _isRotating = false;
+        //         }
+        //     }
+        // }
 
-        protected virtual void Move()
-        {
-            if (_canMove)
-            {
-                var delta = _pointToMove - transform.position;
-                delta.Normalize();
-                transform.position = transform.position + (delta * _speed * Time.deltaTime);
+        // protected virtual void Move()
+        // {
+        //     if (_canMove)
+        //     {
+        //         var delta = _pointToMove - transform.position;
+        //         delta.Normalize();
+        //         transform.position = transform.position + (delta * _speed * Time.deltaTime);
 
-                var vec = this.transform.position - _pointToMove;
-                if (Mathf.Abs(vec.x) <= 0.1 && Mathf.Abs(vec.z) <= 0.1)
-                {
-                    _isMoving = false;
-                    if (_animator != null)
-                    {
-                        _animator.SetBool("IsRuning", _isMoving);
-                    }
-                }
-            }
-        }
+        //         var vec = this.transform.position - _pointToMove;
+        //         if (Mathf.Abs(vec.x) <= 0.1 && Mathf.Abs(vec.z) <= 0.1)
+        //         {
+        //             _isMoving = false;
+        //             if (_animator != null)
+        //             {
+        //                 _animator.SetBool("IsRuning", _isMoving);
+        //             }
+        //         }
+        //     }
+        // }
     }
 }
