@@ -55,7 +55,7 @@ namespace StrategyGame.Assets.Scripts.Unit
 
             if (_animator != null)
             {
-                _animator.SetBool("IsRuning", true);
+                // _animator.SetBool("IsRuning", true);
             }
         }
 

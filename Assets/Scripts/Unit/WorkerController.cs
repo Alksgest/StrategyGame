@@ -53,6 +53,14 @@ namespace StrategyGame.Assets.Scripts.Unit
                 _speedText.text = $"{_currentStats.Speed}";
                 _navMeshAgent.speed = _currentStats.Speed;
             }
+
+            if (this.tag == "AttachedToMineUnit")
+            {
+                if (_animator != null && !_animator.GetBool("IsMining")) // TOOD: rewrite this piece
+                {
+                    _animator.SetBool("IsMining", true);
+                }
+            }
         }
 
         public override void Select()
@@ -84,7 +92,7 @@ namespace StrategyGame.Assets.Scripts.Unit
 
             if (_animator != null)
             {
-                _animator.SetBool("IsRuning", true);
+                // _animator.SetBool("IsRuning", true);
             }
 
             if (this.tag == "AttachedToMineUnit")
@@ -92,6 +100,11 @@ namespace StrategyGame.Assets.Scripts.Unit
                 if (ObjectAttachedTo != null)
                 {
                     ObjectAttachedTo.GetComponent<MineController>().DeatachUnit(this);
+                }
+
+                if (_animator != null)
+                {
+                    _animator.SetBool("IsMining", false);
                 }
             }
         }
