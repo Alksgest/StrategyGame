@@ -33,9 +33,9 @@ namespace StrategyGame.Assets.Scripts.Unit
             var gch = FindObjectOfType<GlobalClickHandler>();
             gch.LeftMouseButtonUp += OnLeftClick;
 
-            if (_navMeshAgent != null)
+            if (_navMeshAgent == null)
             {
-                _navMeshAgent = FindObjectOfType<NavMeshAgent>();
+                _navMeshAgent = GetComponent<NavMeshAgent>();
             }
 
             if (_speedText != null)

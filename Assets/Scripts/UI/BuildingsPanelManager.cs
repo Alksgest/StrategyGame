@@ -119,6 +119,7 @@ namespace StrategyGame.Assets.Scripts.UI
                 Destroy(ObjectToCreate.gameObject);
                 ObjectToCreate = null;
                 IsBuildSelected = false;
+                _worker.IsBuilding = false;
             }
         }
 
