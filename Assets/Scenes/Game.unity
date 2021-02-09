@@ -370,6 +370,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: CubeUnit
       objectReference: {fileID: 0}
+    - target: {fileID: 6582804445382717015, guid: 317976e60f6456d4986ce17c00e503ae,
+        type: 3}
+      propertyPath: _currentStats.Speed
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 6582804445382717015, guid: 317976e60f6456d4986ce17c00e503ae,
+        type: 3}
+      propertyPath: _currentStats.Health
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 7967566423582563192, guid: 317976e60f6456d4986ce17c00e503ae,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -444,11 +454,6 @@ PrefabInstance:
       propertyPath: _camera
       value: 
       objectReference: {fileID: 1883878300}
-    - target: {fileID: 7059732006992515478, guid: b289dd46dbc1d6e43b5b0ba6f933b029,
-        type: 3}
-      propertyPath: _worker
-      value: 
-      objectReference: {fileID: 1849325225}
     - target: {fileID: 7967566423582563192, guid: b289dd46dbc1d6e43b5b0ba6f933b029,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -926,18 +931,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1664248901}
   m_CullTransparentMesh: 0
---- !u!114 &1849325225 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: -2132822002929393236, guid: b289dd46dbc1d6e43b5b0ba6f933b029,
-    type: 3}
-  m_PrefabInstance: {fileID: 862281579}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e42472805975ec34ba1b5beaba34d44a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1883878295
 GameObject:
   m_ObjectHideFlags: 0

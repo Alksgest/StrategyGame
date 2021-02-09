@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-using StrategyGame.Assets.Scripts.Building;
 using StrategyGame.Assets.Scripts.Util;
 
 namespace StrategyGame.Assets.Scripts.Unit
@@ -19,6 +18,8 @@ namespace StrategyGame.Assets.Scripts.Unit
 
             var renderer = GetComponentInChildren<MeshRenderer>();
             renderer.material = _defaultMaterial;
+
+            _previousStats = _currentStats;
         }
 
         private void Awake()
@@ -28,14 +29,19 @@ namespace StrategyGame.Assets.Scripts.Unit
 
             if (_speedText != null)
             {
-                _speedText.text = $"{_speed}";
+                _speedText.text = $"{_currentStats.Speed}";
             }
         }
 
         private void FixedUpdate()
         {
-            // if (_isMoving) Move();
-            // if (_isRotating) Rotate();
+            if (_currentStats != _previousStats)
+            {
+                _previousStats = UnitStats.MakeCopy(_currentStats);
+
+                _speedText.text = $"{_currentStats.Speed}";
+                _navMeshAgent.speed = _currentStats.Speed;
+            }
         }
 
         public override void HideUI()
@@ -45,7 +51,7 @@ namespace StrategyGame.Assets.Scripts.Unit
 
         public override void AskToMove(Vector3 point)
         {
-            _agent.SetDestination(point);
+            _navMeshAgent.SetDestination(point);
 
             if (_animator != null)
             {

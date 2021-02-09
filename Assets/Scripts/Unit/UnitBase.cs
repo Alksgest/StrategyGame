@@ -3,11 +3,9 @@ using UnityEngine.AI;
 
 namespace StrategyGame.Assets.Scripts.Unit
 {
+
     public abstract class UnitBase : MonoBehaviour
     {
-        [SerializeField]
-        protected float _speed = 0.01f;
-
         [SerializeField]
         protected Material _defaultMaterial;
         [SerializeField]
@@ -25,7 +23,11 @@ namespace StrategyGame.Assets.Scripts.Unit
         public abstract void AskToMove(Vector3 point);
 
         [SerializeField]
-        protected NavMeshAgent _agent;
+        protected NavMeshAgent _navMeshAgent;
+
+        [SerializeField]
+        protected UnitStats _currentStats;
+        protected UnitStats _previousStats;
 
         public virtual void Select()
         {
