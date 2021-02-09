@@ -73,14 +73,16 @@ namespace StrategyGame.Assets.Scripts.Building
         {
             BuildingBase building;
 
-            if (hit.transform.tag == "MineEdge")
-            {
-                building = hit.transform.parent.gameObject.GetComponent<BuildingBase>();
-            }
-            else
-            {
-                building = hit.transform.gameObject.GetComponent<BuildingBase>();
-            }
+            building = hit.transform.parent.gameObject.GetComponent<BuildingBase>();
+
+            // if (hit.transform.tag == "MineEdge")
+            // {
+            //     building = hit.transform.parent.gameObject.GetComponent<BuildingBase>();
+            // }
+            // else
+            // {
+            //     building = hit.transform.gameObject.GetComponent<BuildingBase>();
+            // }
 
             return building;
         }
