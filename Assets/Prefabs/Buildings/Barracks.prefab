@@ -243,9 +243,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isInstantiated: 0
+  _UI: {fileID: 4428716598567582133}
   _unitPrefab: {fileID: 4695825492272960227, guid: b289dd46dbc1d6e43b5b0ba6f933b029,
     type: 3}
-  _barrackUI: {fileID: 4428716598567582133}
   _spawnPoint: {fileID: 8936739303693359084}
 --- !u!54 &6784384117686169124
 Rigidbody:
