@@ -23,6 +23,7 @@ namespace StrategyGame.Assets.Scripts.Unit
         private GameObject _selectImage = null;
         private Vector3 _startHitPoint;
         private bool _isUnitSelectedBySelector = false;
+        private bool _rightMousePressed = false;
 
         private void Start()
         {
@@ -34,16 +35,23 @@ namespace StrategyGame.Assets.Scripts.Unit
             gch.LeftMouseButtonUp += OnLeftClick;
             gch.RightMouseButtonUp += OnRightClick;
             gch.LeftMouseButtonHold += OnLeftMouseKeyHold;
-            gch.LeftMouseButtonDown += OnLeftMousButtonDown;
+            gch.RightMouseButtonDown += OnRightMouseButtonDown;
+            gch.RightMouseButtonUp += OnRightMouseButtonUp;
         }
 
-        private void OnLeftMousButtonDown(RaycastHit obj)
+        private void OnRightMouseButtonUp(RaycastHit hit)
         {
+            _rightMousePressed = false;
+        }
+
+        private void OnRightMouseButtonDown(RaycastHit hit)
+        {
+            _rightMousePressed = true;
         }
 
         private void FixedUpdate()
         {
-            if (_isLeftMouseHold)
+            if (_isLeftMouseHold && !_rightMousePressed && !SelectedWorkers.Any(el => el.IsBuilding))
             {
                 var mouse = Input.mousePosition;
                 var castPoint = Camera.main.ScreenPointToRay(mouse);
@@ -133,7 +141,6 @@ namespace StrategyGame.Assets.Scripts.Unit
             {
                 DeselectAll();
             }
-
             if (unit != null)
             {
                 HideUnitsUI();
@@ -153,22 +160,25 @@ namespace StrategyGame.Assets.Scripts.Unit
 
         private void SelectAllUnitsInArea()
         {
-            var image = _selectImage.GetComponent<Image>();
-
-            var selectorPosition = image.transform.position;
-            var selectorSize = image.rectTransform.sizeDelta;
-
-            foreach (var unit in _unitControllers)
+            if (_selectImage != null)
             {
-                if (CalculationHelper.IsInArea(unit.transform.position, selectorPosition, selectorSize))
+                var image = _selectImage.GetComponent<Image>();
+
+                var selectorPosition = image.transform.position;
+                var selectorSize = image.rectTransform.sizeDelta;
+
+                foreach (var unit in _unitControllers)
                 {
-                    unit.Select();
-                    _isUnitSelectedBySelector = true;
+                    if (CalculationHelper.IsInArea(unit.transform.position, selectorPosition, selectorSize))
+                    {
+                        unit.Select();
+                        _isUnitSelectedBySelector = true;
+                    }
                 }
-            }
-            if (_isUnitSelectedBySelector && SelectedUnits.Count > 1)
-            {
-                HideUnitsUI();
+                if (_isUnitSelectedBySelector && SelectedUnits.Count > 1)
+                {
+                    HideUnitsUI();
+                }
             }
         }
 

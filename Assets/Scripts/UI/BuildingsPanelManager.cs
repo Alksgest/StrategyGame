@@ -65,7 +65,6 @@ namespace StrategyGame.Assets.Scripts.UI
         {
             if (ObjectToCreate != null)
             {
-                Debug.Log("object is not null");
                 var mouse = Input.mousePosition;
                 var castPoint = Camera.main.ScreenPointToRay(mouse);
 

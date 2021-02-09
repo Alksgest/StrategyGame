@@ -10,15 +10,51 @@ namespace StrategyGame.Assets.Scripts.Util
         public event Action<RaycastHit> LeftMouseButtonHold;
         public event Action<RaycastHit> LeftMouseButtonDown;
         public event Action<RaycastHit> RightMouseButtonUp;
+        public event Action<RaycastHit> RightMouseButtonHold;
+        public event Action<RaycastHit> RightMouseButtonDown;
 
         private void Update()
         {
-            HandleLeftMouseButtonUp();
-            HandleLeftMouseButtonHold();
             HandleLeftMouseButtonDown();
+            HandleLeftMouseButtonHold();
+            HandleLeftMouseButtonUp();
+            HandleRightMouseButtonDown();
+            HandleRightMouseButtonHold();
             HandleRightMouseButtonUp();
         }
-        
+
+        private void HandleRightMouseButtonDown()
+        {
+            if (Input.GetMouseButtonDown((int)MouseButton.RightMouseButton))
+            {
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+                if (Physics.Raycast(ray, out RaycastHit hit))
+                {
+                    if (hit.transform != null)
+                    {
+                        RightMouseButtonDown?.Invoke(hit);
+                    }
+                }
+            }
+        }
+
+        private void HandleRightMouseButtonHold()
+        {
+            if (Input.GetMouseButton((int)MouseButton.RightMouseButton))
+            {
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+                if (Physics.Raycast(ray, out RaycastHit hit))
+                {
+                    if (hit.transform != null)
+                    {
+                        RightMouseButtonHold?.Invoke(hit);
+                    }
+                }
+            }
+        }
+
         private void HandleLeftMouseButtonDown()
         {
             if (Input.GetMouseButtonDown((int)MouseButton.LeftMouseButton))
