@@ -5,6 +5,8 @@ using StrategyGame.Assets.Scripts.Building;
 using StrategyGame.Assets.Scripts.Util;
 using StrategyGame.Assets.Scripts.WorldState;
 using UnityEngine.AI;
+using StrategyGame.Assets.Scripts.Unit;
+using System.Linq;
 
 namespace StrategyGame.Assets.Scripts.UI
 {
@@ -16,11 +18,10 @@ namespace StrategyGame.Assets.Scripts.UI
         private GameObject _minePrefab;
 
         [SerializeField]
-        private Transform _buildingsParent;
-
+        private Camera _camera;
 
         [SerializeField]
-        private Camera _camera;
+        private GameObject _buildingPanelUI;
 
         public bool IsBuildSelected { get; private set; } = false;
 
@@ -31,9 +32,12 @@ namespace StrategyGame.Assets.Scripts.UI
 
         private GameManager _gameManager;
         private BuildingManager _buildingManager;
+        private UnitManager _unitManager;
+        private NavMeshSurface _surface;
 
         [SerializeField]
-        private NavMeshSurface _surface;
+        private WorkerController _worker;
+
 
         private void Awake()
         {
@@ -43,6 +47,10 @@ namespace StrategyGame.Assets.Scripts.UI
 
             _gameManager = FindObjectOfType<GameManager>();
             _buildingManager = FindObjectOfType<BuildingManager>();
+            _unitManager = FindObjectOfType<UnitManager>();
+            _surface = FindObjectOfType<NavMeshSurface>();
+
+            _camera = Camera.main;
         }
 
         private void Update()
@@ -57,6 +65,7 @@ namespace StrategyGame.Assets.Scripts.UI
         {
             if (ObjectToCreate != null)
             {
+                Debug.Log("object is not null");
                 var mouse = Input.mousePosition;
                 var castPoint = Camera.main.ScreenPointToRay(mouse);
 
@@ -77,8 +86,11 @@ namespace StrategyGame.Assets.Scripts.UI
             var x = Input.GetAxis("Mouse X");
             var z = Input.GetAxis("Mouse Y");
 
-            ObjectToCreate = Instantiate(prefab, new Vector3(x, 5, z), new Quaternion(), _buildingsParent);
+            ObjectToCreate = Instantiate(prefab, new Vector3(x, 5, z), new Quaternion(), _buildingManager.transform);
             ObjectToCreate.layer = 8;
+
+            _worker.IsBuilding = true;
+
             StartCoroutine(WaitForPlaceBuilding(0.5f));
         }
 
@@ -98,6 +110,7 @@ namespace StrategyGame.Assets.Scripts.UI
             ObjectToCreate = null;
             IsBuildSelected = false;
             _buildingManager.AddBuilding(building);
+            _worker.IsBuilding = false;
         }
 
         public void RemoveUnsettedBuilding()
@@ -139,6 +152,23 @@ namespace StrategyGame.Assets.Scripts.UI
         private void OnRightClick(RaycastHit hit)
         {
             RemoveUnsettedBuilding();
+
+            if (hit.transform.tag == this.tag && !_unitManager.SelectedUnits.Any() && !_buildingManager.SelectedBuildings.Any())
+            {
+                ManageEmptyRightClick();
+            }
+        }
+
+        private void ManageEmptyRightClick()
+        {
+            if (_buildingPanelUI.activeSelf)
+            {
+                _buildingPanelUI.SetActive(false);
+            }
+            else
+            {
+                _buildingPanelUI.SetActive(true);
+            }
         }
     }
 }

@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 using StrategyGame.Assets.Scripts.Building;
 using StrategyGame.Assets.Scripts.Util;
+using StrategyGame.Assets.Scripts.UI;
 
 namespace StrategyGame.Assets.Scripts.Unit
 {
@@ -11,7 +12,12 @@ namespace StrategyGame.Assets.Scripts.Unit
         public GameObject ObjectAttachedTo { get; set; }
 
         [SerializeField]
+        private BuildingsPanelManager _buildingsPanelManager;
+
+        [SerializeField]
         private Text _speedText;
+
+        public bool IsBuilding { get; set; }
 
         private void Start()
         {
@@ -34,15 +40,25 @@ namespace StrategyGame.Assets.Scripts.Unit
 
         public override void Select()
         {
-            Selected = !Selected;
-            var renderer = GetComponentInChildren<MeshRenderer>();
-            renderer.material = Selected ? _selectedMaterial : _defaultMaterial;
-            _unitUI.SetActive(Selected);
+            if (!Selected)
+            {
+                _buildingsPanelManager.gameObject.SetActive(true);
+                base.Select();
+            }
+        }
+        public override void Deselect()
+        {
+            if (Selected)
+            {
+                _buildingsPanelManager.gameObject.SetActive(false);
+                base.Deselect();
+            }
         }
 
         public override void HideUI()
         {
             _unitUI.SetActive(false);
+            _buildingsPanelManager.gameObject.SetActive(false);
         }
 
         public override void AskToMove(Vector3 point)
@@ -81,7 +97,7 @@ namespace StrategyGame.Assets.Scripts.Unit
 
         private void OnLeftClick(RaycastHit hit)
         {
-            if (hit.transform.gameObject == this.gameObject)
+            if (hit.transform.gameObject == this.gameObject && !_buildingsPanelManager.IsBuildSelected)
             {
                 Select();
             }

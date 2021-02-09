@@ -124,12 +124,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 23800000, guid: 6053da5756e647040bc8ea349e85e744, type: 2}
---- !u!1 &238957388 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8283108983677526932, guid: a0dbf74bcfa4af3488aaa410587338cb,
-    type: 3}
-  m_PrefabInstance: {fileID: 4187491963373399013}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &253882876 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4428716598567582133, guid: b9abedd4a09f72f4b98eb315cd30c337,
@@ -440,16 +434,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 588388027}
     m_Modifications:
-    - target: {fileID: -2132822002929393236, guid: b289dd46dbc1d6e43b5b0ba6f933b029,
-        type: 3}
-      propertyPath: _speed
-      value: 15
-      objectReference: {fileID: 0}
     - target: {fileID: 4695825492272960227, guid: b289dd46dbc1d6e43b5b0ba6f933b029,
         type: 3}
       propertyPath: m_Name
       value: Worker
       objectReference: {fileID: 0}
+    - target: {fileID: 7059732006992515478, guid: b289dd46dbc1d6e43b5b0ba6f933b029,
+        type: 3}
+      propertyPath: _camera
+      value: 
+      objectReference: {fileID: 1883878300}
+    - target: {fileID: 7059732006992515478, guid: b289dd46dbc1d6e43b5b0ba6f933b029,
+        type: 3}
+      propertyPath: _worker
+      value: 
+      objectReference: {fileID: 1849325225}
     - target: {fileID: 7967566423582563192, guid: b289dd46dbc1d6e43b5b0ba6f933b029,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -579,7 +578,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1084695742}
-  - component: {fileID: 1084695741}
   m_Layer: 8
   m_Name: Terrain
   m_TagString: Terrain
@@ -587,18 +585,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
   m_IsActive: 1
---- !u!114 &1084695741
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1084695740}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe237efa32456134b9489d4dd3b886cd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1084695742
 Transform:
   m_ObjectHideFlags: 0
@@ -940,6 +926,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1664248901}
   m_CullTransparentMesh: 0
+--- !u!114 &1849325225 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -2132822002929393236, guid: b289dd46dbc1d6e43b5b0ba6f933b029,
+    type: 3}
+  m_PrefabInstance: {fileID: 862281579}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e42472805975ec34ba1b5beaba34d44a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1883878295
 GameObject:
   m_ObjectHideFlags: 0
@@ -1133,7 +1131,6 @@ GameObject:
   - component: {fileID: 1945984807}
   - component: {fileID: 1945984809}
   - component: {fileID: 1945984808}
-  - component: {fileID: 1945984810}
   m_Layer: 8
   m_Name: Terrain
   m_TagString: Terrain
@@ -1199,19 +1196,6 @@ Terrain:
   m_GroupingID: 0
   m_RenderingLayerMask: 1
   m_AllowAutoConnect: 1
---- !u!114 &1945984810
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1945984806}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 565a822204e5a1841a38e31ca2413af5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _buildingPanelUI: {fileID: 238957388}
 --- !u!114 &1997660480 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7412069380508002290, guid: a112b9a2317f8ce4381f3af751069e58,

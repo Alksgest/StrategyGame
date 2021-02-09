@@ -129,7 +129,7 @@ namespace StrategyGame.Assets.Scripts.Unit
             {
                 _isUnitSelectedBySelector = false;
             }
-            else if (unit == null)
+            else if (unit == null && !SelectedWorkers.Any(el => el.IsBuilding))
             {
                 DeselectAll();
             }
