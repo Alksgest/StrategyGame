@@ -60,25 +60,15 @@ namespace StrategyGame.Assets.Scripts.Building
             if (_isInstantiated)
             {
                 base.LeftClick(obj);
-                // if (obj is RaycastHit hit)
-                // {
-                //     if (hit.transform.parent.gameObject == this.gameObject)
-                //     {
-                //         base.LeftClick(hit);
-                //     }
-                // }
             }
         }
 
         public override void RightClick(object obj)
         {
-            if (obj is RaycastHit hit)
+            if (_isInstantiated)
             {
-                if (hit.transform.parent.gameObject == this.gameObject)
-                {
-                    SendUnitsToEdge();
-                    base.RightClick(hit);
-                }
+                SendUnitsToEdge();
+                base.RightClick(obj);
             }
         }
 
