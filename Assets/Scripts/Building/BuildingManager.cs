@@ -14,7 +14,7 @@ namespace StrategyGame.Assets.Scripts.Building
 
         private void Awake()
         {
-            var buildings = FindObjectsOfType<BuildingBase>();
+            var buildings = FindObjectsOfType<BuildingBase>(); // !!!!! TODO: remove from this list if delete building
             _buildings = new List<BuildingBase>();
             foreach (var b in buildings)
             {
