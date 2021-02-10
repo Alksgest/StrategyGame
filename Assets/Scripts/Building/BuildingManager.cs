@@ -35,15 +35,17 @@ namespace StrategyGame.Assets.Scripts.Building
 
         private void OnRightClick(RaycastHit hit)
         {
-            BuildingBase building = GetBuilding(hit);
+            if (hit.transform.gameObject.tag != "BuildingBlock" && hit.transform.gameObject.tag != "MineEdge")
+            {
+                DeselectAll();
+                return;
+            }
+
+            BuildingBase building = GetBuilding(hit.transform.gameObject);
 
             if (building != null)
             {
                 building.RightClick(hit);
-            }
-            else
-            {
-                DeselectAll();
             }
         }
 
@@ -57,34 +59,30 @@ namespace StrategyGame.Assets.Scripts.Building
 
         private void OnLeftClick(RaycastHit hit)
         {
-            BuildingBase building = GetBuilding(hit);
+            if (hit.transform.gameObject.tag != "BuildingBlock" && hit.transform.gameObject.tag != "MineEdge")
+            {
+                DeselectAll();
+                return;
+            }
+
+            BuildingBase building = GetBuilding(hit.transform.gameObject);
 
             if (building != null)
             {
                 building.LeftClick(hit);
             }
-            else
-            {
-                DeselectAll();
-            }
         }
 
-        private static BuildingBase GetBuilding(RaycastHit hit)
+        private static BuildingBase GetBuilding(GameObject gameObject)
         {
-            BuildingBase building;
+            var bb = gameObject.GetComponent<BuildingBase>();
+            if (bb == null)
+            {
+                bb = GetBuilding(gameObject.transform.parent.gameObject);
+            }
 
-            building = hit.transform.parent.gameObject.GetComponent<BuildingBase>();
-
-            // if (hit.transform.tag == "MineEdge")
-            // {
-            //     building = hit.transform.parent.gameObject.GetComponent<BuildingBase>();
-            // }
-            // else
-            // {
-            //     building = hit.transform.gameObject.GetComponent<BuildingBase>();
-            // }
-
-            return building;
+            return bb;
         }
+
     }
 }

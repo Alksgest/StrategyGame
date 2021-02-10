@@ -11,6 +11,7 @@ TagManager:
   - MineEdge
   - AttachedToMineUnit
   - BuildingManager
+  - BuildingBlock
   layers:
   - Default
   - TransparentFX

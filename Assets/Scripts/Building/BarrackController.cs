@@ -37,13 +37,14 @@ namespace StrategyGame.Assets.Scripts.Building
         {
             if (_isInstantiated)
             {
-                if (obj is RaycastHit hit)
-                {
-                    if (hit.transform.root.gameObject == this.gameObject)
-                    {
-                        base.LeftClick(hit);
-                    }
-                }
+                base.LeftClick(obj);
+                // if (obj is RaycastHit hit)
+                // {
+                //     if (hit.transform.root.gameObject == this.gameObject)
+                //     {
+                //         base.LeftClick(hit);
+                //     }
+                // }
             }
         }
 
