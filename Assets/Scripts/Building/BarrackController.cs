@@ -39,8 +39,7 @@ namespace StrategyGame.Assets.Scripts.Building
             {
                 if (obj is RaycastHit hit)
                 {
-                    // if (hit.transform.tag == this.tag && hit.transform.gameObject == this.gameObject)
-                    if (hit.transform.parent.gameObject == this.gameObject)
+                    if (hit.transform.root.gameObject == this.gameObject)
                     {
                         base.LeftClick(hit);
                     }
