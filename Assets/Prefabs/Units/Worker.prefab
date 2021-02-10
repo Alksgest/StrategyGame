@@ -114,7 +114,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 126
   m_CollisionDetection: 0
 --- !u!114 &-2132822002929393236
 MonoBehaviour:
@@ -128,6 +128,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e42472805975ec34ba1b5beaba34d44a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _unitId: 
   _defaultMaterial: {fileID: 2100000, guid: e17cc9ee7e4152a4e9ed3b67a8d4a1db, type: 2}
   _selectedMaterial: {fileID: 2100000, guid: 76544da34e0ca5443a3098f5b78d03e6, type: 2}
   _unitUI: {fileID: 2194877945874629389}
@@ -149,7 +150,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 4695825492272960227}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 1
+  m_Radius: 0.6
   m_Speed: 15
   m_Acceleration: 30
   avoidancePriority: 50

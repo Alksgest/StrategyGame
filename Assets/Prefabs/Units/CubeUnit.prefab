@@ -111,11 +111,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71636d4199a9039449783a8edcb707be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 10
+  _unitId: 
   _defaultMaterial: {fileID: 2100000, guid: e17cc9ee7e4152a4e9ed3b67a8d4a1db, type: 2}
   _selectedMaterial: {fileID: 2100000, guid: 76544da34e0ca5443a3098f5b78d03e6, type: 2}
   _unitUI: {fileID: 8969434690966046223}
-  _agent: {fileID: 5321586541879667215}
+  _navMeshAgent: {fileID: 5321586541879667215}
+  _currentStats:
+    Speed: 15
+    Health: 10
+    Attack: 0
+    Armor: 0
+    Defence: 0
   _speedText: {fileID: 5185758582311569132}
 --- !u!54 &2563002402483510869
 Rigidbody:
@@ -131,7 +137,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 126
   m_CollisionDetection: 0
 --- !u!195 &5321586541879667215
 NavMeshAgent:

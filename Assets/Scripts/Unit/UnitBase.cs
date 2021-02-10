@@ -1,11 +1,18 @@
+using System;
+
 using UnityEngine;
 using UnityEngine.AI;
 
 namespace StrategyGame.Assets.Scripts.Unit
 {
 
-    public abstract class UnitBase : MonoBehaviour
+    public abstract class UnitBase : MonoBehaviour, IEquatable<UnitBase>
     {
+
+        [SerializeField]
+        protected string _unitId;
+        public string UnitId => _unitId;
+
         [SerializeField]
         protected Material _defaultMaterial;
         [SerializeField]
@@ -49,6 +56,16 @@ namespace StrategyGame.Assets.Scripts.Unit
                 renderer.material = _defaultMaterial;
                 _unitUI.SetActive(false);
             }
+        }
+
+        public bool Equals(UnitBase other)
+        {
+            return this._unitId == other.UnitId;
+        }
+
+        public override int GetHashCode()
+        {
+            return this._unitId.GetHashCode();
         }
 
         // protected virtual void Rotate()

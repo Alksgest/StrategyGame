@@ -22,14 +22,13 @@ namespace StrategyGame.Assets.Scripts.Unit
         private GameObject _selectCanvas = null;
         private GameObject _selectImage = null;
         private Vector3 _startHitPoint;
-        private bool _isUnitSelectedBySelector = false;
         private bool _rightMousePressed = false;
 
         private void Start()
         {
             var units = Resources.FindObjectsOfTypeAll<UnitBase>();
 
-            _unitControllers = new List<UnitBase>(units);
+            _unitControllers = units.Distinct().ToList();
 
             var gch = FindObjectOfType<GlobalClickHandler>();
             gch.LeftMouseButtonUp += OnLeftClick;
@@ -51,23 +50,23 @@ namespace StrategyGame.Assets.Scripts.Unit
 
         private void FixedUpdate()
         {
-            if (_isLeftMouseHold && !_rightMousePressed && !SelectedWorkers.Any(el => el.IsBuilding))
-            {
-                var mouse = Input.mousePosition;
-                var castPoint = Camera.main.ScreenPointToRay(mouse);
+            // if (_isLeftMouseHold && !_rightMousePressed && !SelectedWorkers.Any(el => el.IsBuilding))
+            // {
+            //     var mouse = Input.mousePosition;
+            //     var castPoint = Camera.main.ScreenPointToRay(mouse);
 
-                if (Physics.Raycast(castPoint, out RaycastHit hit, Mathf.Infinity))
-                {
-                    if (_selectCanvas == null)
-                    {
-                        _startHitPoint = hit.point;
-                        CreateSelectCanvas(_startHitPoint);
-                    }
-                    var image = _selectImage.GetComponent<Image>();
+            //     if (Physics.Raycast(castPoint, out RaycastHit hit, Mathf.Infinity))
+            //     {
+            //         if (_selectCanvas == null)
+            //         {
+            //             _startHitPoint = hit.point;
+            //             CreateSelectCanvas(_startHitPoint);
+            //         }
+            //         var image = _selectImage.GetComponent<Image>();
 
-                    DrowRect(image, hit.point);
-                }
-            }
+            //         DrowRect(image, hit.point);
+            //     }
+            // }
         }
 
         private void DrowRect(Image image, Vector3 right)
@@ -130,20 +129,22 @@ namespace StrategyGame.Assets.Scripts.Unit
 
         private void OnLeftClick(RaycastHit hit)
         {
-            FinalizeSelection();
+            var isWorkerBusy = SelectedWorkers.Any(el => el.IsBuilding);
+
+            // if (_selectCanvas != null && !isWorkerBusy)
+            // {
+            //     DeselectAll();
+            //     FinalizeSelection();
+            // }
 
             var unit = hit.transform.gameObject.GetComponent<UnitBase>();
-            if (_isUnitSelectedBySelector)
-            {
-                _isUnitSelectedBySelector = false;
-            }
-            else if (unit == null && !SelectedWorkers.Any(el => el.IsBuilding))
-            {
-                DeselectAll();
-            }
             if (unit != null)
             {
-                HideUnitsUI();
+                unit.Select();
+            }
+            else if (unit == null && !isWorkerBusy)
+            {
+                DeselectAll();
             }
         }
 
@@ -167,15 +168,14 @@ namespace StrategyGame.Assets.Scripts.Unit
                 var selectorPosition = image.transform.position;
                 var selectorSize = image.rectTransform.sizeDelta;
 
-                foreach (var unit in _unitControllers)
+                foreach (var unit in _unitControllers) //TODO: rewrite this with smth more quick
                 {
                     if (CalculationHelper.IsInArea(unit.transform.position, selectorPosition, selectorSize))
                     {
                         unit.Select();
-                        _isUnitSelectedBySelector = true;
                     }
                 }
-                if (_isUnitSelectedBySelector && SelectedUnits.Count > 1)
+                if (SelectedUnits.Count > 1)
                 {
                     HideUnitsUI();
                 }

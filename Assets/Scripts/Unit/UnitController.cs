@@ -1,7 +1,7 @@
+using System;
+
 using UnityEngine;
 using UnityEngine.UI;
-
-using StrategyGame.Assets.Scripts.Util;
 
 namespace StrategyGame.Assets.Scripts.Unit
 {
@@ -14,6 +14,8 @@ namespace StrategyGame.Assets.Scripts.Unit
 
         private void Start()
         {
+            _unitId = Guid.NewGuid().ToString();
+
             _animator = GetComponent<Animator>();
 
             var renderer = GetComponentInChildren<MeshRenderer>();
@@ -24,9 +26,6 @@ namespace StrategyGame.Assets.Scripts.Unit
 
         private void Awake()
         {
-            var gch = FindObjectOfType<GlobalClickHandler>();
-            gch.LeftMouseButtonUp += OnLeftClick;
-
             if (_speedText != null)
             {
                 _speedText.text = $"{_currentStats.Speed}";
@@ -73,21 +72,6 @@ namespace StrategyGame.Assets.Scripts.Unit
             {
                 _canMove = false;
             }
-        }
-
-        private void OnLeftClick(RaycastHit hit)
-        {
-            if (hit.transform.gameObject == this.gameObject)
-            {
-                Select();
-            }
-        }
-
-        private void OnDestroy()
-        {
-            var gch = FindObjectOfType<GlobalClickHandler>();
-            if (gch != null)
-                gch.LeftMouseButtonUp -= OnLeftClick;
         }
     }
 }

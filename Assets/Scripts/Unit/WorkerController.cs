@@ -1,8 +1,9 @@
+using System;
+
 using UnityEngine;
 using UnityEngine.UI;
 
 using StrategyGame.Assets.Scripts.Building;
-using StrategyGame.Assets.Scripts.Util;
 using StrategyGame.Assets.Scripts.UI;
 using UnityEngine.AI;
 
@@ -22,6 +23,8 @@ namespace StrategyGame.Assets.Scripts.Unit
 
         private void Start()
         {
+            _unitId = Guid.NewGuid().ToString();
+
             _animator = GetComponent<Animator>();
 
             var renderer = GetComponentInChildren<MeshRenderer>();
@@ -30,9 +33,6 @@ namespace StrategyGame.Assets.Scripts.Unit
 
         private void Awake()
         {
-            var gch = FindObjectOfType<GlobalClickHandler>();
-            gch.LeftMouseButtonUp += OnLeftClick;
-
             if (_navMeshAgent == null)
             {
                 _navMeshAgent = GetComponent<NavMeshAgent>();
@@ -71,6 +71,7 @@ namespace StrategyGame.Assets.Scripts.Unit
                 base.Select();
             }
         }
+
         public override void Deselect()
         {
             if (Selected)
@@ -123,21 +124,6 @@ namespace StrategyGame.Assets.Scripts.Unit
             {
                 _canMove = false;
             }
-        }
-
-        private void OnLeftClick(RaycastHit hit)
-        {
-            if (hit.transform.gameObject == this.gameObject && !_buildingsPanelManager.IsBuildSelected)
-            {
-                Select();
-            }
-        }
-
-        private void OnDestroy()
-        {
-            var gch = FindObjectOfType<GlobalClickHandler>();
-            if (gch != null)
-                gch.LeftMouseButtonUp -= OnLeftClick;
         }
     }
 }
