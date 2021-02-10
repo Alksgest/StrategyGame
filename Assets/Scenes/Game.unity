@@ -376,6 +376,12 @@ MonoBehaviour:
   m_VoxelSize: 0.16666667
   m_BuildHeightMesh: 0
   m_NavMeshData: {fileID: 23800000, guid: a4e480f29bf2fcf4c8962a03ff57d06d, type: 2}
+--- !u!208 &459304296 stripped
+NavMeshObstacle:
+  m_CorrespondingSourceObject: {fileID: 8838966091895729491, guid: 68248416e940c5b408a95d7ee0b1f77c,
+    type: 3}
+  m_PrefabInstance: {fileID: 8838966090694873421}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &462010603 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7612621277816248570, guid: a112b9a2317f8ce4381f3af751069e58,
@@ -1807,31 +1813,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 891672419}
     m_Modifications:
-    - target: {fileID: 6438554802140686037, guid: 68248416e940c5b408a95d7ee0b1f77c,
+    - target: {fileID: 8429605311370142855, guid: 68248416e940c5b408a95d7ee0b1f77c,
         type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8838966091058920670, guid: 68248416e940c5b408a95d7ee0b1f77c,
-        type: 3}
-      propertyPath: m_TagString
-      value: BuildingBlock
-      objectReference: {fileID: 0}
-    - target: {fileID: 8838966091575768635, guid: 68248416e940c5b408a95d7ee0b1f77c,
-        type: 3}
-      propertyPath: m_TagString
-      value: BuildingBlock
-      objectReference: {fileID: 0}
-    - target: {fileID: 8838966091613150629, guid: 68248416e940c5b408a95d7ee0b1f77c,
-        type: 3}
-      propertyPath: m_TagString
-      value: BuildingBlock
-      objectReference: {fileID: 0}
-    - target: {fileID: 8838966091895729489, guid: 68248416e940c5b408a95d7ee0b1f77c,
-        type: 3}
-      propertyPath: m_TagString
-      value: BuildingBlock
-      objectReference: {fileID: 0}
+      propertyPath: _navMeshObstacle
+      value: 
+      objectReference: {fileID: 459304296}
     - target: {fileID: 8838966092184380752, guid: 68248416e940c5b408a95d7ee0b1f77c,
         type: 3}
       propertyPath: m_LocalPosition.x
