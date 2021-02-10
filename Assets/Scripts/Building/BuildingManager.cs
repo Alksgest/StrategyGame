@@ -65,6 +65,8 @@ namespace StrategyGame.Assets.Scripts.Building
                 return;
             }
 
+            DeselectAll();
+
             BuildingBase building = GetBuilding(hit.transform.gameObject);
 
             if (building != null)
@@ -78,6 +80,10 @@ namespace StrategyGame.Assets.Scripts.Building
             var bb = gameObject.GetComponent<BuildingBase>();
             if (bb == null)
             {
+                if (gameObject.transform.parent == null)
+                {
+                    return null;
+                }
                 bb = GetBuilding(gameObject.transform.parent.gameObject);
             }
 
