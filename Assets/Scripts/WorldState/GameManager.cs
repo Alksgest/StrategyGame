@@ -36,12 +36,13 @@ namespace StrategyGame.Assets.Scripts.WorldState
             });
 
             _buildings = StaticData.GetBuildingTemplates();
+            _units = StaticData.GetUnitTemplates();
 
             AddIron("mainPlayer", 20);
             AddFood("mainPlayer", 20);
         }
 
-        public bool CanByUnit(string playerIdentifier, string unitTag)
+        public bool CanBuyUnit(string playerIdentifier, string unitTag)
         {
             var st = States.Find(state => state.PlayerIdentifier == playerIdentifier);
 
@@ -57,6 +58,21 @@ namespace StrategyGame.Assets.Scripts.WorldState
             var b = _buildings.Single(el => el.BuildingName == buildingTag);
 
             return st.Iron >= b.Cost.Iron;
+        }
+
+        public void BuyUnit(string playerIdentifier, string unitTag)
+        {
+            var st = States.Find(state => state.PlayerIdentifier == playerIdentifier);
+            var b = _units.Single(el => el.UnitName == unitTag);
+            var cost = b.Cost.Food;
+
+            if (st.Food < cost)
+            {
+                Debug.LogError($"You cannot by {unitTag} for {playerIdentifier}.");
+                return;
+            }
+
+            AddFood(playerIdentifier, -cost);
         }
 
         public void BuyBuilding(string playerIdentifier, string buildingTag)

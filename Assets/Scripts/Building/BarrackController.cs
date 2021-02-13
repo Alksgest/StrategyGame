@@ -1,18 +1,14 @@
 using UnityEngine;
 
+
 using StrategyGame.Assets.Scripts.Unit;
 using StrategyGame.Assets.Scripts.Util;
+using StrategyGame.Assets.Scripts.Static;
 
 namespace StrategyGame.Assets.Scripts.Building
 {
     public class BarrackController : BuildingBase
     {
-        [SerializeField]
-        private GameObject _unitPrefab;
-
-        [SerializeField]
-        private GameObject _spawnPoint;
-
         [SerializeField]
         private GameObject _barracksUI;
 
@@ -23,11 +19,6 @@ namespace StrategyGame.Assets.Scripts.Building
             _unitManager = FindObjectOfType<UnitManager>();
 
             _isInstantiated = false;
-        }
-
-        public void CreateNewUnit()
-        {
-            _unitManager.CreateWorker(_unitPrefab, _spawnPoint.transform.position);
         }
 
         private void OnDestroy()
@@ -53,13 +44,6 @@ namespace StrategyGame.Assets.Scripts.Building
             if (_isInstantiated)
             {
                 base.LeftClick(obj);
-                // if (obj is RaycastHit hit)
-                // {
-                //     if (hit.transform.root.gameObject == this.gameObject)
-                //     {
-                //         base.LeftClick(hit);
-                //     }
-                // }
             }
         }
 

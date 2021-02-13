@@ -17,7 +17,7 @@ namespace StrategyGame.Assets.Scripts.UI
         [SerializeField]
         private BuildingsPanelManager _buildingsPanelManager;
 
-        private Vector3 _initialPosition = new Vector3(-130 + 260, 60 + 199, 0); //  very magic constants in addition. Very strange behaviour
+        private Vector3 _initialPosition = new Vector3(-130 + 260, 40 + 199, 0); //  very magic constants in addition. Very strange behaviour
         private int _yDelta = 30;
 
         private void Awake()

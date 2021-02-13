@@ -12,12 +12,6 @@ namespace StrategyGame.Assets.Scripts.UI
 {
     public class BuildingsPanelManager : MonoBehaviour
     {
-        [SerializeField]
-        private GameObject _barrackPrefab;
-        [SerializeField]
-        private GameObject _minePrefab;
-
-        [SerializeField]
         private Camera _camera;
 
         [SerializeField]
@@ -77,7 +71,7 @@ namespace StrategyGame.Assets.Scripts.UI
 
         private void RotateBuilding()
         {
-            ObjectToCreate.transform.Rotate(new Vector3(0, ObjectToCreate.transform.rotation.y + 30, 0));
+            ObjectToCreate.transform.Rotate(new Vector3(0, ObjectToCreate.transform.rotation.y + 20, 0));
         }
 
         public void CreateBuilding(GameObject prefab, float y)

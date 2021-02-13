@@ -49,9 +49,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isInstantiated: 0
   _UI: {fileID: 4428716598567582133}
-  _unitPrefab: {fileID: 4695825492272960227, guid: b289dd46dbc1d6e43b5b0ba6f933b029,
-    type: 3}
-  _spawnPoint: {fileID: 8936739303693359084}
   _barracksUI: {fileID: 753949986821503096}
 --- !u!1 &343400208937730335
 GameObject:
@@ -186,6 +183,85 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!1 &646845005325639442
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8198352002396341908}
+  - component: {fileID: 5053040564140823879}
+  - component: {fileID: 4029012577603509016}
+  m_Layer: 5
+  m_Name: WorkerCost
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &8198352002396341908
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 646845005325639442}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 3959996755376755620}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -700, y: -300}
+  m_SizeDelta: {x: 160, y: 30}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &5053040564140823879
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 646845005325639442}
+  m_CullTransparentMesh: 0
+--- !u!114 &4029012577603509016
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 646845005325639442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 12
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 1
+    m_MaxSize: 40
+    m_Alignment: 4
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: 'Food: 10'
 --- !u!1 &753949986821503096
 GameObject:
   m_ObjectHideFlags: 0
@@ -198,6 +274,7 @@ GameObject:
   - component: {fileID: 6172770344165118745}
   - component: {fileID: 5728641109725946267}
   - component: {fileID: 6010700074761389424}
+  - component: {fileID: 1971762135826782445}
   m_Layer: 5
   m_Name: BarracksUI
   m_TagString: Untagged
@@ -219,6 +296,7 @@ RectTransform:
   - {fileID: 9173293700662109720}
   - {fileID: 5849220011899891232}
   - {fileID: 9135922539999300079}
+  - {fileID: 8198352002396341908}
   m_Father: {fileID: 263217844969951883}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -287,6 +365,19 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &1971762135826782445
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 753949986821503096}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cefb8344d4bf8f24d9e333afae911304, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _spawnPoint: {fileID: 7970076389416191869}
 --- !u!1 &775976409740868370
 GameObject:
   m_ObjectHideFlags: 0
@@ -390,10 +481,10 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 14
+    m_FontSize: 12
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 1
     m_MaxSize: 40
     m_Alignment: 4
     m_AlignByGeometry: 0
@@ -401,7 +492,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Create unit
+  m_Text: Create worker
 --- !u!1 &1114950334483199849
 GameObject:
   m_ObjectHideFlags: 0
@@ -714,7 +805,7 @@ GameObject:
   - component: {fileID: 7172276398920384029}
   - component: {fileID: 5968982880934306107}
   m_Layer: 5
-  m_Name: CreateUnitButton
+  m_Name: CreateWorkerButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
@@ -737,8 +828,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -704, y: -321}
-  m_SizeDelta: {x: 120, y: 30}
+  m_AnchoredPosition: {x: -830, y: -300}
+  m_SizeDelta: {x: 60, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8599962266202575708
 CanvasRenderer:
@@ -821,16 +912,17 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6764907908869692510}
-        m_TargetAssemblyTypeName: 
+      - m_Target: {fileID: 1971762135826782445}
+        m_TargetAssemblyTypeName: StrategyGame.Assets.Scripts.UI.UnitPanelManager,
+          Assembly-CSharp
         m_MethodName: CreateNewUnit
-        m_Mode: 1
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Worker
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &2248504928377849899

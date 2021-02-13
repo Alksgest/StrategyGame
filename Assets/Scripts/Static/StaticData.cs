@@ -10,6 +10,7 @@ namespace StrategyGame.Assets.Scripts.Static
     public static class StaticData
     {
         private static string BuildingsPrefabPath = "Prefabs/Buildings";
+        private static string UnitsPrefabPath = "Prefabs/Units";
         private static List<BuildingTemplate> _cachedBuildingsTemplates;
         private static List<UnitTemplate> _cachedUnitsTemplates;
 
@@ -19,7 +20,15 @@ namespace StrategyGame.Assets.Scripts.Static
             {
                 _cachedUnitsTemplates = new List<UnitTemplate>
                 {
-
+                    new UnitTemplate
+                    {
+                        Cost = new ObjectCost
+                        {
+                            Food = 10
+                        },
+                        UnitName = UnitsNames.Worker,
+                        Prefab = Resources.Load<GameObject>($"{UnitsPrefabPath}/{UnitsNames.Worker}"),
+                    }
                 };
             }
 

@@ -3,7 +3,9 @@ using UnityEngine.UI;
 
 using System.Linq;
 using System.Collections.Generic;
+
 using StrategyGame.Assets.Scripts.Util;
+using StrategyGame.Assets.Scripts.WorldState;
 
 namespace StrategyGame.Assets.Scripts.Unit
 {
@@ -24,8 +26,12 @@ namespace StrategyGame.Assets.Scripts.Unit
         private Vector3 _startHitPoint;
         private bool _rightMousePressed = false;
 
+        private GameManager _gameManager;
+
         private void Start()
         {
+            _gameManager = FindObjectOfType<GameManager>();
+
             var units = Resources.FindObjectsOfTypeAll<UnitBase>();
 
             _unitControllers = units.Distinct().ToList();
@@ -121,10 +127,14 @@ namespace StrategyGame.Assets.Scripts.Unit
             }
         }
 
-        public void CreateWorker(GameObject prefab, Vector3 creatorPosition)
+        public void CreateUnit(string tag, GameObject prefab, Vector3 creatorPosition)
         {
-            var unit = GameObject.Instantiate(prefab, creatorPosition, new Quaternion(0, 0, 0, 0), this.transform);
-            _unitControllers.Add(unit.GetComponent<WorkerController>());
+            if (_gameManager.CanBuyUnit("mainPlayer", tag))
+            {
+                _gameManager.BuyUnit("mainPlayer", tag);
+                var unit = GameObject.Instantiate(prefab, creatorPosition, new Quaternion(0, 0, 0, 0), this.transform);
+                _unitControllers.Add(unit.GetComponent<UnitBase>());
+            }
         }
 
         private void OnLeftClick(RaycastHit hit)
