@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6764907908869692510}
   m_Layer: 8
   m_Name: Barracks
-  m_TagString: Barrack
+  m_TagString: Barracks
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 0

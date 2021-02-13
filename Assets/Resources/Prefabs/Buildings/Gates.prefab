@@ -1194,7 +1194,7 @@ GameObject:
   - component: {fileID: 8429605311370142855}
   m_Layer: 0
   m_Name: Gates
-  m_TagString: Untagged
+  m_TagString: Gates
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1230,3 +1230,4 @@ MonoBehaviour:
   _isInstantiated: 0
   _UI: {fileID: 6438554802140686037}
   _animator: {fileID: 8838966091895729519}
+  _navMeshObstacle: {fileID: 0}

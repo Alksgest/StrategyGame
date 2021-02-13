@@ -80,27 +80,17 @@ namespace StrategyGame.Assets.Scripts.UI
             ObjectToCreate.transform.Rotate(new Vector3(0, ObjectToCreate.transform.rotation.y + 30, 0));
         }
 
-        private void CreateBuilding(GameObject prefab, float y)
+        public void CreateBuilding(GameObject prefab, float y)
         {
             var x = Input.GetAxis("Mouse X");
             var z = Input.GetAxis("Mouse Y");
 
-            ObjectToCreate = Instantiate(prefab, new Vector3(x, 5, z), new Quaternion(), _buildingManager.transform);
+            ObjectToCreate = Instantiate(prefab, new Vector3(x, y, z), new Quaternion(), _buildingManager.transform);
             ObjectToCreate.layer = 8;
 
             _worker.IsBuilding = true;
 
             StartCoroutine(WaitForPlaceBuilding(0.5f));
-        }
-
-        public void CreateBaracks()
-        {
-            CreateBuilding(_barrackPrefab, 5);
-        }
-
-        public void CreateMine()
-        {
-            CreateBuilding(_minePrefab, 4);
         }
 
         public void SetBuildingOnPlace(BuildingBase building)

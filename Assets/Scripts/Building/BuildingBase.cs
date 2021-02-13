@@ -1,3 +1,4 @@
+using StrategyGame.Assets.Scripts.UI;
 using UnityEngine;
 
 namespace StrategyGame.Assets.Scripts.Building
@@ -16,6 +17,8 @@ namespace StrategyGame.Assets.Scripts.Building
 
         public bool Selected { get; protected set; } = false;
 
+        private BuildingsPanelManager _buildingsPanelManager;
+
         public void Instantiate()
         {
             if (!_isInstantiated)
@@ -30,14 +33,29 @@ namespace StrategyGame.Assets.Scripts.Building
 
         public virtual void LeftClick(object obj)
         {
-            SetUIActive();
-            Selected = true;
+            if (_buildingsPanelManager == null)
+            {
+                _buildingsPanelManager = FindObjectOfType<BuildingsPanelManager>();
+            }
+
+            if (!_buildingsPanelManager.IsBuildSelected)
+            {
+                SetUIActive();
+                Selected = true;
+            }
         }
 
         public void Deselect()
         {
-            SetUIInactive();
-            Selected = false;
+            if (_buildingsPanelManager == null)
+            {
+                _buildingsPanelManager = FindObjectOfType<BuildingsPanelManager>();
+            }
+            if (!_buildingsPanelManager.IsBuildSelected)
+            {
+                SetUIInactive();
+                Selected = false;
+            }
         }
 
         public virtual void RightClick(object obj)

@@ -1,19 +1,18 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+using System.Linq;
 using System.Collections.Generic;
 
 using StrategyGame.Assets.Scripts.WorldState.Models;
+using StrategyGame.Assets.Scripts.Models.Building;
+using StrategyGame.Assets.Scripts.Static;
 
 namespace StrategyGame.Assets.Scripts.WorldState
 {
     public class GameManager : MonoBehaviour
     {
-        private Dictionary<string, long> BuildingCost = new Dictionary<string, long>
-        {
-            {"Mine", 20},
-            {"Barrack", 100}
-        };
+        private List<BuildingTemplate> _buildings;
 
         [SerializeField]
         private Text _ironCountText;
@@ -29,6 +28,8 @@ namespace StrategyGame.Assets.Scripts.WorldState
                 PlayerIdentifier = "mainPlayer"
             });
 
+            _buildings = StaticData.GetBuildingTemplates();
+
             SetValueToIron(20);
         }
 
@@ -36,13 +37,16 @@ namespace StrategyGame.Assets.Scripts.WorldState
         {
             var st = States.Find(state => state.PlayerIdentifier == playerIdentifier);
 
-            return st.Iron >= BuildingCost[buildingTag];
+            var b = _buildings.Single(el => el.BuildingName == buildingTag);
+
+            return st.Iron >= b.BuildingCost.Iron;
         }
 
         public void BuyBuilding(string playerIdentifier, string buildingTag)
         {
             var st = States.Find(state => state.PlayerIdentifier == playerIdentifier);
-            var cost = BuildingCost[buildingTag];
+            var b = _buildings.Single(el => el.BuildingName == buildingTag);
+            var cost = b.BuildingCost.Iron;
 
             if (st.Iron < cost)
             {
