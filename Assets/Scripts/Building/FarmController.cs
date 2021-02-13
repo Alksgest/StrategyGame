@@ -39,8 +39,20 @@ namespace StrategyGame.Assets.Scripts.Building
                 };
             }
 
-            // InvokeRepeating("AddIron", .01f, 1.0f);
+            InvokeRepeating("AddCrop", .01f, 1.0f);
         }
+
+        private void AddCrop()
+        {
+            foreach (var wp in workplaces)
+            {
+                if (wp.IsBusy && wp.IsUnitOnPlace)
+                {
+                    _gameManager.AddFood(Owner, 5);
+                }
+            }
+        }
+
 
         public void AttacheUnit(IWorkable unit, Workpalce workplace)
         {

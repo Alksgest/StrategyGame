@@ -8,7 +8,6 @@ TagManager:
   - Terrain
   - Mine
   - MineEdge
-  - AttachedToMineUnit
   - BuildingManager
   - BuildingBlock
   - Barracks
@@ -16,6 +15,7 @@ TagManager:
   - ShootingRange
   - CastleWall
   - Gates
+  - AttachedUnit
   layers:
   - Default
   - TransparentFX

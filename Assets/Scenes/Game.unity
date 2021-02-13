@@ -1641,21 +1641,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8373706226841321328, guid: a0dbf74bcfa4af3488aaa410587338cb,
-        type: 3}
-      propertyPath: _buildingsParent
-      value: 
-      objectReference: {fileID: 891672419}
-    - target: {fileID: 8373706226841321328, guid: a0dbf74bcfa4af3488aaa410587338cb,
-        type: 3}
-      propertyPath: _camera
-      value: 
-      objectReference: {fileID: 1883878300}
-    - target: {fileID: 8373706226841321328, guid: a0dbf74bcfa4af3488aaa410587338cb,
-        type: 3}
-      propertyPath: _surface
-      value: 
-      objectReference: {fileID: 457177876}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a0dbf74bcfa4af3488aaa410587338cb, type: 3}
 --- !u!1001 &7733430376675541239

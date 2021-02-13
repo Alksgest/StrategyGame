@@ -16,6 +16,10 @@ namespace StrategyGame.Assets.Scripts.WorldState
 
         [SerializeField]
         private Text _ironCountText;
+
+        [SerializeField]
+        private Text _foodCountText;
+        
         public List<PlayerState> States { get; set; }
 
         private void Start()
@@ -61,6 +65,27 @@ namespace StrategyGame.Assets.Scripts.WorldState
         {
             var st = States.Find(state => state.PlayerIdentifier == playerIdentifier);
             AddIron(st, count);
+        }
+
+        public void AddFood(string playerIdentifier, long count)
+        {
+            var st = States.Find(state => state.PlayerIdentifier == playerIdentifier);
+            AddFood(st, count);
+        }
+
+        private void AddFood(PlayerState state, long count)
+        {
+            state.Food += count;
+
+            SetValueToFood(state.Food);
+        }
+
+        private void SetValueToFood(long food)
+        {
+            if (_foodCountText != null)
+            {
+                _foodCountText.text = $"{food}";
+            }
         }
 
         private void AddIron(PlayerState state, long count)
