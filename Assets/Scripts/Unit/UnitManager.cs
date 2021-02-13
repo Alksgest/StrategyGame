@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 using StrategyGame.Assets.Scripts.Util;
 using StrategyGame.Assets.Scripts.WorldState;
+using StrategyGame.Assets.Scripts.Models.Unit;
 
 namespace StrategyGame.Assets.Scripts.Unit
 {
@@ -127,12 +128,16 @@ namespace StrategyGame.Assets.Scripts.Unit
             }
         }
 
-        public void CreateUnit(string tag, GameObject prefab, Vector3 creatorPosition)
+        public void CreateUnit(UnitTemplate template, Vector3 unitPosition)
         {
-            if (_gameManager.CanBuyUnit("mainPlayer", tag))
+            if (_gameManager.CanBuyUnit("mainPlayer", template.UnitName))
             {
-                _gameManager.BuyUnit("mainPlayer", tag);
-                var unit = GameObject.Instantiate(prefab, creatorPosition, new Quaternion(0, 0, 0, 0), this.transform);
+                var unit  = _gameManager.BuyUnit("mainPlayer", template, unitPosition, this.transform);
+                // var unit = GameObject.Instantiate(template.Prefab, unitPosition, new Quaternion(0, 0, 0, 0), this.transform);
+
+                var unitController = unit.GetComponent<UnitBase>();
+                unitController.Instantiate(template.UnitStats);
+
                 _unitControllers.Add(unit.GetComponent<UnitBase>());
             }
         }

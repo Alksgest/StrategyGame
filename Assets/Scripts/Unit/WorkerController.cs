@@ -8,6 +8,7 @@ using StrategyGame.Assets.Scripts.UI;
 using UnityEngine.AI;
 using StrategyGame.Assets.Scripts.Unit.Interfaces;
 using StrategyGame.Assets.Scripts.Building.Interfaces;
+using StrategyGame.Assets.Scripts.Models.Unit;
 
 namespace StrategyGame.Assets.Scripts.Unit
 {

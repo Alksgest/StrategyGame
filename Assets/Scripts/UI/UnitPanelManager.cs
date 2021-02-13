@@ -26,9 +26,9 @@ namespace StrategyGame.Assets.Scripts.UI
 
         public void CreateNewUnit(string tag)
         {
-            var prefab = _unitTemplates.Find(el => el.UnitName == tag).Prefab;
+            var template = _unitTemplates.Find(el => el.UnitName == tag);
 
-            _unitManager.CreateUnit(tag, prefab, _spawnPoint.position);
+            _unitManager.CreateUnit(template, _spawnPoint.position);
         }
     }
 }

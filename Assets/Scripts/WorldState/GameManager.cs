@@ -60,19 +60,20 @@ namespace StrategyGame.Assets.Scripts.WorldState
             return st.Iron >= b.Cost.Iron;
         }
 
-        public void BuyUnit(string playerIdentifier, string unitTag)
+        public GameObject BuyUnit(string playerIdentifier, UnitTemplate template, Vector3 unitPosition, Transform parent)
         {
             var st = States.Find(state => state.PlayerIdentifier == playerIdentifier);
-            var b = _units.Single(el => el.UnitName == unitTag);
-            var cost = b.Cost.Food;
+            var cost = template.Cost.Food;
 
             if (st.Food < cost)
             {
-                Debug.LogError($"You cannot by {unitTag} for {playerIdentifier}.");
-                return;
+                Debug.LogError($"You cannot by {template.UnitName} for {playerIdentifier}.");
+                return null;
             }
 
             AddFood(playerIdentifier, -cost);
+
+            return GameObject.Instantiate(template.Prefab, unitPosition, new Quaternion(0, 0, 0, 0), parent);
         }
 
         public void BuyBuilding(string playerIdentifier, string buildingTag)

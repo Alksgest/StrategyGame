@@ -1,5 +1,5 @@
 using System;
-
+using StrategyGame.Assets.Scripts.Models.Unit;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -33,6 +33,12 @@ namespace StrategyGame.Assets.Scripts.Unit
         [SerializeField]
         protected UnitStats _currentStats;
         protected UnitStats _previousStats;
+
+        public virtual void Instantiate(UnitStats stats)
+        {
+            _currentStats = stats;
+            _previousStats = UnitStats.MakeCopy(stats);
+        }
 
         public virtual void Select()
         {
