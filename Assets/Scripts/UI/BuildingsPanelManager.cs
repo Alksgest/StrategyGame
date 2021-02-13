@@ -7,6 +7,9 @@ using StrategyGame.Assets.Scripts.WorldState;
 using UnityEngine.AI;
 using StrategyGame.Assets.Scripts.Unit;
 using System.Linq;
+using System.Collections.Generic;
+using StrategyGame.Assets.Scripts.Models.Building;
+using StrategyGame.Assets.Scripts.Static;
 
 namespace StrategyGame.Assets.Scripts.UI
 {
@@ -32,6 +35,8 @@ namespace StrategyGame.Assets.Scripts.UI
         [SerializeField]
         private WorkerController _worker;
 
+        private List<BuildingTemplate> _buildings;
+
 
         private void Awake()
         {
@@ -43,6 +48,8 @@ namespace StrategyGame.Assets.Scripts.UI
             _buildingManager = FindObjectOfType<BuildingManager>();
             _unitManager = FindObjectOfType<UnitManager>();
             _surface = FindObjectOfType<NavMeshSurface>();
+            
+            _buildings = StaticData.GetBuildingTemplates();
 
             _camera = Camera.main;
         }

@@ -133,7 +133,6 @@ namespace StrategyGame.Assets.Scripts.Unit
             if (_gameManager.CanBuyUnit("mainPlayer", template.UnitName))
             {
                 var unit  = _gameManager.BuyUnit("mainPlayer", template, unitPosition, this.transform);
-                // var unit = GameObject.Instantiate(template.Prefab, unitPosition, new Quaternion(0, 0, 0, 0), this.transform);
 
                 var unitController = unit.GetComponent<UnitBase>();
                 unitController.Instantiate(template.UnitStats);

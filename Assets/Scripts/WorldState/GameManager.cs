@@ -30,16 +30,16 @@ namespace StrategyGame.Assets.Scripts.WorldState
 
             States.Add(new PlayerState
             {
-                Iron = 20,
-                Food = 20,
+                Iron = 200,
+                Food = 200,
                 PlayerIdentifier = "mainPlayer"
             });
 
             _buildings = StaticData.GetBuildingTemplates();
             _units = StaticData.GetUnitTemplates();
 
-            AddIron("mainPlayer", 20);
-            AddFood("mainPlayer", 20);
+            AddIron("mainPlayer", 200);
+            AddFood("mainPlayer", 200);
         }
 
         public bool CanBuyUnit(string playerIdentifier, string unitTag)
