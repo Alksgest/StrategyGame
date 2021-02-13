@@ -30,18 +30,28 @@ namespace StrategyGame.Assets.Scripts.Building
         {
             _unitManager = FindObjectOfType<UnitManager>();
             _gameManager = FindObjectOfType<GameManager>();
+        }
 
+        public override void Instantiate()
+        {
+            base.Instantiate();
+
+            InitWorkplaces();
+            InvokeRepeating("AddIron", .01f, 1.0f);
+        }
+
+        private void InitWorkplaces()
+        {
             workplaces = new Workpalce[_unitPlaces.Length];
 
             for (int i = 0; i < _unitPlaces.Length; ++i)
             {
+                var pos = _unitPlaces[i].transform.position;
                 workplaces[i] = new Workpalce
                 {
-                    Position = _unitPlaces[i].transform.position
+                    Position = pos
                 };
             }
-
-            InvokeRepeating("AddIron", .01f, 1.0f);
         }
 
         private void AddIron()
@@ -117,7 +127,7 @@ namespace StrategyGame.Assets.Scripts.Building
         {
             if (workplace?.AttachedUnit != null)
             {
-                workplace.AttachedUnit.SetTag("Unit");
+                workplace.AttachedUnit.SetTag("Worker");
                 workplace.AttachedUnit.ObjectAttachedTo = null;
                 workplace.AttachedUnit = null;
 

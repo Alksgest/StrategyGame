@@ -26,20 +26,29 @@ namespace StrategyGame.Assets.Scripts.Building
         {
             _unitManager = FindObjectOfType<UnitManager>();
             _gameManager = FindObjectOfType<GameManager>();
+        }
 
+        public override void Instantiate()
+        {
+            base.Instantiate();
+
+            InitWorkplaces();
+
+            InvokeRepeating("AddCrop", .01f, 1.0f);
+        }
+
+        private void InitWorkplaces()
+        {
             workplaces = new Workpalce[_unitPlaces.Length];
 
             for (int i = 0; i < _unitPlaces.Length; ++i)
             {
+                var pos = _unitPlaces[i].transform.position;
                 workplaces[i] = new Workpalce
                 {
-                    Position = _unitPlaces[i].transform.position,
-                    AttachedUnit = null,
-                    IsBusy = false
+                    Position = pos
                 };
             }
-
-            InvokeRepeating("AddCrop", .01f, 1.0f);
         }
 
         private void AddCrop()
@@ -52,7 +61,6 @@ namespace StrategyGame.Assets.Scripts.Building
                 }
             }
         }
-
 
         public void AttacheUnit(IWorkable unit, Workpalce workplace)
         {
@@ -79,7 +87,7 @@ namespace StrategyGame.Assets.Scripts.Building
         {
             if (workplace?.AttachedUnit != null)
             {
-                workplace.AttachedUnit.SetTag("Unit");
+                workplace.AttachedUnit.SetTag("Worker");
                 workplace.AttachedUnit.ObjectAttachedTo = null;
                 workplace.AttachedUnit = null;
 

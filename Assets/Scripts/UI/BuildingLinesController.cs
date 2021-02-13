@@ -17,7 +17,7 @@ namespace StrategyGame.Assets.Scripts.UI
         [SerializeField]
         private BuildingsPanelManager _buildingsPanelManager;
 
-        private Vector3 _initialPosition = new Vector3(-130 + 260, 40 + 199, 0); //  very magic constants in addition. Very strange behaviour
+        private Vector3 _initialPosition = new Vector3(-130 + 260, 60 + 199, 0); //  very magic constants in addition. Very strange behaviour
         private int _yDelta = 30;
 
         private void Awake()
@@ -29,7 +29,7 @@ namespace StrategyGame.Assets.Scripts.UI
 
         private void CreateBuildingLines()
         {
-            foreach (var b in _buildings.Take(5))
+            foreach (var b in _buildings) //  _buildings.Take(5)
             {
                 var line = GameObject.Instantiate(BuildingLinePrefab, Vector3.zero, new Quaternion(0, 0, 0, 0), this.transform);
                 line.transform.position = _initialPosition;
@@ -46,7 +46,7 @@ namespace StrategyGame.Assets.Scripts.UI
                 });
 
                 buttonText.text = b.BuildingName;
-                costText.text = $"Iron: {b.BuildingCost.Iron}";
+                costText.text = $"Iron: {b.Cost.Iron}";
             }
         }
     }

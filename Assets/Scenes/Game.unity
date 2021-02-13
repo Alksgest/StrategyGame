@@ -943,6 +943,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2135174449}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1616579184 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 753949986821503096, guid: b9abedd4a09f72f4b98eb315cd30c337,
+    type: 3}
+  m_PrefabInstance: {fileID: 1644685149}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1644685149
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1010,6 +1016,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6764907908869692510, guid: b9abedd4a09f72f4b98eb315cd30c337,
+        type: 3}
+      propertyPath: _barracksUI
+      value: 
+      objectReference: {fileID: 1616579184}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b9abedd4a09f72f4b98eb315cd30c337, type: 3}
 --- !u!114 &1654073398 stripped

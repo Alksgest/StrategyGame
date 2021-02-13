@@ -7,19 +7,21 @@ using System.Collections.Generic;
 using StrategyGame.Assets.Scripts.WorldState.Models;
 using StrategyGame.Assets.Scripts.Models.Building;
 using StrategyGame.Assets.Scripts.Static;
+using StrategyGame.Assets.Scripts.Models.Unit;
 
 namespace StrategyGame.Assets.Scripts.WorldState
 {
     public class GameManager : MonoBehaviour
     {
         private List<BuildingTemplate> _buildings;
+        private List<UnitTemplate> _units;
 
         [SerializeField]
         private Text _ironCountText;
 
         [SerializeField]
         private Text _foodCountText;
-        
+
         public List<PlayerState> States { get; set; }
 
         private void Start()
@@ -29,12 +31,23 @@ namespace StrategyGame.Assets.Scripts.WorldState
             States.Add(new PlayerState
             {
                 Iron = 20,
+                Food = 20,
                 PlayerIdentifier = "mainPlayer"
             });
 
             _buildings = StaticData.GetBuildingTemplates();
 
-            SetValueToIron(20);
+            AddIron("mainPlayer", 20);
+            AddFood("mainPlayer", 20);
+        }
+
+        public bool CanByUnit(string playerIdentifier, string unitTag)
+        {
+            var st = States.Find(state => state.PlayerIdentifier == playerIdentifier);
+
+            var u = _units.Single(el => el.UnitName == unitTag);
+
+            return st.Food >= u.Cost.Food;
         }
 
         public bool CanPlaceBuilding(string playerIdentifier, string buildingTag)
@@ -43,63 +56,43 @@ namespace StrategyGame.Assets.Scripts.WorldState
 
             var b = _buildings.Single(el => el.BuildingName == buildingTag);
 
-            return st.Iron >= b.BuildingCost.Iron;
+            return st.Iron >= b.Cost.Iron;
         }
 
         public void BuyBuilding(string playerIdentifier, string buildingTag)
         {
             var st = States.Find(state => state.PlayerIdentifier == playerIdentifier);
             var b = _buildings.Single(el => el.BuildingName == buildingTag);
-            var cost = b.BuildingCost.Iron;
+            var cost = b.Cost.Iron;
 
             if (st.Iron < cost)
             {
-                Debug.LogError($"You cannt by {buildingTag} for {playerIdentifier}.");
+                Debug.LogError($"You cannot by {buildingTag} for {playerIdentifier}.");
                 return;
             }
 
-            AddIron(st, -cost);
+            AddIron(playerIdentifier, -cost);
         }
 
         public void AddIron(string playerIdentifier, long count)
         {
             var st = States.Find(state => state.PlayerIdentifier == playerIdentifier);
-            AddIron(st, count);
+            st.Iron += count;
+
+            if (_ironCountText != null)
+            {
+                _ironCountText.text = $"{st.Iron}";
+            }
         }
 
         public void AddFood(string playerIdentifier, long count)
         {
             var st = States.Find(state => state.PlayerIdentifier == playerIdentifier);
-            AddFood(st, count);
-        }
+            st.Food += count;
 
-        private void AddFood(PlayerState state, long count)
-        {
-            state.Food += count;
-
-            SetValueToFood(state.Food);
-        }
-
-        private void SetValueToFood(long food)
-        {
             if (_foodCountText != null)
             {
-                _foodCountText.text = $"{food}";
-            }
-        }
-
-        private void AddIron(PlayerState state, long count)
-        {
-            state.Iron += count;
-
-            SetValueToIron(state.Iron);
-        }
-
-        private void SetValueToIron(long iron)
-        {
-            if (_ironCountText != null)
-            {
-                _ironCountText.text = $"{iron}";
+                _foodCountText.text = $"{st.Food}";
             }
         }
     }

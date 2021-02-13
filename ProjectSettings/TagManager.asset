@@ -16,6 +16,7 @@ TagManager:
   - CastleWall
   - Gates
   - AttachedUnit
+  - Worker
   layers:
   - Default
   - TransparentFX

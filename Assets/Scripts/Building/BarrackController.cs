@@ -13,6 +13,9 @@ namespace StrategyGame.Assets.Scripts.Building
         [SerializeField]
         private GameObject _spawnPoint;
 
+        [SerializeField]
+        private GameObject _barracksUI;
+
         private UnitManager _unitManager;
 
         private void Awake()
@@ -31,6 +34,18 @@ namespace StrategyGame.Assets.Scripts.Building
         {
             var gch = FindObjectOfType<GlobalClickHandler>();
             _isInstantiated = false;
+        }
+
+        public override void Select()
+        {
+            base.Select();
+            _barracksUI.SetActive(true);
+        }
+
+        public override void Deselect()
+        {
+            base.Deselect();
+            _barracksUI.SetActive(false);
         }
 
         public override void LeftClick(object obj)

@@ -19,7 +19,7 @@ namespace StrategyGame.Assets.Scripts.Building
 
         private BuildingsPanelManager _buildingsPanelManager;
 
-        public void Instantiate()
+        public virtual void Instantiate()
         {
             if (!_isInstantiated)
             {
@@ -43,11 +43,16 @@ namespace StrategyGame.Assets.Scripts.Building
             //     SetUIActive();
             //     Selected = true;
             // }
+            Select();
+        }
+
+        public virtual void Select()
+        {
             SetUIActive();
             Selected = true;
         }
 
-        public void Deselect()
+        public virtual void Deselect()
         {
             SetUIInactive();
             Selected = false;
