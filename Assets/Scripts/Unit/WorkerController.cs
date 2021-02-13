@@ -6,10 +6,12 @@ using UnityEngine.UI;
 using StrategyGame.Assets.Scripts.Building;
 using StrategyGame.Assets.Scripts.UI;
 using UnityEngine.AI;
+using StrategyGame.Assets.Scripts.Unit.Interfaces;
+using StrategyGame.Assets.Scripts.Building.Interfaces;
 
 namespace StrategyGame.Assets.Scripts.Unit
 {
-    public class WorkerController : UnitBase
+    public class WorkerController : UnitBase, IWorkable
     {
         public GameObject ObjectAttachedTo { get; set; }
 
@@ -20,6 +22,7 @@ namespace StrategyGame.Assets.Scripts.Unit
         private Text _speedText;
 
         public bool IsBuilding { get; set; }
+        public GameObject GameObject => this.gameObject;
 
         private void Start()
         {
@@ -54,7 +57,7 @@ namespace StrategyGame.Assets.Scripts.Unit
                 _navMeshAgent.speed = _currentStats.Speed;
             }
 
-            if (this.tag == "AttachedToMineUnit")
+            if (this.tag == "AttachedUnit")
             {
                 if (_animator != null && !_animator.GetBool("IsMining")) // TOOD: rewrite this piece
                 {
@@ -91,39 +94,29 @@ namespace StrategyGame.Assets.Scripts.Unit
         {
             _navMeshAgent.SetDestination(point);
 
-            if (_animator != null)
-            {
-                // _animator.SetBool("IsRuning", true);
-            }
+            // if (_animator != null)
+            // {
+            //     _animator.SetBool("IsRuning", true);
+            // }
 
-            if (this.tag == "AttachedToMineUnit")
+            if (this.tag == "AttachedUnit")
             {
                 if (ObjectAttachedTo != null)
                 {
-                    ObjectAttachedTo.GetComponent<MineController>().DeatachUnit(this);
+                    var workplace = ObjectAttachedTo.GetComponent<IWorkplace>();
+                    workplace.DeatachUnit(this);
                 }
 
-                if (_animator != null)
-                {
-                    _animator.SetBool("IsMining", false);
-                }
+                // if (_animator != null)
+                // {
+                //     _animator.SetBool("IsMining", false);
+                // }
             }
         }
 
-        private void OnCollisionEnter(Collision other)
+        public void SetTag(string tag)
         {
-            if (other.transform.tag == "Terrain" && !_canMove)
-            {
-                _canMove = true;
-            }
-        }
-
-        private void OnCollisionExit(Collision other)
-        {
-            if (other.transform.tag == "Terrain" && _canMove)
-            {
-                _canMove = false;
-            }
+            this.tag = tag;
         }
     }
 }

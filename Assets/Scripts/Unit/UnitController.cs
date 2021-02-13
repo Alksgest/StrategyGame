@@ -57,21 +57,5 @@ namespace StrategyGame.Assets.Scripts.Unit
                 // _animator.SetBool("IsRuning", true);
             }
         }
-
-        private void OnCollisionEnter(Collision other)
-        {
-            if (other.transform.tag == "Terrain" && !_canMove)
-            {
-                _canMove = true;
-            }
-        }
-
-        private void OnCollisionExit(Collision other)
-        {
-            if (other.transform.tag == "Terrain" && _canMove)
-            {
-                _canMove = false;
-            }
-        }
     }
 }

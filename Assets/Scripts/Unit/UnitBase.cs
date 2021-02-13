@@ -20,8 +20,6 @@ namespace StrategyGame.Assets.Scripts.Unit
 
         [SerializeField]
         protected GameObject _unitUI;
-
-        protected bool _canMove = false;
         protected Animator _animator;
 
         public bool Selected { get; protected set; } = false;

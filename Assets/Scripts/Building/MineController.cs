@@ -1,20 +1,24 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+using System;
 using System.Linq;
 using System.Collections.Generic;
 
 using StrategyGame.Assets.Scripts.Util;
 using StrategyGame.Assets.Scripts.Unit;
 using StrategyGame.Assets.Scripts.WorldState;
-using System;
+using StrategyGame.Assets.Scripts.Unit.Interfaces;
+using StrategyGame.Assets.Scripts.Building.Interfaces;
 
 namespace StrategyGame.Assets.Scripts.Building
 {
-    public class MineController : BuildingBase
+    public class MineController : BuildingBase, IWorkplace
     {
         private UnitManager _unitManager;
-        private MineEdge[] _edges;
+        private GameManager _gameManager;
+
+        private Workpalce[] workplaces;
 
         [SerializeField]
         private Text[] _edgesText;
@@ -22,21 +26,18 @@ namespace StrategyGame.Assets.Scripts.Building
         [SerializeField]
         private GameObject[] _unitPlaces;
 
-        [SerializeField]
-        private GameManager _gameManager;
-
         private void Awake()
         {
             _unitManager = FindObjectOfType<UnitManager>();
             _gameManager = FindObjectOfType<GameManager>();
 
-            _edges = new MineEdge[4];
+            workplaces = new Workpalce[_unitPlaces.Length];
 
-            for (int i = 0; i < 4; ++i)
+            for (int i = 0; i < _unitPlaces.Length; ++i)
             {
-                _edges[i] = new MineEdge
+                workplaces[i] = new Workpalce
                 {
-                    UnitTransform = _unitPlaces[i].transform
+                    Position = _unitPlaces[i].transform.position
                 };
             }
 
@@ -45,10 +46,9 @@ namespace StrategyGame.Assets.Scripts.Building
 
         private void AddIron()
         {
-            var bisyEdges = _edges.Where(e => e.IsBusy).Count();
-            if (bisyEdges > 0)
+            foreach (var wp in workplaces)
             {
-                for (int i = 0; i < bisyEdges; ++i)
+                if (wp.IsBusy && wp.IsUnitOnPlace)
                 {
                     _gameManager.AddIron(Owner, 5);
                 }
@@ -67,65 +67,64 @@ namespace StrategyGame.Assets.Scripts.Building
         {
             if (_isInstantiated)
             {
-                SendUnitsToEdge();
+                SendUnitsToWorkplace();
                 base.RightClick(obj);
             }
         }
 
-
-        private void SendUnitsToEdge()
+        private void SendUnitsToWorkplace()
         {
-            var edges = _edges.Where(e => !e.IsBusy).ToList();
+            var freeWorkplaces = workplaces.Where(e => !e.IsBusy).ToList();
             var selected = _unitManager.SelectedWorkers;
 
-            if (edges.Count < selected.Count)
+            if (freeWorkplaces.Count < selected.Count)
             {
-                selected = new List<WorkerController>(_unitManager.SelectedWorkers.GetRange(0, edges.Count));
+                selected = new List<WorkerController>(_unitManager.SelectedWorkers.GetRange(0, freeWorkplaces.Count));
             }
 
             for (int i = 0; i < selected.Count; ++i)
             {
-                var position = edges[i].UnitTransform.position;
+                var position = freeWorkplaces[i].Position;
 
                 selected[i].AskToMove(position);
 
-                AttacheUnit(selected[i], edges[i]);
+                AttacheUnit(selected[i], freeWorkplaces[i]);
             }
         }
 
-        public void AttacheUnit(WorkerController unit, MineEdge edge)
+        public void AttacheUnit(IWorkable unit, Workpalce workplace)
         {
-            edge.AttachedUnit = unit;
-            edge.IsBusy = true;
+            workplace.AttachedUnit = unit;
+            workplace.IsBusy = true;
 
-            unit.tag = "AttachedToMineUnit";
+            unit.SetTag("AttachedUnit");
             unit.ObjectAttachedTo = this.gameObject;
 
-            var position = Array.IndexOf(_edges, edge);
-            _edgesText[position].text = edge.EdgeText;
+            var position = Array.IndexOf(workplaces, workplace);
+            _edgesText[position].text = workplace.BusyText;
         }
 
-        public void DeatachUnit(UnitBase unit)
+        public void DeatachUnit(IWorkable unit)
         {
-            var edge = _edges.FirstOrDefault(el => el.AttachedUnit == unit);
-            if (edge != null)
+            var workplace = workplaces.FirstOrDefault(el => el.AttachedUnit == unit);
+            if (workplace != null)
             {
-                DeatachUnit(edge);
+                DeatachUnit(workplace);
             }
         }
 
-        private void DeatachUnit(MineEdge edge)
+        private void DeatachUnit(Workpalce workplace)
         {
-            if (edge?.AttachedUnit != null)
+            if (workplace?.AttachedUnit != null)
             {
-                edge.AttachedUnit.tag = "Unit";
-                edge.AttachedUnit.ObjectAttachedTo = null;
-                edge.AttachedUnit = null;
+                workplace.AttachedUnit.SetTag("Unit");
+                workplace.AttachedUnit.ObjectAttachedTo = null;
+                workplace.AttachedUnit = null;
 
-                edge.IsBusy = false;
+                workplace.IsBusy = false;
 
-                var position = Array.IndexOf(_edges, edge);
-                _edgesText[position].text = edge.EdgeText;
+                var position = Array.IndexOf(workplaces, workplace);
+                _edgesText[position].text = workplace.BusyText;
             }
         }
 
@@ -133,9 +132,9 @@ namespace StrategyGame.Assets.Scripts.Building
         {
             var gch = FindObjectOfType<GlobalClickHandler>();
 
-            foreach (var edge in _edges)
+            foreach (var workplace in workplaces)
             {
-                DeatachUnit(edge);
+                DeatachUnit(workplace);
             }
         }
     }

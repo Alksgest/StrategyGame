@@ -33,29 +33,24 @@ namespace StrategyGame.Assets.Scripts.Building
 
         public virtual void LeftClick(object obj)
         {
-            if (_buildingsPanelManager == null)
-            {
-                _buildingsPanelManager = FindObjectOfType<BuildingsPanelManager>();
-            }
+            // if (_buildingsPanelManager == null)
+            // {
+            //     _buildingsPanelManager = FindObjectOfType<BuildingsPanelManager>();
+            // }
 
-            if (!_buildingsPanelManager.IsBuildSelected)
-            {
-                SetUIActive();
-                Selected = true;
-            }
+            // if (!_buildingsPanelManager.IsBuildSelected)
+            // {
+            //     SetUIActive();
+            //     Selected = true;
+            // }
+            SetUIActive();
+            Selected = true;
         }
 
         public void Deselect()
         {
-            if (_buildingsPanelManager == null)
-            {
-                _buildingsPanelManager = FindObjectOfType<BuildingsPanelManager>();
-            }
-            if (!_buildingsPanelManager.IsBuildSelected)
-            {
-                SetUIInactive();
-                Selected = false;
-            }
+            SetUIInactive();
+            Selected = false;
         }
 
         public virtual void RightClick(object obj)

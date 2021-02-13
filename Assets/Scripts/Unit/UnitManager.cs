@@ -141,6 +141,11 @@ namespace StrategyGame.Assets.Scripts.Unit
             if (unit != null)
             {
                 unit.Select();
+
+                if (SelectedUnits.Count > 1)
+                {
+                    HideUnitsUI();
+                }
             }
             else if (unit == null && !isWorkerBusy)
             {
