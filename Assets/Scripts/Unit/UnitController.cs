@@ -48,9 +48,9 @@ namespace StrategyGame.Assets.Scripts.Unit
             _unitUI.SetActive(false);
         }
 
-        public override void AskToMove(Vector3 point)
+        public override void Move(Vector3 point)
         {
-            _navMeshAgent.SetDestination(point);
+            base.Move(point);
 
             if (_animator != null)
             {

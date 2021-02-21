@@ -3,7 +3,6 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-using StrategyGame.Assets.Scripts.Building;
 using StrategyGame.Assets.Scripts.UI;
 using UnityEngine.AI;
 using StrategyGame.Assets.Scripts.Unit.Interfaces;
@@ -12,7 +11,7 @@ using StrategyGame.Assets.Scripts.Models.Unit;
 
 namespace StrategyGame.Assets.Scripts.Unit
 {
-    public class WorkerController : UnitBase, IWorkable
+    public class WorkerController : UnitBase, IWorkable // TODO: add new interface for command such as move, attack etc.
     {
         public GameObject ObjectAttachedTo { get; set; }
 
@@ -20,7 +19,7 @@ namespace StrategyGame.Assets.Scripts.Unit
         private BuildingsPanelManager _buildingsPanelManager;
 
         [SerializeField]
-        private Text _speedText;
+        private Text _hpText;
 
         public bool IsBuilding { get; set; }
         public GameObject GameObject => this.gameObject;
@@ -42,9 +41,9 @@ namespace StrategyGame.Assets.Scripts.Unit
                 _navMeshAgent = GetComponent<NavMeshAgent>();
             }
 
-            if (_speedText != null)
+            if (_hpText != null)
             {
-                _speedText.text = $"{_currentStats.Speed}";
+                _hpText.text = $"{_currentStats.Health}";
             }
         }
 
@@ -54,17 +53,23 @@ namespace StrategyGame.Assets.Scripts.Unit
             {
                 _previousStats = UnitStats.MakeCopy(_currentStats);
 
-                _speedText.text = $"{_currentStats.Speed}";
+                _hpText.text = $"{_currentStats.Speed}";
                 _navMeshAgent.speed = _currentStats.Speed;
             }
 
-            if (this.tag == "AttachedUnit")
+            if (_attackTarget != null)
             {
-                if (_animator != null && !_animator.GetBool("IsMining")) // TOOD: rewrite this piece
-                {
-                    _animator.SetBool("IsMining", true);
-                }
+                Debug.Log("Attack");
+                Attack();
             }
+
+            // if (this.tag == "AttachedUnit")
+            // {
+            //     if (_animator != null && !_animator.GetBool("IsMining")) // TOOD: rewrite this piece
+            //     {
+            //         _animator.SetBool("IsMining", true);
+            //     }
+            // }
         }
 
         public override void Select()
@@ -91,9 +96,9 @@ namespace StrategyGame.Assets.Scripts.Unit
             _buildingsPanelManager.gameObject.SetActive(false);
         }
 
-        public override void AskToMove(Vector3 point)
+        public override void Move(Vector3 point)
         {
-            _navMeshAgent.SetDestination(point);
+            base.Move(point);
 
             // if (_animator != null)
             // {

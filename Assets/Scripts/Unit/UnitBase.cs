@@ -22,10 +22,9 @@ namespace StrategyGame.Assets.Scripts.Unit
         protected GameObject _unitUI;
         protected Animator _animator;
 
-        public bool Selected { get; protected set; } = false;
+        protected GameObject _attackTarget;
 
-        public abstract void HideUI();
-        public abstract void AskToMove(Vector3 point);
+        public bool Selected { get; protected set; } = false;
 
         [SerializeField]
         protected NavMeshAgent _navMeshAgent;
@@ -33,6 +32,23 @@ namespace StrategyGame.Assets.Scripts.Unit
         [SerializeField]
         protected UnitStats _currentStats;
         protected UnitStats _previousStats;
+
+        public abstract void HideUI();
+
+        public virtual void AskToMove(Vector3 point)
+        {
+            SetAttackTarget(null);
+            Move(point);
+        }
+        public virtual void Move(Vector3 point)
+        {
+            _navMeshAgent.SetDestination(point);
+        }
+
+        public virtual void SetAttackTarget(GameObject target)
+        {
+            _attackTarget = target;
+        }
 
         public virtual void Instantiate(UnitStats stats)
         {
@@ -60,6 +76,11 @@ namespace StrategyGame.Assets.Scripts.Unit
                 renderer.material = _defaultMaterial;
                 _unitUI.SetActive(false);
             }
+        }
+
+        protected virtual void Attack()
+        {
+            Move(_attackTarget.transform.position - new Vector3(_currentStats.AttackRange, 0, _currentStats.AttackRange));
         }
 
         public bool Equals(UnitBase other)

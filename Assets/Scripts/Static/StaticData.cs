@@ -30,11 +30,12 @@ namespace StrategyGame.Assets.Scripts.Static
                         Prefab = Resources.Load<GameObject>($"{UnitsPrefabPath}/{UnitsNames.Worker}"),
                         UnitStats = new UnitStats
                         {
-                            Armor = 0,
-                            Attack = 1,
-                            Defence = 1,
-                            Health = 5,
-                            Speed = 15
+                            Armor = 0f,
+                            Attack = 1f,
+                            Defence = 1f,
+                            Health = 5f,
+                            Speed = 15f,
+                            AttackRange = 2f
                         }
                     }
                 };

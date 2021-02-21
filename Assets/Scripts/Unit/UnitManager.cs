@@ -112,6 +112,30 @@ namespace StrategyGame.Assets.Scripts.Unit
             _isLeftMouseHold = true;
         }
 
+        private void OnRightClick(RaycastHit hit)
+        {
+            if (hit.transform.root.tag == "BuildingManager")
+            {
+
+            }
+            else if (hit.transform.root.tag == "UnitManager")
+            {
+                AttackObject(hit.transform.gameObject);
+            }
+            else
+            {
+                MoveUnitsToPoint(hit.point);
+            }
+        }
+
+        public void AttackObject(GameObject obj)
+        {
+            foreach (var unit in SelectedUnits)
+            {
+                unit.SetAttackTarget(obj);
+            }
+        }
+
         public void MoveUnitsToPoint(Vector3 point)
         {
             foreach (var unit in SelectedUnits)
@@ -132,7 +156,7 @@ namespace StrategyGame.Assets.Scripts.Unit
         {
             if (_gameManager.CanBuyUnit("mainPlayer", template.UnitName))
             {
-                var unit  = _gameManager.BuyUnit("mainPlayer", template, unitPosition, this.transform);
+                var unit = _gameManager.BuyUnit("mainPlayer", template, unitPosition, this.transform);
 
                 var unitController = unit.GetComponent<UnitBase>();
                 unitController.Instantiate(template.UnitStats);
@@ -215,14 +239,6 @@ namespace StrategyGame.Assets.Scripts.Unit
             Destroy(_selectCanvas);
             _selectCanvas = null;
             _selectImage = null;
-        }
-
-        private void OnRightClick(RaycastHit hit)
-        {
-            if (hit.transform.root.tag != "BuildingManager")
-            {
-                MoveUnitsToPoint(hit.point);
-            }
         }
     }
 }

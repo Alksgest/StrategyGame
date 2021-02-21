@@ -17,6 +17,7 @@ TagManager:
   - Gates
   - AttachedUnit
   - Worker
+  - UnitManager
   layers:
   - Default
   - TransparentFX

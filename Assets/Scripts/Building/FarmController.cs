@@ -121,7 +121,7 @@ namespace StrategyGame.Assets.Scripts.Building
             {
                 var position = freeWorkplaces[i].Position;
 
-                selected[i].AskToMove(position);
+                selected[i].Move(position);
 
                 AttacheUnit(selected[i], freeWorkplaces[i]);
             }

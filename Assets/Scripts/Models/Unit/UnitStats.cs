@@ -10,6 +10,7 @@ namespace StrategyGame.Assets.Scripts.Models.Unit
         public float Attack;
         public float Armor;
         public float Defence;
+        public float AttackRange;
 
         public static UnitStats MakeCopy(UnitStats obj)
         {
@@ -19,7 +20,8 @@ namespace StrategyGame.Assets.Scripts.Models.Unit
                 Attack = obj.Attack,
                 Defence = obj.Defence,
                 Health = obj.Health,
-                Speed = obj.Speed
+                Speed = obj.Speed,
+                AttackRange = obj.AttackRange
             };
         }
 
@@ -30,7 +32,8 @@ namespace StrategyGame.Assets.Scripts.Models.Unit
                    Health == stats.Health &&
                    Attack == stats.Attack &&
                    Armor == stats.Armor &&
-                   Defence == stats.Defence;
+                   Defence == stats.Defence && 
+                   AttackRange == stats.AttackRange;
         }
 
         public override int GetHashCode()
