@@ -1,10 +1,10 @@
-using Assets.Scripts.Behaviour.Common;
+using Assets.Scripts.Behaviour.Building;
 using Assets.Scripts.Commands.Interfaces;
 using UnityEngine;
 
 namespace Assets.Scripts.Building
 {
-    public abstract class BuildingBase : MonoBehaviour, ICommandExecutor<BuildingBase>, ISelectable
+    public abstract class BuildingBase : MonoBehaviour, ICommandExecutor<BuildingBase>, IBuilding
     {
         [SerializeField]
         protected bool IsInstantiated = false;
@@ -47,11 +47,6 @@ namespace Assets.Scripts.Building
             Selected = false;
         }
 
-        public void Destroy()
-        {
-            Destroy(gameObject);
-        }
-
         public void SetUiActive()
         {
             Ui.SetActive(true);
@@ -60,6 +55,11 @@ namespace Assets.Scripts.Building
         public void SetUiInactive()
         {
             Ui.SetActive(false);
+        }
+
+        public void Delete()
+        {
+            Destroy(gameObject);
         }
     }
 }

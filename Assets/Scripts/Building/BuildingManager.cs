@@ -65,7 +65,7 @@ namespace Assets.Scripts.Building
             }
         }
 
-        public void DeselectAll()
+        private void DeselectAll()
         {
             foreach (var building in _buildings.Where(el => el.Selected))
             {

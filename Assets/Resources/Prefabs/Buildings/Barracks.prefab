@@ -171,9 +171,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6764907908869692510}
-        m_TargetAssemblyTypeName: StrategyGame.Assets.Scripts.Building.BuildingBase,
-          Assembly-CSharp
-        m_MethodName: Destroy
+        m_TargetAssemblyTypeName: Assets.Scripts.Building.BuildingBase, Assembly-CSharp
+        m_MethodName: Delete
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

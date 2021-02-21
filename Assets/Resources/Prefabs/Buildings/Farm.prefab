@@ -1249,7 +1249,7 @@ GameObject:
   - component: {fileID: 5098791539135404136}
   - component: {fileID: 3517245721381111443}
   m_Layer: 5
-  m_Name: Button
+  m_Name: DeleteButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
@@ -1357,9 +1357,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 8844654943518298377}
-        m_TargetAssemblyTypeName: StrategyGame.Assets.Scripts.Building.BuildingBase,
-          Assembly-CSharp
-        m_MethodName: Destroy
+        m_TargetAssemblyTypeName: Assets.Scripts.Building.BuildingBase, Assembly-CSharp
+        m_MethodName: Delete
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

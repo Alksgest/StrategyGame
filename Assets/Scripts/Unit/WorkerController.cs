@@ -146,7 +146,6 @@ namespace Assets.Scripts.Unit
         {
             workplace.DetachUnit(this);
             _workplace = null;
-            //TODO: do smth else
         }
     }
 }
