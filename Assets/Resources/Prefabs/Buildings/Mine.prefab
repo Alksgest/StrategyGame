@@ -1253,8 +1253,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42a67a49ee436e5468aac2dff927c83d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isInstantiated: 0
-  _UI: {fileID: 4459344187927171935}
+  IsInstantiated: 0
+  Ui: {fileID: 4459344187927171935}
   _edgesText:
   - {fileID: 7612621277816248570}
   - {fileID: 5118598920224304477}

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace StrategyGame.Assets.Scripts.Util
+namespace Assets.Scripts.Util
 {
     public static class CalculationHelper
     {

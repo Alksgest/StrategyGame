@@ -1,8 +1,7 @@
-using System;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace StrategyGame.Assets.Scripts.Building
+namespace Assets.Scripts.Building
 {
     public class GatesController : BuildingBase
     {

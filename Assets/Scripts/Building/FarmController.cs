@@ -1,14 +1,12 @@
-using UnityEngine;
-
-using StrategyGame.Assets.Scripts.Building.Interfaces;
-using StrategyGame.Assets.Scripts.Unit.Interfaces;
-using StrategyGame.Assets.Scripts.Unit;
-using StrategyGame.Assets.Scripts.WorldState;
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.Building.Interfaces;
+using Assets.Scripts.Unit;
+using Assets.Scripts.Unit.Interfaces;
+using Assets.Scripts.WorldState;
+using UnityEngine;
 
-namespace StrategyGame.Assets.Scripts.Building
+namespace Assets.Scripts.Building
 {
     public class FarmController : BuildingBase, IWorkplace
     {
@@ -70,20 +68,20 @@ namespace StrategyGame.Assets.Scripts.Building
             unit.SetTag("AttachedUnit");
             unit.ObjectAttachedTo = this.gameObject;
 
-            var position = Array.IndexOf(workplaces, workplace);
+            // var position = Array.IndexOf(workplaces, workplace);
             // _edgesText[position].text = workplace.EdgeText;
         }
 
-        public void DeatachUnit(IWorkable unit)
+        public void DetachUnit(IWorkable unit)
         {
             var workplace = workplaces.FirstOrDefault(el => el.AttachedUnit == unit);
             if (workplace != null)
             {
-                DeatachUnit(workplace);
+                DetachUnit(workplace);
             }
         }
 
-        private void DeatachUnit(Workpalce workplace)
+        private void DetachUnit(Workpalce workplace)
         {
             if (workplace?.AttachedUnit != null)
             {
@@ -100,7 +98,7 @@ namespace StrategyGame.Assets.Scripts.Building
 
         public override void RightClick(object obj)
         {
-            if (_isInstantiated)
+            if (IsInstantiated)
             {
                 SendUnitsToWorkplace();
                 base.RightClick(obj);

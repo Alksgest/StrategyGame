@@ -1,96 +1,85 @@
 using System;
-using StrategyGame.Assets.Scripts.Models.Unit;
+using Assets.Scripts.Behaviour;
+using Assets.Scripts.Commands.Interfaces;
+using Assets.Scripts.Models.Unit;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace StrategyGame.Assets.Scripts.Unit
+namespace Assets.Scripts.Unit
 {
-
-    public abstract class UnitBase : MonoBehaviour, IEquatable<UnitBase>
+    public abstract class UnitBase : MonoBehaviour, IEquatable<UnitBase>, ICommandExecutor<UnitBase>, IUnit
     {
+        [SerializeField] protected string UnitId;
+        [SerializeField] protected Material DefaultMaterial;
+        [SerializeField] protected Material SelectedMaterial;
+        [SerializeField] protected GameObject UnitUi;
+        [SerializeField] protected NavMeshAgent NavMeshAgent;
+        [SerializeField] protected UnitStats CurrentStats;
 
-        [SerializeField]
-        protected string _unitId;
-        public string UnitId => _unitId;
-
-        [SerializeField]
-        protected Material _defaultMaterial;
-        [SerializeField]
-        protected Material _selectedMaterial;
-
-        [SerializeField]
-        protected GameObject _unitUI;
-        protected Animator _animator;
-
-        protected GameObject _attackTarget;
+        protected Animator Animator;
+        protected GameObject AttackTarget;
+        protected UnitStats PreviousStats;
 
         public bool Selected { get; protected set; } = false;
 
-        [SerializeField]
-        protected NavMeshAgent _navMeshAgent;
+        public abstract void HideUi();
 
-        [SerializeField]
-        protected UnitStats _currentStats;
-        protected UnitStats _previousStats;
-
-        public abstract void HideUI();
-
-        public virtual void AskToMove(Vector3 point)
+        public void Execute(ICommand<UnitBase> command)
         {
-            SetAttackTarget(null);
-            Move(point);
+            command.Execute(this);
         }
+
         public virtual void Move(Vector3 point)
         {
-            _navMeshAgent.SetDestination(point);
+            SetAttackTarget(null);
+            NavMeshAgent.SetDestination(point);
         }
 
-        public virtual void SetAttackTarget(GameObject target)
+        public virtual void StopMoving()
         {
-            _attackTarget = target;
-        }
-
-        public virtual void Instantiate(UnitStats stats)
-        {
-            _currentStats = stats;
-            _previousStats = UnitStats.MakeCopy(stats);
+            NavMeshAgent.isStopped = true;
         }
 
         public virtual void Select()
         {
-            if (!Selected)
-            {
-                Selected = true;
-                var renderer = GetComponentInChildren<MeshRenderer>();
-                renderer.material = _selectedMaterial;
-                _unitUI.SetActive(true);
-            }
+            Selected = true;
+            var meshRenderer = GetComponentInChildren<MeshRenderer>();
+            meshRenderer.material = SelectedMaterial;
+            UnitUi.SetActive(true);
         }
 
         public virtual void Deselect()
         {
-            if (Selected)
-            {
-                Selected = false;
-                var renderer = GetComponentInChildren<MeshRenderer>();
-                renderer.material = _defaultMaterial;
-                _unitUI.SetActive(false);
-            }
+            Selected = false;
+            var meshRenderer = GetComponentInChildren<MeshRenderer>();
+            meshRenderer.material = DefaultMaterial;
+            UnitUi.SetActive(false);
+        }
+
+        public virtual void SetAttackTarget(GameObject target)
+        {
+            AttackTarget = target;
+        }
+
+        public virtual void Instantiate(UnitStats stats)
+        {
+            CurrentStats = stats;
+            PreviousStats = UnitStats.MakeCopy(stats);
         }
 
         protected virtual void Attack()
         {
-            Move(_attackTarget.transform.position - new Vector3(_currentStats.AttackRange, 0, _currentStats.AttackRange));
+            Move(AttackTarget.transform.position - new Vector3(CurrentStats.AttackRange, 0, CurrentStats.AttackRange));
         }
 
         public bool Equals(UnitBase other)
         {
-            return this._unitId == other.UnitId;
+            return UnitId == other?.UnitId;
         }
 
         public override int GetHashCode()
         {
-            return this._unitId.GetHashCode();
+            return UnitId.GetHashCode();
         }
 
         // protected virtual void Rotate()

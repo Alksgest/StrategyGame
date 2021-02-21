@@ -1,4 +1,4 @@
-namespace StrategyGame.Assets.Scripts.Models.Building
+namespace Assets.Scripts.Models.Building
 {
     public static class BuildingsNames
     {

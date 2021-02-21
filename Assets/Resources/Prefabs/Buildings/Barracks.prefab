@@ -47,8 +47,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66a1013f2dd82df4c9b91b3ac398e241, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isInstantiated: 0
-  _UI: {fileID: 4428716598567582133}
+  IsInstantiated: 0
+  Ui: {fileID: 753949986821503096}
   _barracksUI: {fileID: 753949986821503096}
 --- !u!1 &343400208937730335
 GameObject:

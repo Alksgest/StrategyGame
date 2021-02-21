@@ -1,14 +1,14 @@
-﻿using UnityEngine;
+﻿using System;
+using Assets.Scripts.Util;
+using UnityEngine;
 
-using StrategyGame.Assets.Scripts.Util;
-
-namespace StrategyGame.Assets.Scripts.UI
+namespace Assets.Scripts.Camera
 {
-    public partial class CameraController : MonoBehaviour
+    public class CameraController : MonoBehaviour
     {
 
         [SerializeField]
-        private Camera _camera;
+        private UnityEngine.Camera _camera;
 
         [SerializeField]
         private float _scrollCoefficient = 500.0f;
@@ -22,10 +22,10 @@ namespace StrategyGame.Assets.Scripts.UI
 
         private void Start()
         {
-            _camera = GetComponent<Camera>();
+            _camera = GetComponent<UnityEngine.Camera>();
         }
 
-        void Update()
+        private void Update()
         {
             ScrollCamera();
             MoveCamera();
@@ -84,7 +84,7 @@ namespace StrategyGame.Assets.Scripts.UI
 
         private void ScrollCamera()
         {
-            if (Input.mouseScrollDelta.y != 0)
+            if (Mathf.Abs(Input.mouseScrollDelta.y) > 0)
             {
                 var newY = _camera.transform.position.y - (Input.mouseScrollDelta.y * _scrollCoefficient * Time.deltaTime);
                 newY = Mathf.Clamp(newY, 20, 300);

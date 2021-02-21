@@ -1,4 +1,4 @@
-namespace StrategyGame.Assets.Scripts.Models.Common
+namespace Assets.Scripts.Models.Common
 {
     public class ObjectCost
     {

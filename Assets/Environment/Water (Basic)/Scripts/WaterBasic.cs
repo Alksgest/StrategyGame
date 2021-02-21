@@ -1,7 +1,6 @@
-using System;
 using UnityEngine;
 
-namespace UnityStandardAssets.Water
+namespace Assets.Environment.Scripts
 {
     [ExecuteInEditMode]
     public class WaterBasic : MonoBehaviour

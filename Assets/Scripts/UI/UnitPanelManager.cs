@@ -1,13 +1,10 @@
+using System.Collections.Generic;
+using Assets.Scripts.Models.Unit;
+using Assets.Scripts.Static;
+using Assets.Scripts.Unit;
 using UnityEngine;
 
-using System.Collections.Generic;
-
-using StrategyGame.Assets.Scripts.Models.Unit;
-using StrategyGame.Assets.Scripts.Static;
-using StrategyGame.Assets.Scripts.Unit;
-using StrategyGame.Assets.Scripts.WorldState;
-
-namespace StrategyGame.Assets.Scripts.UI
+namespace Assets.Scripts.UI
 {
     public class UnitPanelManager : MonoBehaviour // TODO: could be abstract base for other
     {

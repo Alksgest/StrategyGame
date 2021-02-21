@@ -1,21 +1,20 @@
-using UnityEngine;
-
 using System.Collections;
-using StrategyGame.Assets.Scripts.Building;
-using StrategyGame.Assets.Scripts.Util;
-using StrategyGame.Assets.Scripts.WorldState;
-using UnityEngine.AI;
-using StrategyGame.Assets.Scripts.Unit;
-using System.Linq;
 using System.Collections.Generic;
-using StrategyGame.Assets.Scripts.Models.Building;
-using StrategyGame.Assets.Scripts.Static;
+using System.Linq;
+using Assets.Scripts.Building;
+using Assets.Scripts.Models.Building;
+using Assets.Scripts.Static;
+using Assets.Scripts.Unit;
+using Assets.Scripts.Util;
+using Assets.Scripts.WorldState;
+using UnityEngine;
+using UnityEngine.AI;
 
-namespace StrategyGame.Assets.Scripts.UI
+namespace Assets.Scripts.UI
 {
     public class BuildingsPanelManager : MonoBehaviour
     {
-        private Camera _camera;
+        private UnityEngine.Camera _camera;
 
         [SerializeField]
         private GameObject _buildingPanelUI;
@@ -51,7 +50,7 @@ namespace StrategyGame.Assets.Scripts.UI
             
             _buildings = StaticData.GetBuildingTemplates();
 
-            _camera = Camera.main;
+            _camera = UnityEngine.Camera.main;
         }
 
         private void Update()
@@ -67,7 +66,7 @@ namespace StrategyGame.Assets.Scripts.UI
             if (ObjectToCreate != null)
             {
                 var mouse = Input.mousePosition;
-                var castPoint = Camera.main.ScreenPointToRay(mouse);
+                var castPoint = UnityEngine.Camera.main.ScreenPointToRay(mouse);
 
                 if (Physics.Raycast(castPoint, out RaycastHit hit, Mathf.Infinity))
                 {

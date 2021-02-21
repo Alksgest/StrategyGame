@@ -747,8 +747,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30f6fc60b061b004b8dea7ae5b45dadc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isInstantiated: 0
-  _UI: {fileID: 8708487865432751923}
+  IsInstantiated: 0
+  Ui: {fileID: 8708487865432751923}
   _unitPlaces:
   - {fileID: 4571528131708876795}
   - {fileID: 8127462582637786029}

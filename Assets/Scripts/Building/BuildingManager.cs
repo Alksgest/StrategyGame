@@ -1,11 +1,9 @@
+using System.Collections.Generic;
+using System.Linq;
+using Assets.Scripts.Util;
 using UnityEngine;
 
-using System.Linq;
-using System.Collections.Generic;
-
-using StrategyGame.Assets.Scripts.Util;
-
-namespace StrategyGame.Assets.Scripts.Building
+namespace Assets.Scripts.Building
 {
     public class BuildingManager : MonoBehaviour
     {
@@ -19,7 +17,6 @@ namespace StrategyGame.Assets.Scripts.Building
             foreach (var b in buildings)
             {
                 b.Instantiate();
-
                 _buildings.Add(b);
             }
 

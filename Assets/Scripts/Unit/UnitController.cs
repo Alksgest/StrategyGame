@@ -1,9 +1,9 @@
 using System;
-using StrategyGame.Assets.Scripts.Models.Unit;
+using Assets.Scripts.Models.Unit;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace StrategyGame.Assets.Scripts.Unit
+namespace Assets.Scripts.Unit
 {
     public class UnitController : UnitBase
     {
@@ -14,45 +14,45 @@ namespace StrategyGame.Assets.Scripts.Unit
 
         private void Start()
         {
-            _unitId = Guid.NewGuid().ToString();
+            UnitId = Guid.NewGuid().ToString();
 
-            _animator = GetComponent<Animator>();
+            Animator = GetComponent<Animator>();
 
-            var renderer = GetComponentInChildren<MeshRenderer>();
-            renderer.material = _defaultMaterial;
+            var meshRenderer = GetComponentInChildren<MeshRenderer>();
+            meshRenderer.material = DefaultMaterial;
 
-            _previousStats = _currentStats;
+            PreviousStats = CurrentStats;
         }
 
         private void Awake()
         {
             if (_speedText != null)
             {
-                _speedText.text = $"{_currentStats.Speed}";
+                _speedText.text = $"{CurrentStats.Speed}";
             }
         }
 
         private void FixedUpdate()
         {
-            if (_currentStats != _previousStats)
+            if (CurrentStats != PreviousStats)
             {
-                _previousStats = UnitStats.MakeCopy(_currentStats);
+                PreviousStats = UnitStats.MakeCopy(CurrentStats);
 
-                _speedText.text = $"{_currentStats.Speed}";
-                _navMeshAgent.speed = _currentStats.Speed;
+                _speedText.text = $"{CurrentStats.Speed}";
+                NavMeshAgent.speed = CurrentStats.Speed;
             }
         }
 
-        public override void HideUI()
+        public override void HideUi()
         {
-            _unitUI.SetActive(false);
+            UnitUi.SetActive(false);
         }
 
         public override void Move(Vector3 point)
         {
             base.Move(point);
 
-            if (_animator != null)
+            if (Animator != null)
             {
                 // _animator.SetBool("IsRuning", true);
             }

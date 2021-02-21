@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace StrategyGame.Assets.Scripts.UI
+namespace Assets.Scripts.UI
 {
     public class MainMenuManager : MonoBehaviour
     {

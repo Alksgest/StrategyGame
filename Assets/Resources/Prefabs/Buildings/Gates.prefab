@@ -1227,7 +1227,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0259263c705571241b1dd99ff9021fba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isInstantiated: 0
-  _UI: {fileID: 6438554802140686037}
+  IsInstantiated: 0
+  Ui: {fileID: 6438554802140686037}
   _animator: {fileID: 8838966091895729519}
   _navMeshObstacle: {fileID: 0}

@@ -1,15 +1,14 @@
-using StrategyGame.Assets.Scripts.UI;
 using UnityEngine;
 
-namespace StrategyGame.Assets.Scripts.Building
+namespace Assets.Scripts.Building
 {
     public abstract class BuildingBase : MonoBehaviour
     {
         [SerializeField]
-        protected bool _isInstantiated = false;
+        protected bool IsInstantiated = false;
 
         [SerializeField]
-        protected GameObject _UI;
+        protected GameObject Ui;
 
         public string Owner { get; protected set; } = "mainPlayer";
 
@@ -17,13 +16,11 @@ namespace StrategyGame.Assets.Scripts.Building
 
         public bool Selected { get; protected set; } = false;
 
-        private BuildingsPanelManager _buildingsPanelManager;
-
         public virtual void Instantiate()
         {
-            if (!_isInstantiated)
+            if (!IsInstantiated)
             {
-                _isInstantiated = true;
+                IsInstantiated = true;
             }
             else
             {
@@ -33,16 +30,6 @@ namespace StrategyGame.Assets.Scripts.Building
 
         public virtual void LeftClick(object obj)
         {
-            // if (_buildingsPanelManager == null)
-            // {
-            //     _buildingsPanelManager = FindObjectOfType<BuildingsPanelManager>();
-            // }
-
-            // if (!_buildingsPanelManager.IsBuildSelected)
-            // {
-            //     SetUIActive();
-            //     Selected = true;
-            // }
             Select();
         }
 
@@ -70,17 +57,17 @@ namespace StrategyGame.Assets.Scripts.Building
 
         public void SetUIActive()
         {
-            _UI.SetActive(true);
+            Ui.SetActive(true);
         }
 
         public void SetUIInactive()
         {
-            _UI.SetActive(false);
+            Ui.SetActive(false);
         }
 
         private void OnCollisionEnter(Collision other)
         {
-            if (_isInstantiated)
+            if (IsInstantiated)
             {
                 CanBePlaced = false;
             }
@@ -88,7 +75,7 @@ namespace StrategyGame.Assets.Scripts.Building
 
         private void OnCollisionExit(Collision other)
         {
-            if (_isInstantiated)
+            if (IsInstantiated)
             {
                 CanBePlaced = true;
             }

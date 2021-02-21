@@ -1,7 +1,7 @@
-using StrategyGame.Assets.Scripts.Models.Common;
+using Assets.Scripts.Models.Common;
 using UnityEngine;
 
-namespace StrategyGame.Assets.Scripts.Models.Unit
+namespace Assets.Scripts.Models.Unit
 {
     public class UnitTemplate
     {

@@ -128,17 +128,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e42472805975ec34ba1b5beaba34d44a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _unitId: 
-  _defaultMaterial: {fileID: 2100000, guid: e17cc9ee7e4152a4e9ed3b67a8d4a1db, type: 2}
-  _selectedMaterial: {fileID: 2100000, guid: 76544da34e0ca5443a3098f5b78d03e6, type: 2}
-  _unitUI: {fileID: 2194877945874629389}
-  _navMeshAgent: {fileID: 3238888164651354792}
-  _currentStats:
-    Speed: 15
-    Health: 10
+  UnitId: 
+  DefaultMaterial: {fileID: 2100000, guid: e17cc9ee7e4152a4e9ed3b67a8d4a1db, type: 2}
+  SelectedMaterial: {fileID: 2100000, guid: 76544da34e0ca5443a3098f5b78d03e6, type: 2}
+  UnitUi: {fileID: 2194877945874629389}
+  NavMeshAgent: {fileID: 3238888164651354792}
+  CurrentStats:
+    Speed: 0
+    Health: 0
     Attack: 0
     Armor: 0
     Defence: 0
+    AttackRange: 0
   _buildingsPanelManager: {fileID: 7059732006992515478}
   _hpText: {fileID: 1525038600017571196}
 --- !u!195 &3238888164651354792
@@ -152,9 +153,9 @@ NavMeshAgent:
   m_AgentTypeID: 0
   m_Radius: 0.6
   m_Speed: 15
-  m_Acceleration: 30
+  m_Acceleration: 100
   avoidancePriority: 50
-  m_AngularSpeed: 180
+  m_AngularSpeed: 200
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1

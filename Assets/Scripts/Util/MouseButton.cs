@@ -1,4 +1,4 @@
-namespace StrategyGame.Assets.Scripts.Util
+namespace Assets.Scripts.Util
 {
         public enum MouseButton
         {

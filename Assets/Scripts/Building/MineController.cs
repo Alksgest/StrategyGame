@@ -1,17 +1,14 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Assets.Scripts.Building.Interfaces;
+using Assets.Scripts.Unit;
+using Assets.Scripts.Unit.Interfaces;
+using Assets.Scripts.WorldState;
 using UnityEngine;
 using UnityEngine.UI;
 
-using System;
-using System.Linq;
-using System.Collections.Generic;
-
-using StrategyGame.Assets.Scripts.Util;
-using StrategyGame.Assets.Scripts.Unit;
-using StrategyGame.Assets.Scripts.WorldState;
-using StrategyGame.Assets.Scripts.Unit.Interfaces;
-using StrategyGame.Assets.Scripts.Building.Interfaces;
-
-namespace StrategyGame.Assets.Scripts.Building
+namespace Assets.Scripts.Building
 {
     public class MineController : BuildingBase, IWorkplace
     {
@@ -67,7 +64,7 @@ namespace StrategyGame.Assets.Scripts.Building
 
         public override void LeftClick(object obj)
         {
-            if (_isInstantiated)
+            if (IsInstantiated)
             {
                 base.LeftClick(obj);
             }
@@ -75,7 +72,7 @@ namespace StrategyGame.Assets.Scripts.Building
 
         public override void RightClick(object obj)
         {
-            if (_isInstantiated)
+            if (IsInstantiated)
             {
                 SendUnitsToWorkplace();
                 base.RightClick(obj);
@@ -114,16 +111,16 @@ namespace StrategyGame.Assets.Scripts.Building
             _edgesText[position].text = workplace.BusyText;
         }
 
-        public void DeatachUnit(IWorkable unit)
+        public void DetachUnit(IWorkable unit)
         {
             var workplace = workplaces.FirstOrDefault(el => el.AttachedUnit == unit);
             if (workplace != null)
             {
-                DeatachUnit(workplace);
+                DetachUnit(workplace);
             }
         }
 
-        private void DeatachUnit(Workpalce workplace)
+        private void DetachUnit(Workpalce workplace)
         {
             if (workplace?.AttachedUnit != null)
             {
@@ -140,11 +137,9 @@ namespace StrategyGame.Assets.Scripts.Building
 
         private void OnDestroy()
         {
-            var gch = FindObjectOfType<GlobalClickHandler>();
-
             foreach (var workplace in workplaces)
             {
-                DeatachUnit(workplace);
+                DetachUnit(workplace);
             }
         }
     }

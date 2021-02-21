@@ -1,8 +1,7 @@
 using System;
-
 using UnityEngine;
 
-namespace StrategyGame.Assets.Scripts.Util
+namespace Assets.Scripts.Util
 {
     public class GlobalClickHandler : MonoBehaviour
     {
@@ -27,7 +26,7 @@ namespace StrategyGame.Assets.Scripts.Util
         {
             if (Input.GetMouseButtonDown((int)MouseButton.RightMouseButton))
             {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                Ray ray = UnityEngine.Camera.main.ScreenPointToRay(Input.mousePosition);
 
                 if (Physics.Raycast(ray, out RaycastHit hit))
                 {
@@ -43,7 +42,7 @@ namespace StrategyGame.Assets.Scripts.Util
         {
             if (Input.GetMouseButton((int)MouseButton.RightMouseButton))
             {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                Ray ray = UnityEngine.Camera.main.ScreenPointToRay(Input.mousePosition);
 
                 if (Physics.Raycast(ray, out RaycastHit hit))
                 {
@@ -59,7 +58,7 @@ namespace StrategyGame.Assets.Scripts.Util
         {
             if (Input.GetMouseButtonDown((int)MouseButton.LeftMouseButton))
             {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                Ray ray = UnityEngine.Camera.main.ScreenPointToRay(Input.mousePosition);
 
                 if (Physics.Raycast(ray, out RaycastHit hit))
                 {
@@ -75,7 +74,7 @@ namespace StrategyGame.Assets.Scripts.Util
         {
             if (Input.GetMouseButton((int)MouseButton.LeftMouseButton))
             {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                Ray ray = UnityEngine.Camera.main.ScreenPointToRay(Input.mousePosition);
 
                 if (Physics.Raycast(ray, out RaycastHit hit))
                 {
@@ -91,7 +90,7 @@ namespace StrategyGame.Assets.Scripts.Util
         {
             if (Input.GetMouseButtonUp((int)MouseButton.RightMouseButton))
             {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                Ray ray = UnityEngine.Camera.main.ScreenPointToRay(Input.mousePosition);
 
                 if (Physics.Raycast(ray, out RaycastHit hit))
                 {
@@ -107,7 +106,7 @@ namespace StrategyGame.Assets.Scripts.Util
         {
             if (Input.GetMouseButtonUp((int)MouseButton.LeftMouseButton))
             {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                Ray ray = UnityEngine.Camera.main.ScreenPointToRay(Input.mousePosition);
 
                 if (Physics.Raycast(ray, out RaycastHit hit))
                 {

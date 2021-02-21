@@ -1,4 +1,4 @@
-namespace StrategyGame.Assets.Scripts.Building
+namespace Assets.Scripts.Building
 {
     public class ShootingRangeConroller : BuildingBase
     {

@@ -1,14 +1,14 @@
+using System.Collections.Generic;
+using System.Linq;
+using Assets.Scripts.Commands;
+using Assets.Scripts.Models.Unit;
+using Assets.Scripts.Static;
+using Assets.Scripts.Util;
+using Assets.Scripts.WorldState;
 using UnityEngine;
 using UnityEngine.UI;
 
-using System.Linq;
-using System.Collections.Generic;
-
-using StrategyGame.Assets.Scripts.Util;
-using StrategyGame.Assets.Scripts.WorldState;
-using StrategyGame.Assets.Scripts.Models.Unit;
-
-namespace StrategyGame.Assets.Scripts.Unit
+namespace Assets.Scripts.Unit
 {
     public class UnitManager : MonoBehaviour
     {
@@ -17,9 +17,8 @@ namespace StrategyGame.Assets.Scripts.Unit
         public List<UnitBase> SelectedUnits => _unitControllers.Where(unit => unit.Selected).ToList();
 
         public List<WorkerController> SelectedWorkers => SelectedUnits
-                                                        .Where(unit => unit is WorkerController)
-                                                        .Select(unit => unit as WorkerController)
-                                                        .ToList();
+            .OfType<WorkerController>()
+            .ToList();
 
         private bool _isLeftMouseHold = false;
         private GameObject _selectCanvas = null;
@@ -36,6 +35,17 @@ namespace StrategyGame.Assets.Scripts.Unit
             var units = Resources.FindObjectsOfTypeAll<UnitBase>();
 
             _unitControllers = units.Distinct().ToList();
+
+            var unitTemplates = StaticData.GetUnitTemplates();
+
+            foreach (var unit in _unitControllers)
+            {
+                var t = unitTemplates.SingleOrDefault(el => el.UnitName == unit.tag);
+                if (t != null)
+                {
+                    unit.Instantiate(t.UnitStats);
+                }
+            }
 
             var gch = FindObjectOfType<GlobalClickHandler>();
             gch.LeftMouseButtonUp += OnLeftClick;
@@ -76,9 +86,8 @@ namespace StrategyGame.Assets.Scripts.Unit
             // }
         }
 
-        private void DrowRect(Image image, Vector3 right)
+        private void DrawRect(Image image, Vector3 right)
         {
-
             image.rectTransform.sizeDelta =
                 CalculationHelper.CalculateRectangleSize(_startHitPoint, right);
             image.transform.position =
@@ -87,14 +96,12 @@ namespace StrategyGame.Assets.Scripts.Unit
 
         private void CreateSelectCanvas(Vector3 position)
         {
-            _selectCanvas = new GameObject();
-            _selectCanvas.name = "SelectionCanvas";
+            _selectCanvas = new GameObject {name = "SelectionCanvas"};
 
             var canvas = _selectCanvas.AddComponent<Canvas>();
 
-            _selectImage = new GameObject();
+            _selectImage = new GameObject {name = "SelectionRectangle"};
             _selectImage.transform.SetParent(canvas.transform);
-            _selectImage.name = "SelectionRectangle";
             _selectImage.transform.Rotate(new Vector3(90, 0, 0));
 
             var image = _selectImage.AddComponent<Image>();
@@ -114,17 +121,16 @@ namespace StrategyGame.Assets.Scripts.Unit
 
         private void OnRightClick(RaycastHit hit)
         {
-            if (hit.transform.root.tag == "BuildingManager")
+            switch (hit.transform.root.tag)
             {
-
-            }
-            else if (hit.transform.root.tag == "UnitManager")
-            {
-                AttackObject(hit.transform.gameObject);
-            }
-            else
-            {
-                MoveUnitsToPoint(hit.point);
+                case "BuildingManager":
+                    break;
+                case "UnitManager":
+                    AttackObject(hit.transform.gameObject);
+                    break;
+                default:
+                    MoveUnitsToPoint(hit.point);
+                    break;
             }
         }
 
@@ -140,7 +146,7 @@ namespace StrategyGame.Assets.Scripts.Unit
         {
             foreach (var unit in SelectedUnits)
             {
-                unit.AskToMove(point);
+                unit.Execute(new MoveCommand<UnitBase>(point));
             }
         }
 
@@ -148,21 +154,20 @@ namespace StrategyGame.Assets.Scripts.Unit
         {
             foreach (var unit in SelectedUnits)
             {
-                unit.Deselect();
+                unit.Execute(new DeselectCommand<UnitBase>());
             }
         }
 
         public void CreateUnit(UnitTemplate template, Vector3 unitPosition)
         {
-            if (_gameManager.CanBuyUnit("mainPlayer", template.UnitName))
-            {
-                var unit = _gameManager.BuyUnit("mainPlayer", template, unitPosition, this.transform);
+            if (!_gameManager.CanBuyUnit("mainPlayer", template.UnitName)) return;
 
-                var unitController = unit.GetComponent<UnitBase>();
-                unitController.Instantiate(template.UnitStats);
+            var unit = _gameManager.BuyUnit("mainPlayer", template, unitPosition, transform);
 
-                _unitControllers.Add(unit.GetComponent<UnitBase>());
-            }
+            var unitController = unit.GetComponent<UnitBase>();
+            unitController.Instantiate(template.UnitStats);
+
+            _unitControllers.Add(unit.GetComponent<UnitBase>());
         }
 
         private void OnLeftClick(RaycastHit hit)
@@ -178,26 +183,26 @@ namespace StrategyGame.Assets.Scripts.Unit
             var unit = hit.transform.gameObject.GetComponent<UnitBase>();
             if (unit != null)
             {
-                unit.Select();
+                unit.Execute(new SelectCommand<UnitBase>());
 
                 if (SelectedUnits.Count > 1)
                 {
-                    HideUnitsUI();
+                    HideUnitsUi();
                 }
             }
-            else if (unit == null && !isWorkerBusy)
+            else if (!isWorkerBusy)
             {
                 DeselectAll();
             }
         }
 
-        private void HideUnitsUI()
+        private void HideUnitsUi()
         {
             if (SelectedUnits.Count > 1)
             {
                 foreach (var u in SelectedUnits)
                 {
-                    u.HideUI();
+                    u.HideUi();
                 }
             }
         }
@@ -220,7 +225,7 @@ namespace StrategyGame.Assets.Scripts.Unit
                 }
                 if (SelectedUnits.Count > 1)
                 {
-                    HideUnitsUI();
+                    HideUnitsUi();
                 }
             }
         }

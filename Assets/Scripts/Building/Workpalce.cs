@@ -1,7 +1,7 @@
+using Assets.Scripts.Unit.Interfaces;
 using UnityEngine;
-using StrategyGame.Assets.Scripts.Unit.Interfaces;
 
-namespace StrategyGame.Assets.Scripts.Building
+namespace Assets.Scripts.Building
 {
     public class Workpalce
     {

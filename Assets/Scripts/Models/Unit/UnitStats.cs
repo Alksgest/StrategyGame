@@ -1,6 +1,6 @@
 using System;
 
-namespace StrategyGame.Assets.Scripts.Models.Unit
+namespace Assets.Scripts.Models.Unit
 {
     [Serializable]
     public class UnitStats

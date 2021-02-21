@@ -1,63 +1,61 @@
 using System;
-
+using Assets.Scripts.Building.Interfaces;
+using Assets.Scripts.Models.Unit;
+using Assets.Scripts.UI;
+using Assets.Scripts.Unit.Interfaces;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.UI;
 
-using StrategyGame.Assets.Scripts.UI;
-using UnityEngine.AI;
-using StrategyGame.Assets.Scripts.Unit.Interfaces;
-using StrategyGame.Assets.Scripts.Building.Interfaces;
-using StrategyGame.Assets.Scripts.Models.Unit;
-
-namespace StrategyGame.Assets.Scripts.Unit
+namespace Assets.Scripts.Unit
 {
     public class WorkerController : UnitBase, IWorkable // TODO: add new interface for command such as move, attack etc.
     {
         public GameObject ObjectAttachedTo { get; set; }
 
         [SerializeField]
-        private BuildingsPanelManager _buildingsPanelManager;
+        private BuildingsPanelManager _buildingsPanelManager = null;
 
         [SerializeField]
-        private Text _hpText;
+        private Text _hpText = null;
 
         public bool IsBuilding { get; set; }
         public GameObject GameObject => this.gameObject;
 
         private void Start()
         {
-            _unitId = Guid.NewGuid().ToString();
+            UnitId = Guid.NewGuid().ToString();
 
-            _animator = GetComponent<Animator>();
+            Animator = GetComponent<Animator>();
 
-            var renderer = GetComponentInChildren<MeshRenderer>();
-            renderer.material = _defaultMaterial;
+            var meshRenderer = GetComponentInChildren<MeshRenderer>();
+            meshRenderer.material = DefaultMaterial;
         }
 
         private void Awake()
         {
-            if (_navMeshAgent == null)
+            if (NavMeshAgent == null)
             {
-                _navMeshAgent = GetComponent<NavMeshAgent>();
+                NavMeshAgent = GetComponent<NavMeshAgent>();
             }
 
             if (_hpText != null)
             {
-                _hpText.text = $"{_currentStats.Health}";
+                UpdateUi();
             }
         }
 
         private void FixedUpdate()
         {
-            if (_currentStats != _previousStats)
+            if (!Equals(CurrentStats, PreviousStats))
             {
-                _previousStats = UnitStats.MakeCopy(_currentStats);
+                PreviousStats = UnitStats.MakeCopy(CurrentStats);
 
-                _hpText.text = $"{_currentStats.Speed}";
-                _navMeshAgent.speed = _currentStats.Speed;
+                UpdateUi();
+                NavMeshAgent.speed = CurrentStats.Speed;
             }
 
-            if (_attackTarget != null)
+            if (AttackTarget != null)
             {
                 Debug.Log("Attack");
                 Attack();
@@ -72,27 +70,37 @@ namespace StrategyGame.Assets.Scripts.Unit
             // }
         }
 
+        private void UpdateUi()
+        {
+            _hpText.text = $"{CurrentStats.Health}";
+        }
+
+        public override void Instantiate(UnitStats stats)
+        {
+            base.Instantiate(stats);
+            CurrentStats = stats;
+            PreviousStats = UnitStats.MakeCopy(stats);
+        }
+
         public override void Select()
         {
-            if (!Selected)
-            {
-                _buildingsPanelManager.gameObject.SetActive(true);
-                base.Select();
-            }
+            if (Selected) return;
+
+            _buildingsPanelManager.gameObject.SetActive(true);
+            base.Select();
         }
 
         public override void Deselect()
         {
-            if (Selected)
-            {
-                _buildingsPanelManager.gameObject.SetActive(false);
-                base.Deselect();
-            }
+            if (!Selected) return;
+
+            _buildingsPanelManager.gameObject.SetActive(false);
+            base.Deselect();
         }
 
-        public override void HideUI()
+        public override void HideUi()
         {
-            _unitUI.SetActive(false);
+            UnitUi.SetActive(false);
             _buildingsPanelManager.gameObject.SetActive(false);
         }
 
@@ -110,7 +118,7 @@ namespace StrategyGame.Assets.Scripts.Unit
                 if (ObjectAttachedTo != null)
                 {
                     var workplace = ObjectAttachedTo.GetComponent<IWorkplace>();
-                    workplace.DeatachUnit(this);
+                    workplace.DetachUnit(this);
                 }
 
                 // if (_animator != null)
