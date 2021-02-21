@@ -2,7 +2,7 @@
 
 namespace Assets.Scripts.Behaviour.Unit
 {
-    public interface IUnit : IMovable, ISelectable, IAttachable
+    public interface IUnit : IMovable, ISelectable, IAttachable, IAttackSusceptible
     {
     }
 }

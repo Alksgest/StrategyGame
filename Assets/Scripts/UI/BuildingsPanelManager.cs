@@ -9,6 +9,7 @@ using Assets.Scripts.Util;
 using Assets.Scripts.WorldState;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Assertions.Must;
 
 namespace Assets.Scripts.UI
 {
@@ -16,8 +17,7 @@ namespace Assets.Scripts.UI
     {
         private UnityEngine.Camera _camera;
 
-        [SerializeField]
-        private GameObject _buildingPanelUI;
+        [SerializeField] private GameObject _buildingPanelUI;
 
         public bool IsBuildSelected { get; private set; } = false;
 
@@ -31,8 +31,7 @@ namespace Assets.Scripts.UI
         private UnitManager _unitManager;
         private NavMeshSurface _surface;
 
-        [SerializeField]
-        private WorkerController _worker;
+        [SerializeField] private WorkerController _worker;
 
         private List<BuildingTemplate> _buildings;
 
@@ -47,7 +46,7 @@ namespace Assets.Scripts.UI
             _buildingManager = FindObjectOfType<BuildingManager>();
             _unitManager = FindObjectOfType<UnitManager>();
             _surface = FindObjectOfType<NavMeshSurface>();
-            
+
             _buildings = StaticData.GetBuildingTemplates();
 
             _camera = UnityEngine.Camera.main;
@@ -70,7 +69,8 @@ namespace Assets.Scripts.UI
 
                 if (Physics.Raycast(castPoint, out RaycastHit hit, Mathf.Infinity))
                 {
-                    ObjectToCreate.transform.position = new Vector3(hit.point.x, ObjectToCreate.transform.position.y, hit.point.z);
+                    var v = new Vector3(hit.point.x, ObjectToCreate.transform.position.y, hit.point.z);
+                    ObjectToCreate.transform.position = v;
                 }
             }
         }
@@ -86,7 +86,12 @@ namespace Assets.Scripts.UI
             var z = Input.GetAxis("Mouse Y");
 
             ObjectToCreate = Instantiate(prefab, new Vector3(x, y, z), new Quaternion(), _buildingManager.transform);
-            ObjectToCreate.layer = 8;
+            ObjectToCreate.layer = LayerMask.NameToLayer("Terrain");
+
+            //foreach (var child in transform.GetComponentsInChildren<BoxCollider>())
+            //{
+            //    child.isTrigger = true;
+            //}
 
             _worker.IsBuilding = true;
 
@@ -96,6 +101,7 @@ namespace Assets.Scripts.UI
         public void SetBuildingOnPlace(BuildingBase building)
         {
             building.Instantiate();
+            ObjectToCreate.layer = LayerMask.NameToLayer("Terrain");
             ObjectToCreate = null;
             IsBuildSelected = false;
             _buildingManager.AddBuilding(building);
@@ -127,7 +133,6 @@ namespace Assets.Scripts.UI
                 var building = ObjectToCreate.GetComponent<BuildingBase>();
                 var buildingTag = building.tag;
                 if (
-                    building != null &&
                     building.CanBePlaced &&
                     _gameManager.CanPlaceBuilding("mainPlayer", buildingTag))
                 {
@@ -143,7 +148,8 @@ namespace Assets.Scripts.UI
         {
             RemoveUnsettedBuilding();
 
-            if (hit.transform.tag == this.tag && !_unitManager.SelectedUnits.Any() && !_buildingManager.SelectedBuildings.Any())
+            if (hit.transform.tag == this.tag && !_unitManager.SelectedUnits.Any() &&
+                !_buildingManager.SelectedBuildings.Any())
             {
                 ManageEmptyRightClick();
             }

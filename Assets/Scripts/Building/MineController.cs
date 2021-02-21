@@ -108,6 +108,8 @@ namespace Assets.Scripts.Building
 
         private void OnDestroy()
         {
+            if (_workplaces == null) return;
+
             foreach (var workplace in _workplaces)
             {
                 DetachUnit(workplace);

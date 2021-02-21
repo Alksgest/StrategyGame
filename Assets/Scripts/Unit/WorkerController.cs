@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Assets.Scripts.Behaviour.Building;
 using Assets.Scripts.Behaviour.Unit;
 using Assets.Scripts.Commands.Interfaces;
@@ -28,6 +29,8 @@ namespace Assets.Scripts.Unit
 
             var meshRenderer = GetComponentInChildren<MeshRenderer>();
             meshRenderer.material = DefaultMaterial;
+
+            InvokeRepeating(nameof(ExecuteLastRejectableCommand), .01f, 0.1f);
         }
 
         private void Awake()
@@ -52,8 +55,6 @@ namespace Assets.Scripts.Unit
                 UpdateUi();
                 NavMeshAgent.speed = CurrentStats.Speed;
             }
-
-            ExecuteLastRejectableCommand();
         }
 
         protected override void ExecuteLastRejectableCommand()
@@ -94,16 +95,15 @@ namespace Assets.Scripts.Unit
             command.Execute(this);
         }
 
+        public override void TakeDamage(float value)
+        {
+            base.TakeDamage(value);
+            UpdateUi();
+        }
+
         private void UpdateUi()
         {
             _hpText.text = $"{CurrentStats.Health}";
-        }
-
-        public override void Instantiate(UnitStats stats)
-        {
-            base.Instantiate(stats);
-            CurrentStats = stats;
-            PreviousStats = UnitStats.MakeCopy(stats);
         }
 
         public override void Select()

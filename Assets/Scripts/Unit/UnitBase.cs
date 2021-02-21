@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Assets.Scripts.Behaviour.Common;
 using Assets.Scripts.Behaviour.Unit;
 using Assets.Scripts.Commands.Interfaces;
@@ -22,6 +23,8 @@ namespace Assets.Scripts.Unit
         protected UnitStats PreviousStats;
         protected GameObject ObjectAttachedTo;
         protected IRejectableCommand<UnitBase> LastRejectableCommand;
+
+        protected bool IsAttackCoroutineDone = true;
 
         public bool Selected { get; protected set; } = false;
 
@@ -61,8 +64,42 @@ namespace Assets.Scripts.Unit
 
         public void Attack(GameObject target)
         {
-            AttackTarget = target;
-            Move(AttackTarget.transform.position - new Vector3(CurrentStats.AttackRange, 0, CurrentStats.AttackRange));
+            if (AttackTarget == null)
+            {
+                AttackTarget = target;
+            }
+
+            var ias = target.GetComponent<IAttackSusceptible>();
+            if (ias == null)
+            {
+                RejectLastCommand();
+                return;
+            }
+
+            var attackPosition = AttackTarget.transform.position -
+                                 new Vector3(CurrentStats.AttackRange, 0, CurrentStats.AttackRange);
+
+            var routine = MakeDamage(ias);
+
+            if (transform.position != attackPosition)
+            {
+                StopCoroutine(routine);
+                Move(AttackTarget.transform.position -
+                     new Vector3(CurrentStats.AttackRange, 0, CurrentStats.AttackRange));
+            }
+            else if(IsAttackCoroutineDone)
+            {
+                StartCoroutine(routine);
+            }
+        }
+
+        private IEnumerator MakeDamage(IAttackSusceptible ias)
+        {
+            IsAttackCoroutineDone = false;
+            yield return new WaitForSeconds(1f);
+            ias.TakeDamage(CurrentStats.Attack);
+            yield return new WaitForSeconds(1f);
+            IsAttackCoroutineDone = true;
         }
 
         public void StopAttacking()
@@ -97,20 +134,17 @@ namespace Assets.Scripts.Unit
             UnitUi.SetActive(false);
         }
 
-        //protected virtual void SetAttackTarget(GameObject target)
-        //{
-        //    AttackTarget = target;
-        //}
-
-        //protected virtual void Attack()
-        //{
-        //    Move(AttackTarget.transform.position - new Vector3(CurrentStats.AttackRange, 0, CurrentStats.AttackRange));
-        //}
+        public virtual void TakeDamage(float value)
+        {
+            var damage = (value - CurrentStats.Armor) / CurrentStats.Defence;
+            PreviousStats = UnitStats.MakeCopy(CurrentStats);
+            CurrentStats.Health -= damage;
+        }
 
         public virtual void Instantiate(UnitStats stats)
         {
-            CurrentStats = stats;
-            PreviousStats = UnitStats.MakeCopy(stats);
+            CurrentStats = UnitStats.MakeCopy(stats);
+            PreviousStats = UnitStats.MakeCopy(CurrentStats);
         }
 
         public bool Equals(UnitBase other)
