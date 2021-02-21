@@ -128,6 +128,12 @@ namespace Assets.Scripts.Unit
             _buildingsPanelManager.gameObject.SetActive(false);
         }
 
+        public override void Delete()
+        {
+            Destroy(gameObject);
+            Destroy(_buildingsPanelManager.gameObject);
+        }
+
         public void AttachToWork(IWorkplace workplace)
         {
             if (_workplace == null)

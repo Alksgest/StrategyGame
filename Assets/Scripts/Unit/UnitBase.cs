@@ -27,6 +27,7 @@ namespace Assets.Scripts.Unit
         protected bool IsAttackCoroutineDone = true;
 
         public bool Selected { get; protected set; } = false;
+        public bool IsAlive => CurrentStats.Health > 0;
 
         public abstract void HideUi();
 
@@ -64,6 +65,12 @@ namespace Assets.Scripts.Unit
 
         public void Attack(GameObject target)
         {
+            if (target == null)
+            {
+                RejectLastCommand();
+                return;
+            }
+
             if (AttackTarget == null)
             {
                 AttackTarget = target;
@@ -96,9 +103,9 @@ namespace Assets.Scripts.Unit
         private IEnumerator MakeDamage(IAttackSusceptible ias)
         {
             IsAttackCoroutineDone = false;
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(CurrentStats.AttackSpeed / 2);
             ias.TakeDamage(CurrentStats.Attack);
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(CurrentStats.AttackSpeed / 2);
             IsAttackCoroutineDone = true;
         }
 
@@ -145,6 +152,11 @@ namespace Assets.Scripts.Unit
         {
             CurrentStats = UnitStats.MakeCopy(stats);
             PreviousStats = UnitStats.MakeCopy(CurrentStats);
+        }
+
+        public virtual void Delete()
+        {
+            Destroy(gameObject);
         }
 
         public bool Equals(UnitBase other)

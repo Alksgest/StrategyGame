@@ -17,7 +17,7 @@ namespace Assets.Scripts.UI
     {
         private UnityEngine.Camera _camera;
 
-        [SerializeField] private GameObject _buildingPanelUI;
+        [SerializeField] private GameObject _buildingPanelUi = null;
 
         public bool IsBuildSelected { get; private set; } = false;
 
@@ -146,6 +146,12 @@ namespace Assets.Scripts.UI
 
         private void OnRightClick(RaycastHit hit)
         {
+            if (this?.gameObject == null)
+            {
+                Destroy(this);
+                return;
+            }
+
             RemoveUnsettedBuilding();
 
             if (hit.transform.tag == this.tag && !_unitManager.SelectedUnits.Any() &&
@@ -157,13 +163,13 @@ namespace Assets.Scripts.UI
 
         private void ManageEmptyRightClick()
         {
-            if (_buildingPanelUI.activeSelf)
+            if (_buildingPanelUi.activeSelf)
             {
-                _buildingPanelUI.SetActive(false);
+                _buildingPanelUi.SetActive(false);
             }
             else
             {
-                _buildingPanelUI.SetActive(true);
+                _buildingPanelUi.SetActive(true);
             }
         }
     }

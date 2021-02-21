@@ -140,8 +140,9 @@ MonoBehaviour:
     Armor: 0
     Defence: 0
     AttackRange: 0
-  _buildingsPanelManager: {fileID: 7059732006992515478}
+    AttackSpeed: 0
   _hpText: {fileID: 1525038600017571196}
+  _buildingsPanelManager: {fileID: 7059732006992515478}
 --- !u!195 &3238888164651354792
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -191,6 +192,11 @@ PrefabInstance:
       propertyPath: _buildingPanelUI
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 5632196308724410334, guid: e51ec2aecdea1f94cbd6d942d1ce0f33,
+        type: 3}
+      propertyPath: _buildingPanelUi
+      value: 
+      objectReference: {fileID: 4372698200627178346}
     - target: {fileID: 7286214440303324305, guid: e51ec2aecdea1f94cbd6d942d1ce0f33,
         type: 3}
       propertyPath: m_LocalPosition.y
@@ -271,6 +277,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f83f46dd30fe8c84da086728af03b178, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &4372698200627178346 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1404649950254013730, guid: e51ec2aecdea1f94cbd6d942d1ce0f33,
+    type: 3}
+  m_PrefabInstance: {fileID: 3445430085773325896}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5743261948994272257
 PrefabInstance:
   m_ObjectHideFlags: 0

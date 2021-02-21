@@ -11,6 +11,7 @@ namespace Assets.Scripts.Models.Unit
         public float Armor;
         public float Defence;
         public float AttackRange;
+        public float AttackSpeed;
 
         public static UnitStats MakeCopy(UnitStats obj)
         {
@@ -21,7 +22,8 @@ namespace Assets.Scripts.Models.Unit
                 Defence = obj.Defence,
                 Health = obj.Health,
                 Speed = obj.Speed,
-                AttackRange = obj.AttackRange
+                AttackRange = obj.AttackRange,
+                AttackSpeed = obj.AttackSpeed
             };
         }
 
@@ -32,8 +34,9 @@ namespace Assets.Scripts.Models.Unit
                    Health == stats.Health &&
                    Attack == stats.Attack &&
                    Armor == stats.Armor &&
-                   Defence == stats.Defence && 
-                   AttackRange == stats.AttackRange;
+                   Defence == stats.Defence &&
+                   AttackRange == stats.AttackRange &&
+                   AttackSpeed == stats.AttackSpeed;
         }
 
         public override int GetHashCode()

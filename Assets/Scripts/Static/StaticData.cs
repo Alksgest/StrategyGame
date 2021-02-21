@@ -33,7 +33,8 @@ namespace Assets.Scripts.Static
                         Defence = 1f,
                         Health = 5f,
                         Speed = 15f,
-                        AttackRange = 2f
+                        AttackRange = 2f,
+                        AttackSpeed = 0.5f
                     }
                 }
             });

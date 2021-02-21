@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Behaviour.Building;
-using Assets.Scripts.Behaviour.Unit;
 using Assets.Scripts.Commands;
 using Assets.Scripts.Models.Unit;
 using Assets.Scripts.Static;
@@ -18,9 +17,8 @@ namespace Assets.Scripts.Unit
 
         public List<UnitBase> SelectedUnits => _unitControllers.Where(unit => unit.Selected).ToList();
 
-        public List<WorkerController> SelectedWorkers => SelectedUnits
-            .OfType<WorkerController>()
-            .ToList();
+        public IEnumerable<WorkerController> SelectedWorkers => SelectedUnits
+            .OfType<WorkerController>();
 
         private bool _isLeftMouseHold = false;
         private GameObject _selectCanvas = null;
@@ -86,6 +84,19 @@ namespace Assets.Scripts.Unit
             //         DrawRect(image, hit.point);
             //     }
             // }
+            CheckUnitsAndDelete();
+        }
+
+        private void CheckUnitsAndDelete()
+        {
+            var unitsToDelete = _unitControllers.Where(u => !u.IsAlive).ToList();
+
+            _unitControllers = _unitControllers.Except(unitsToDelete).ToList();
+
+            foreach (var unit in unitsToDelete)
+            {
+                unit.Execute(new DeleteCommand<UnitBase>());
+            }
         }
 
         private void DrawRect(Image image, Vector3 right)
