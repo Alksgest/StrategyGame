@@ -7,8 +7,6 @@ namespace Assets.Scripts.Unit
 {
     public class UnitController : UnitBase
     {
-        public GameObject ObjectAttachedTo { get; set; }
-
         [SerializeField]
         private Text _speedText;
 
@@ -34,7 +32,7 @@ namespace Assets.Scripts.Unit
 
         private void FixedUpdate()
         {
-            if (CurrentStats != PreviousStats)
+            if (!Equals(CurrentStats, PreviousStats))
             {
                 PreviousStats = UnitStats.MakeCopy(CurrentStats);
 

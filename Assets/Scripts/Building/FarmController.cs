@@ -1,8 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts.Building.Interfaces;
+using Assets.Scripts.Behaviour.Building;
+using Assets.Scripts.Behaviour.Unit;
 using Assets.Scripts.Unit;
-using Assets.Scripts.Unit.Interfaces;
 using Assets.Scripts.WorldState;
 using UnityEngine;
 
@@ -10,15 +11,12 @@ namespace Assets.Scripts.Building
 {
     public class FarmController : BuildingBase, IWorkplace
     {
-
         private UnitManager _unitManager;
         private GameManager _gameManager;
 
+        [SerializeField] private Transform[] _unitPlaces = null;
 
-        [SerializeField]
-        private Transform[] _unitPlaces;
-        private Workpalce[] workplaces;
-
+        private Workplace[] _workplaces = null;
 
         private void Awake()
         {
@@ -32,17 +30,17 @@ namespace Assets.Scripts.Building
 
             InitWorkplaces();
 
-            InvokeRepeating("AddCrop", .01f, 1.0f);
+            InvokeRepeating(nameof(AddCrop), .01f, 1.0f);
         }
 
         private void InitWorkplaces()
         {
-            workplaces = new Workpalce[_unitPlaces.Length];
+            _workplaces = new Workplace[_unitPlaces.Length];
 
-            for (int i = 0; i < _unitPlaces.Length; ++i)
+            for (var i = 0; i < _unitPlaces.Length; ++i)
             {
                 var pos = _unitPlaces[i].transform.position;
-                workplaces[i] = new Workpalce
+                _workplaces[i] = new Workplace
                 {
                     Position = pos
                 };
@@ -51,7 +49,7 @@ namespace Assets.Scripts.Building
 
         private void AddCrop()
         {
-            foreach (var wp in workplaces)
+            foreach (var wp in _workplaces)
             {
                 if (wp.IsBusy && wp.IsUnitOnPlace)
                 {
@@ -60,33 +58,56 @@ namespace Assets.Scripts.Building
             }
         }
 
-        public void AttacheUnit(IWorkable unit, Workpalce workplace)
+        public void AttacheUnit(IWorkable unit)
+        {
+            var freeWorkplaces = _workplaces.Where(e => !e.IsBusy).ToList();
+            //var selected = _unitManager.SelectedWorkers;
+
+            if (freeWorkplaces.Count == 0) return;
+
+            var workplace = freeWorkplaces.First();
+
+            //    var position = freeWorkplaces[i].Position;
+            //    selected[i].Move(position); // TODO: remove this line and add command
+            AttacheUnit(unit, workplace);
+        }
+
+        private void AttacheUnit(IWorkable unit, Workplace workplace)
         {
             workplace.AttachedUnit = unit;
             workplace.IsBusy = true;
 
-            unit.SetTag("AttachedUnit");
-            unit.ObjectAttachedTo = this.gameObject;
+            //unit.SetTag("AttachedUnit");
+            //unit.ObjectAttachedTo = this.gameObject;
 
-            // var position = Array.IndexOf(workplaces, workplace);
-            // _edgesText[position].text = workplace.EdgeText;
+            //var position = Array.IndexOf(_workplaces, workplace);
+            //_edgesText[position].text = workplace.BusyText;
         }
 
         public void DetachUnit(IWorkable unit)
         {
-            var workplace = workplaces.FirstOrDefault(el => el.AttachedUnit == unit);
+            var workplace = _workplaces.FirstOrDefault(el => el.AttachedUnit == unit);
             if (workplace != null)
             {
                 DetachUnit(workplace);
             }
         }
 
-        private void DetachUnit(Workpalce workplace)
+        public Vector3? GetFreePosition()
+        {
+            var freeWorkplaces = _workplaces.Where(e => !e.IsBusy).ToList();
+
+            var workplace = freeWorkplaces.FirstOrDefault();
+
+            return workplace?.Position;
+        }
+
+        private void DetachUnit(Workplace workplace)
         {
             if (workplace?.AttachedUnit != null)
             {
-                workplace.AttachedUnit.SetTag("Worker");
-                workplace.AttachedUnit.ObjectAttachedTo = null;
+                //workplace.AttachedUnit.SetTag("Worker");
+                //workplace.AttachedUnit.ObjectAttachedTo = null;
                 workplace.AttachedUnit = null;
 
                 workplace.IsBusy = false;
@@ -96,33 +117,13 @@ namespace Assets.Scripts.Building
             }
         }
 
-        public override void RightClick(object obj)
-        {
-            if (IsInstantiated)
-            {
-                SendUnitsToWorkplace();
-                base.RightClick(obj);
-            }
-        }
+        //public override void RightClick(object obj)
+        //{
+        //    if (!IsInstantiated) return;
 
-        private void SendUnitsToWorkplace()
-        {
-            var freeWorkplaces = workplaces.Where(e => !e.IsBusy).ToList();
-            var selected = _unitManager.SelectedWorkers;
+        //    SendUnitsToWorkplace();
+        //    base.RightClick(obj);
+        //}
 
-            if (freeWorkplaces.Count < selected.Count)
-            {
-                selected = new List<WorkerController>(_unitManager.SelectedWorkers.GetRange(0, freeWorkplaces.Count));
-            }
-
-            for (int i = 0; i < selected.Count; ++i)
-            {
-                var position = freeWorkplaces[i].Position;
-
-                selected[i].Move(position);
-
-                AttacheUnit(selected[i], freeWorkplaces[i]);
-            }
-        }
     }
 }

@@ -1,9 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts.Building.Interfaces;
+using Assets.Scripts.Behaviour.Building;
+using Assets.Scripts.Behaviour.Unit;
 using Assets.Scripts.Unit;
-using Assets.Scripts.Unit.Interfaces;
 using Assets.Scripts.WorldState;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,20 +11,15 @@ namespace Assets.Scripts.Building
 {
     public class MineController : BuildingBase, IWorkplace
     {
-        private UnitManager _unitManager;
         private GameManager _gameManager;
 
-        private Workpalce[] workplaces;
+        private Workplace[] _workplaces;
 
-        [SerializeField]
-        private Text[] _edgesText;
-
-        [SerializeField]
-        private GameObject[] _unitPlaces;
+        [SerializeField] private Text[] _edgesText;
+        [SerializeField] private GameObject[] _unitPlaces;
 
         private void Awake()
         {
-            _unitManager = FindObjectOfType<UnitManager>();
             _gameManager = FindObjectOfType<GameManager>();
         }
 
@@ -34,17 +28,17 @@ namespace Assets.Scripts.Building
             base.Instantiate();
 
             InitWorkplaces();
-            InvokeRepeating("AddIron", .01f, 1.0f);
+            InvokeRepeating(nameof(AddIron), .01f, 1.0f);
         }
 
         private void InitWorkplaces()
         {
-            workplaces = new Workpalce[_unitPlaces.Length];
+            _workplaces = new Workplace[_unitPlaces.Length];
 
-            for (int i = 0; i < _unitPlaces.Length; ++i)
+            for (var i = 0; i < _unitPlaces.Length; ++i)
             {
                 var pos = _unitPlaces[i].transform.position;
-                workplaces[i] = new Workpalce
+                _workplaces[i] = new Workplace
                 {
                     Position = pos
                 };
@@ -53,7 +47,7 @@ namespace Assets.Scripts.Building
 
         private void AddIron()
         {
-            foreach (var wp in workplaces)
+            foreach (var wp in _workplaces)
             {
                 if (wp.IsBusy && wp.IsUnitOnPlace)
                 {
@@ -62,82 +56,59 @@ namespace Assets.Scripts.Building
             }
         }
 
-        public override void LeftClick(object obj)
+        public void AttacheUnit(IWorkable unit)
         {
-            if (IsInstantiated)
-            {
-                base.LeftClick(obj);
-            }
+            var freeWorkplaces = _workplaces.Where(e => !e.IsBusy).ToList();
+
+            if (freeWorkplaces.Count == 0) return;
+
+            var workplace = freeWorkplaces.First();
+
+            AttacheUnit(unit, workplace);
         }
 
-        public override void RightClick(object obj)
-        {
-            if (IsInstantiated)
-            {
-                SendUnitsToWorkplace();
-                base.RightClick(obj);
-            }
-        }
-
-        private void SendUnitsToWorkplace()
-        {
-            var freeWorkplaces = workplaces.Where(e => !e.IsBusy).ToList();
-            var selected = _unitManager.SelectedWorkers;
-
-            if (freeWorkplaces.Count < selected.Count)
-            {
-                selected = new List<WorkerController>(_unitManager.SelectedWorkers.GetRange(0, freeWorkplaces.Count));
-            }
-
-            for (int i = 0; i < selected.Count; ++i)
-            {
-                var position = freeWorkplaces[i].Position;
-
-                selected[i].Move(position);
-
-                AttacheUnit(selected[i], freeWorkplaces[i]);
-            }
-        }
-
-        public void AttacheUnit(IWorkable unit, Workpalce workplace)
+        private void AttacheUnit(IWorkable unit, Workplace workplace)
         {
             workplace.AttachedUnit = unit;
             workplace.IsBusy = true;
 
-            unit.SetTag("AttachedUnit");
-            unit.ObjectAttachedTo = this.gameObject;
-
-            var position = Array.IndexOf(workplaces, workplace);
-            _edgesText[position].text = workplace.BusyText;
+            var index = Array.IndexOf(_workplaces, workplace);
+            _edgesText[index].text = workplace.BusyText;
         }
 
         public void DetachUnit(IWorkable unit)
         {
-            var workplace = workplaces.FirstOrDefault(el => el.AttachedUnit == unit);
-            if (workplace != null)
+            var workplace = _workplaces.FirstOrDefault(el => el.AttachedUnit == unit);
+            if (workplace?.AttachedUnit != null)
             {
                 DetachUnit(workplace);
             }
         }
 
-        private void DetachUnit(Workpalce workplace)
+        public Vector3? GetFreePosition()
         {
-            if (workplace?.AttachedUnit != null)
-            {
-                workplace.AttachedUnit.SetTag("Worker");
-                workplace.AttachedUnit.ObjectAttachedTo = null;
-                workplace.AttachedUnit = null;
+            var freeWorkplaces = _workplaces.Where(e => !e.IsBusy).ToList();
 
-                workplace.IsBusy = false;
+            var workplace = freeWorkplaces.FirstOrDefault();
 
-                var position = Array.IndexOf(workplaces, workplace);
-                _edgesText[position].text = workplace.BusyText;
-            }
+            return workplace?.Position;
+        }
+
+        private void DetachUnit(Workplace workplace)
+        {
+            if (workplace?.AttachedUnit == null) return;
+
+            workplace.AttachedUnit = null;
+
+            workplace.IsBusy = false;
+
+            var index = Array.IndexOf(_workplaces, workplace);
+            _edgesText[index].text = workplace.BusyText;
         }
 
         private void OnDestroy()
         {
-            foreach (var workplace in workplaces)
+            foreach (var workplace in _workplaces)
             {
                 DetachUnit(workplace);
             }

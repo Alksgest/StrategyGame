@@ -1,26 +1,24 @@
 using System;
-using Assets.Scripts.Building.Interfaces;
+using Assets.Scripts.Behaviour.Building;
+using Assets.Scripts.Behaviour.Unit;
+using Assets.Scripts.Commands.Interfaces;
 using Assets.Scripts.Models.Unit;
 using Assets.Scripts.UI;
-using Assets.Scripts.Unit.Interfaces;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.Unit
 {
-    public class WorkerController : UnitBase, IWorkable // TODO: add new interface for command such as move, attack etc.
+    public class WorkerController : UnitBase, IWorkable, ICommandExecutor<WorkerController>
     {
-        public GameObject ObjectAttachedTo { get; set; }
+        [SerializeField] private Text _hpText = null;
+        [SerializeField] private BuildingsPanelManager _buildingsPanelManager = null;
 
-        [SerializeField]
-        private BuildingsPanelManager _buildingsPanelManager = null;
-
-        [SerializeField]
-        private Text _hpText = null;
+        private IRejectableCommand<WorkerController> _lastRejectableCommand;
+        private IWorkplace _workplace;
 
         public bool IsBuilding { get; set; }
-        public GameObject GameObject => this.gameObject;
 
         private void Start()
         {
@@ -55,19 +53,45 @@ namespace Assets.Scripts.Unit
                 NavMeshAgent.speed = CurrentStats.Speed;
             }
 
-            if (AttackTarget != null)
+            ExecuteLastRejectableCommand();
+        }
+
+        protected override void ExecuteLastRejectableCommand()
+        {
+            if (LastRejectableCommand != null)
             {
-                Debug.Log("Attack");
-                Attack();
+                base.ExecuteLastRejectableCommand();
+
+            }
+            else
+            {
+                (_lastRejectableCommand as ICommand<WorkerController>)?.Execute(this);
+            }
+        }
+
+        protected override void RejectLastCommand()
+        {
+            if (LastRejectableCommand != null)
+            {
+                base.RejectLastCommand();
+
+            }
+            else if(_lastRejectableCommand != null)
+            {
+                _lastRejectableCommand.Reject(this);
+                _lastRejectableCommand = null;
+            }
+        }
+
+        public void Execute(ICommand<WorkerController> command)
+        {
+            if (command is IRejectableCommand<WorkerController> r)
+            {
+                RejectLastCommand();
+                _lastRejectableCommand = r;
             }
 
-            // if (this.tag == "AttachedUnit")
-            // {
-            //     if (_animator != null && !_animator.GetBool("IsMining")) // TOOD: rewrite this piece
-            //     {
-            //         _animator.SetBool("IsMining", true);
-            //     }
-            // }
+            command.Execute(this);
         }
 
         private void UpdateUi()
@@ -104,33 +128,25 @@ namespace Assets.Scripts.Unit
             _buildingsPanelManager.gameObject.SetActive(false);
         }
 
-        public override void Move(Vector3 point)
+        public void AttachToWork(IWorkplace workplace)
         {
-            base.Move(point);
-
-            // if (_animator != null)
-            // {
-            //     _animator.SetBool("IsRuning", true);
-            // }
-
-            if (this.tag == "AttachedUnit")
+            if (_workplace == null)
             {
-                if (ObjectAttachedTo != null)
-                {
-                    var workplace = ObjectAttachedTo.GetComponent<IWorkplace>();
-                    workplace.DetachUnit(this);
-                }
+                var pos = workplace.GetFreePosition();
+                if (pos == null) return;
 
-                // if (_animator != null)
-                // {
-                //     _animator.SetBool("IsMining", false);
-                // }
+                workplace.AttacheUnit(this);
+                Move(pos.Value);
+
+                _workplace = workplace;
             }
         }
 
-        public void SetTag(string tag)
+        public void DetachFromWork(IWorkplace workplace)
         {
-            this.tag = tag;
+            workplace.DetachUnit(this);
+            _workplace = null;
+            //TODO: do smth else
         }
     }
 }

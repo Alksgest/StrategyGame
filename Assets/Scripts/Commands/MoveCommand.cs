@@ -1,4 +1,4 @@
-using Assets.Scripts.Behaviour;
+using Assets.Scripts.Behaviour.Unit;
 using Assets.Scripts.Commands.Interfaces;
 using UnityEngine;
 
@@ -20,7 +20,7 @@ namespace Assets.Scripts.Commands
 
         public void Reject(T obj)
         {
-            throw new System.NotImplementedException();
+            obj.StopMoving();
         }
     }
 }

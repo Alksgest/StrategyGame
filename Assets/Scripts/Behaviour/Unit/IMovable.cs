@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Assets.Scripts.Behaviour
+namespace Assets.Scripts.Behaviour.Unit
 {
     public interface IMovable
     {

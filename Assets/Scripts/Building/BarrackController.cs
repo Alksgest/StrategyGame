@@ -28,18 +28,5 @@ namespace Assets.Scripts.Building
             base.Deselect();
             _barracksUI.SetActive(false);
         }
-
-        public override void LeftClick(object obj)
-        {
-            if (IsInstantiated)
-            {
-                base.LeftClick(obj);
-            }
-        }
-
-        public override void RightClick(object obj)
-        {
-            base.RightClick(obj);
-        }
     }
 }

@@ -1,8 +1,10 @@
+using Assets.Scripts.Behaviour.Common;
+using Assets.Scripts.Commands.Interfaces;
 using UnityEngine;
 
 namespace Assets.Scripts.Building
 {
-    public abstract class BuildingBase : MonoBehaviour
+    public abstract class BuildingBase : MonoBehaviour, ICommandExecutor<BuildingBase>, ISelectable
     {
         [SerializeField]
         protected bool IsInstantiated = false;
@@ -28,26 +30,21 @@ namespace Assets.Scripts.Building
             }
         }
 
-        public virtual void LeftClick(object obj)
+        public virtual void Execute(ICommand<BuildingBase> command)
         {
-            Select();
+            command.Execute(this);
         }
 
         public virtual void Select()
         {
-            SetUIActive();
+            SetUiActive();
             Selected = true;
         }
 
         public virtual void Deselect()
         {
-            SetUIInactive();
+            SetUiInactive();
             Selected = false;
-        }
-
-        public virtual void RightClick(object obj)
-        {
-
         }
 
         public void Destroy()
@@ -55,30 +52,14 @@ namespace Assets.Scripts.Building
             Destroy(gameObject);
         }
 
-        public void SetUIActive()
+        public void SetUiActive()
         {
             Ui.SetActive(true);
         }
 
-        public void SetUIInactive()
+        public void SetUiInactive()
         {
             Ui.SetActive(false);
-        }
-
-        private void OnCollisionEnter(Collision other)
-        {
-            if (IsInstantiated)
-            {
-                CanBePlaced = false;
-            }
-        }
-
-        private void OnCollisionExit(Collision other)
-        {
-            if (IsInstantiated)
-            {
-                CanBePlaced = true;
-            }
         }
     }
 }

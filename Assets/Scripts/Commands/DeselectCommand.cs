@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Behaviour;
+using Assets.Scripts.Behaviour.Common;
 using Assets.Scripts.Commands.Interfaces;
 
 namespace Assets.Scripts.Commands

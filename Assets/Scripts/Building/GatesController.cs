@@ -5,19 +5,16 @@ namespace Assets.Scripts.Building
 {
     public class GatesController : BuildingBase
     {
-        [SerializeField]
-        private Animator _animator;
-
-        [SerializeField]
-        private NavMeshObstacle _navMeshObstacle;
+        [SerializeField] private Animator _animator = null;
+        [SerializeField] private NavMeshObstacle _navMeshObstacle = null;
 
         public bool IsOpened { get; private set; } = false;
 
 
-        public override void LeftClick(object obj)
-        {
-            base.LeftClick(obj);
-        }
+        //public override void LeftClick(object obj)
+        //{
+        //    base.LeftClick(obj);
+        //}
 
         public void OpenOrCloseGates()
         {

@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.Behaviour.Building;
+using Assets.Scripts.Behaviour.Unit;
 using Assets.Scripts.Commands;
 using Assets.Scripts.Models.Unit;
 using Assets.Scripts.Static;
@@ -81,7 +83,7 @@ namespace Assets.Scripts.Unit
             //         }
             //         var image = _selectImage.GetComponent<Image>();
 
-            //         DrowRect(image, hit.point);
+            //         DrawRect(image, hit.point);
             //     }
             // }
         }
@@ -91,7 +93,8 @@ namespace Assets.Scripts.Unit
             image.rectTransform.sizeDelta =
                 CalculationHelper.CalculateRectangleSize(_startHitPoint, right);
             image.transform.position =
-                CalculationHelper.CalculateRectanglePosition(_selectCanvas.transform.position, image.rectTransform.sizeDelta);
+                CalculationHelper.CalculateRectanglePosition(_selectCanvas.transform.position,
+                    image.rectTransform.sizeDelta);
         }
 
         private void CreateSelectCanvas(Vector3 position)
@@ -117,57 +120,6 @@ namespace Assets.Scripts.Unit
         private void OnLeftMouseKeyHold(RaycastHit hit)
         {
             _isLeftMouseHold = true;
-        }
-
-        private void OnRightClick(RaycastHit hit)
-        {
-            switch (hit.transform.root.tag)
-            {
-                case "BuildingManager":
-                    break;
-                case "UnitManager":
-                    AttackObject(hit.transform.gameObject);
-                    break;
-                default:
-                    MoveUnitsToPoint(hit.point);
-                    break;
-            }
-        }
-
-        public void AttackObject(GameObject obj)
-        {
-            foreach (var unit in SelectedUnits)
-            {
-                unit.SetAttackTarget(obj);
-            }
-        }
-
-        public void MoveUnitsToPoint(Vector3 point)
-        {
-            foreach (var unit in SelectedUnits)
-            {
-                unit.Execute(new MoveCommand<UnitBase>(point));
-            }
-        }
-
-        public void DeselectAll()
-        {
-            foreach (var unit in SelectedUnits)
-            {
-                unit.Execute(new DeselectCommand<UnitBase>());
-            }
-        }
-
-        public void CreateUnit(UnitTemplate template, Vector3 unitPosition)
-        {
-            if (!_gameManager.CanBuyUnit("mainPlayer", template.UnitName)) return;
-
-            var unit = _gameManager.BuyUnit("mainPlayer", template, unitPosition, transform);
-
-            var unitController = unit.GetComponent<UnitBase>();
-            unitController.Instantiate(template.UnitStats);
-
-            _unitControllers.Add(unit.GetComponent<UnitBase>());
         }
 
         private void OnLeftClick(RaycastHit hit)
@@ -196,14 +148,89 @@ namespace Assets.Scripts.Unit
             }
         }
 
+        private void OnRightClick(RaycastHit hit)
+        {
+            switch (hit.transform.root.tag)
+            {
+                case "BuildingManager":
+                    var wp = FindHelper.GetOfType<IWorkplace>(hit.transform.gameObject);
+                    if (wp != null)
+                    {
+                        SendToWork(wp);
+                    }
+                    else
+                    {
+                        AttachUnit(hit.transform.parent.gameObject);
+                    }
+                    break;
+                case "UnitManager":
+                    AttackObject(hit.transform.gameObject);
+                    break;
+                default:
+                    MoveUnitsToPoint(hit.point);
+                    break;
+            }
+        }
+
+        private void AttachUnit(GameObject obj)
+        {
+            foreach (var unit in SelectedUnits)
+            {
+                unit.Execute(new AttachCommand<UnitBase>(obj));
+            }
+        }
+
+        private void SendToWork(IWorkplace workplace)
+        {
+            foreach (var unit in SelectedWorkers)
+            {
+                unit.Execute(new SendToWorkCommand<WorkerController>(workplace));
+            }
+        }
+
+        private void AttackObject(GameObject obj)
+        {
+            foreach (var unit in SelectedUnits)
+            {
+                unit.Execute(new AttackCommand<UnitBase>(obj));
+            }
+        }
+
+        private void MoveUnitsToPoint(Vector3 point)
+        {
+            foreach (var unit in SelectedUnits)
+            {
+                unit.Execute(new MoveCommand<UnitBase>(point));
+            }
+        }
+
+        private void DeselectAll()
+        {
+            foreach (var unit in SelectedUnits)
+            {
+                unit.Execute(new DeselectCommand<UnitBase>());
+            }
+        }
+
+        public void CreateUnit(UnitTemplate template, Vector3 unitPosition)
+        {
+            if (!_gameManager.CanBuyUnit("mainPlayer", template.UnitName)) return;
+
+            var unit = _gameManager.BuyUnit("mainPlayer", template, unitPosition, transform);
+
+            var unitController = unit.GetComponent<UnitBase>();
+            unitController.Instantiate(template.UnitStats);
+
+            _unitControllers.Add(unit.GetComponent<UnitBase>());
+        }
+
         private void HideUnitsUi()
         {
-            if (SelectedUnits.Count > 1)
+            if (SelectedUnits.Count <= 1) return;
+
+            foreach (var u in SelectedUnits)
             {
-                foreach (var u in SelectedUnits)
-                {
-                    u.HideUi();
-                }
+                u.HideUi();
             }
         }
 
@@ -220,9 +247,10 @@ namespace Assets.Scripts.Unit
                 {
                     if (CalculationHelper.IsInArea(unit.transform.position, selectorPosition, selectorSize))
                     {
-                        unit.Select();
+                        unit.Execute(new SelectCommand<UnitBase>());
                     }
                 }
+
                 if (SelectedUnits.Count > 1)
                 {
                     HideUnitsUi();

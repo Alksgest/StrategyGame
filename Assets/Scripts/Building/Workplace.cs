@@ -1,9 +1,11 @@
-using Assets.Scripts.Unit.Interfaces;
+using Assets.Scripts.Behaviour;
+using Assets.Scripts.Behaviour.Unit;
+using Assets.Scripts.Unit;
 using UnityEngine;
 
 namespace Assets.Scripts.Building
 {
-    public class Workpalce
+    public class Workplace
     {
         public bool IsBusy { get; set; } = false;
         public IWorkable AttachedUnit { get; set; }
@@ -14,12 +16,14 @@ namespace Assets.Scripts.Building
         {
             get
             {
-                if (AttachedUnit == null)
+                var unitGameObject = (AttachedUnit as UnitBase)?.gameObject;
+
+                if (unitGameObject == null)
                 {
                     return false;
                 }
-                
-                var difVec = AttachedUnit.GameObject.transform.position - Position;
+
+                var difVec = unitGameObject.transform.position - Position;
 
                 var dx = difVec.x;
                 // var dy = difVec.y;

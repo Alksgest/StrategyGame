@@ -1,4 +1,4 @@
-﻿namespace Assets.Scripts.Behaviour
+﻿namespace Assets.Scripts.Behaviour.Common
 {
     public interface ISelectable
     {

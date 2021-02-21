@@ -1,6 +1,6 @@
 ﻿namespace Assets.Scripts.Commands.Interfaces
 {
-    public interface IRejectableCommand<T>
+    public interface IRejectableCommand<in T>
     {
         void Reject(T obj);
     }

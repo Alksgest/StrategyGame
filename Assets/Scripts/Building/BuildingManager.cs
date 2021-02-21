@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.Commands;
 using Assets.Scripts.Util;
 using UnityEngine;
 
@@ -30,30 +31,6 @@ namespace Assets.Scripts.Building
             _buildings.Add(building);
         }
 
-        private void OnRightClick(RaycastHit hit)
-        {
-            if (hit.transform.gameObject.tag != "BuildingBlock" && hit.transform.gameObject.tag != "MineEdge")
-            {
-                DeselectAll();
-                return;
-            }
-
-            BuildingBase building = GetBuilding(hit.transform.gameObject);
-
-            if (building != null)
-            {
-                building.RightClick(hit);
-            }
-        }
-
-        public void DeselectAll()
-        {
-            foreach (var s in _buildings.Where(el => el.Selected))
-            {
-                s.Deselect();
-            }
-        }
-
         private void OnLeftClick(RaycastHit hit)
         {
             if (hit.transform.gameObject.tag != "BuildingBlock" && hit.transform.gameObject.tag != "MineEdge")
@@ -64,28 +41,36 @@ namespace Assets.Scripts.Building
 
             DeselectAll();
 
-            BuildingBase building = GetBuilding(hit.transform.gameObject);
+            var building = FindHelper.GetOfType<BuildingBase>(hit.transform.gameObject);
 
             if (building != null)
             {
-                building.LeftClick(hit);
+                building.Execute(new SelectCommand<BuildingBase>());
             }
         }
 
-        private static BuildingBase GetBuilding(GameObject gameObject)
+        private void OnRightClick(RaycastHit hit)
         {
-            var bb = gameObject.GetComponent<BuildingBase>();
-            if (bb == null)
+            if (hit.transform.gameObject.tag != "BuildingBlock" && hit.transform.gameObject.tag != "MineEdge")
             {
-                if (gameObject.transform.parent == null)
-                {
-                    return null;
-                }
-                bb = GetBuilding(gameObject.transform.parent.gameObject);
+                DeselectAll();
+                return;
             }
 
-            return bb;
+            var building = FindHelper.GetOfType<BuildingBase>(hit.transform.gameObject);
+
+            if (building != null)
+            {
+                building.Execute(new DeselectCommand<BuildingBase>());
+            }
         }
 
+        public void DeselectAll()
+        {
+            foreach (var building in _buildings.Where(el => el.Selected))
+            {
+                building.Execute(new DeselectCommand<BuildingBase>());
+            }
+        }
     }
 }

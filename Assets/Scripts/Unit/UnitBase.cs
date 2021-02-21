@@ -1,5 +1,6 @@
 using System;
-using Assets.Scripts.Behaviour;
+using Assets.Scripts.Behaviour.Common;
+using Assets.Scripts.Behaviour.Unit;
 using Assets.Scripts.Commands.Interfaces;
 using Assets.Scripts.Models.Unit;
 using UnityEngine;
@@ -7,7 +8,7 @@ using UnityEngine.AI;
 
 namespace Assets.Scripts.Unit
 {
-    public abstract class UnitBase : MonoBehaviour, IEquatable<UnitBase>, ICommandExecutor<UnitBase>, IUnit
+    public abstract class UnitBase : MonoBehaviour, IEquatable<UnitBase>, ICommandExecutor<UnitBase>, IUnit, IAttacker
     {
         [SerializeField] protected string UnitId;
         [SerializeField] protected Material DefaultMaterial;
@@ -19,19 +20,59 @@ namespace Assets.Scripts.Unit
         protected Animator Animator;
         protected GameObject AttackTarget;
         protected UnitStats PreviousStats;
+        protected GameObject ObjectAttachedTo;
+        protected IRejectableCommand<UnitBase> LastRejectableCommand;
 
         public bool Selected { get; protected set; } = false;
 
         public abstract void HideUi();
 
-        public void Execute(ICommand<UnitBase> command)
+        public virtual void Execute(ICommand<UnitBase> command)
         {
+            if (command is IRejectableCommand<UnitBase> r)
+            {
+                RejectLastCommand();
+                LastRejectableCommand = r;
+            }
+
             command.Execute(this);
+        }
+
+        protected virtual void ExecuteLastRejectableCommand()
+        {
+            (LastRejectableCommand as ICommand<UnitBase>)?.Execute(this);
+        }
+
+        protected virtual void RejectLastCommand()
+        {
+            LastRejectableCommand?.Reject(this);
+            LastRejectableCommand = null;
+        }
+
+        public virtual void Attach(GameObject obj)
+        {
+            ObjectAttachedTo = obj;
+        }
+
+        public virtual void Detach()
+        {
+            ObjectAttachedTo = null;
+        }
+
+        public void Attack(GameObject target)
+        {
+            AttackTarget = target;
+            Move(AttackTarget.transform.position - new Vector3(CurrentStats.AttackRange, 0, CurrentStats.AttackRange));
+        }
+
+        public void StopAttacking()
+        {
+            AttackTarget = null;
         }
 
         public virtual void Move(Vector3 point)
         {
-            SetAttackTarget(null);
+            NavMeshAgent.isStopped = false;
             NavMeshAgent.SetDestination(point);
         }
 
@@ -56,20 +97,20 @@ namespace Assets.Scripts.Unit
             UnitUi.SetActive(false);
         }
 
-        public virtual void SetAttackTarget(GameObject target)
-        {
-            AttackTarget = target;
-        }
+        //protected virtual void SetAttackTarget(GameObject target)
+        //{
+        //    AttackTarget = target;
+        //}
+
+        //protected virtual void Attack()
+        //{
+        //    Move(AttackTarget.transform.position - new Vector3(CurrentStats.AttackRange, 0, CurrentStats.AttackRange));
+        //}
 
         public virtual void Instantiate(UnitStats stats)
         {
             CurrentStats = stats;
             PreviousStats = UnitStats.MakeCopy(stats);
-        }
-
-        protected virtual void Attack()
-        {
-            Move(AttackTarget.transform.position - new Vector3(CurrentStats.AttackRange, 0, CurrentStats.AttackRange));
         }
 
         public bool Equals(UnitBase other)
@@ -81,42 +122,5 @@ namespace Assets.Scripts.Unit
         {
             return UnitId.GetHashCode();
         }
-
-        // protected virtual void Rotate()
-        // {
-        //     if (_pointToRotate != null)
-        //     {
-        //         var targetRotation = Quaternion.LookRotation(_pointToRotate - transform.position);
-        //         var angles = targetRotation.eulerAngles;
-        //         angles.y += 180;
-        //         targetRotation.eulerAngles = angles;
-        //         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 10 * Time.deltaTime);
-
-        //         if (Mathf.Abs(targetRotation.eulerAngles.y - transform.rotation.eulerAngles.y) <= 2)
-        //         {
-        //             _isRotating = false;
-        //         }
-        //     }
-        // }
-
-        // protected virtual void Move()
-        // {
-        //     if (_canMove)
-        //     {
-        //         var delta = _pointToMove - transform.position;
-        //         delta.Normalize();
-        //         transform.position = transform.position + (delta * _speed * Time.deltaTime);
-
-        //         var vec = this.transform.position - _pointToMove;
-        //         if (Mathf.Abs(vec.x) <= 0.1 && Mathf.Abs(vec.z) <= 0.1)
-        //         {
-        //             _isMoving = false;
-        //             if (_animator != null)
-        //             {
-        //                 _animator.SetBool("IsRuning", _isMoving);
-        //             }
-        //         }
-        //     }
-        // }
     }
 }
