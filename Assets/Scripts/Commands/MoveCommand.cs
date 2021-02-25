@@ -4,23 +4,26 @@ using UnityEngine;
 
 namespace Assets.Scripts.Commands
 {
-    public class MoveCommand<T> : ICommand<T>, IRejectableCommand<T> where T : IMovable
+    public class MoveCommand<T> : IRejectableCommand<T> where T : IMovable
     {
+        public bool Interrupt { get; protected set; }
+
         private readonly Vector3 _vector;
 
-        public MoveCommand(Vector3 vector)
+        public MoveCommand(Vector3 vector, bool interrupt = true)
         {
             _vector = vector;
+            Interrupt = interrupt;
         }
 
-        public void Execute(T obj)
+        public bool Execute(T source)
         {
-            obj.Move(_vector);
+            return source.Move(_vector);
         }
 
-        public void Reject(T obj)
+        public void Reject(T source)
         {
-            obj.StopMoving();
+            source.StopMoving();
         }
     }
 }

@@ -6,9 +6,11 @@ namespace Assets.Scripts.Commands
 {
     public class SelectCommand<T> : ICommand<T> where T : ISelectable
     {
-        public void Execute(T obj)
+        public bool Interrupt { get; protected set; } = false;
+
+        public bool Execute(T obj)
         {
-            obj.Select();
+           return obj.Select();
         }
     }
 }

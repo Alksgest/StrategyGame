@@ -43,14 +43,5 @@ namespace Assets.Scripts.Unit
             UnitUi.SetActive(false);
         }
 
-        public override void Move(Vector3 point)
-        {
-            base.Move(point);
-
-            if (Animator != null)
-            {
-                // _animator.SetBool("IsRuning", true);
-            }
-        }
     }
 }

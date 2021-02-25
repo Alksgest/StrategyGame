@@ -2,6 +2,6 @@
 {
     public interface IDeletable
     {
-        void Delete();
+        bool Delete();
     }
 }

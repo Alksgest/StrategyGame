@@ -2,7 +2,7 @@
 {
     public interface ISelectable
     {
-        void Select();
-        void Deselect();
+        bool Select();
+        bool Deselect();
     }
 }

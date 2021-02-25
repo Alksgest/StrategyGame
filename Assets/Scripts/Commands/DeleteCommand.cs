@@ -5,9 +5,11 @@ namespace Assets.Scripts.Commands
 {
     public class DeleteCommand<T> : ICommand<T> where T : IDeletable
     {
-        public void Execute(T obj)
+        public bool Interrupt { get; protected set; } = false;
+
+        public bool Execute(T obj)
         {
-            obj.Delete();
+            return obj.Delete();
         }
     }
 }

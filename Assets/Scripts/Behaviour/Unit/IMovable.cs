@@ -4,7 +4,8 @@ namespace Assets.Scripts.Behaviour.Unit
 {
     public interface IMovable
     {
-        void Move(Vector3 position);
+        // bool indicate that unit is on his destination
+        bool Move(Vector3 position);
         void StopMoving();
     }
 }

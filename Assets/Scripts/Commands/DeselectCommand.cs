@@ -6,9 +6,11 @@ namespace Assets.Scripts.Commands
 {
     public class DeselectCommand<T> : ICommand<T> where T : ISelectable
     {
-        public void Execute(T obj)
+        public bool Interrupt { get; protected set; } = false;
+
+        public bool Execute(T obj)
         {
-            obj.Deselect();
+            return obj.Deselect();
         }
     }
 }

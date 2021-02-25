@@ -4,7 +4,7 @@ namespace Assets.Scripts.Behaviour.Unit
 {
     public interface IWorkable
     {
-        void AttachToWork(IWorkplace workplace);
+        bool AttachToWork(IWorkplace workplace);
         void DetachFromWork(IWorkplace workplace);
     }
 }

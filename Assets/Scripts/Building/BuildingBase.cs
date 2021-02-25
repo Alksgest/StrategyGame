@@ -35,16 +35,18 @@ namespace Assets.Scripts.Building
             command.Execute(this);
         }
 
-        public virtual void Select()
+        public virtual bool Select()
         {
             SetUiActive();
             Selected = true;
+            return true;
         }
 
-        public virtual void Deselect()
+        public virtual bool Deselect()
         {
             SetUiInactive();
             Selected = false;
+            return true;
         }
 
         public void SetUiActive()
@@ -57,9 +59,10 @@ namespace Assets.Scripts.Building
             Ui.SetActive(false);
         }
 
-        public void Delete()
+        public bool Delete()
         {
             Destroy(gameObject);
+            return true;
         }
     }
 }

@@ -4,7 +4,7 @@ namespace Assets.Scripts.Behaviour.Common
 {
     public interface IAttacker
     {
-        void Attack(GameObject target);
+        bool Attack(GameObject target);
         void StopAttacking();
     }
 }

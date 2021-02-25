@@ -15,7 +15,7 @@ using UnityEngine.UI;
 
 namespace Assets.Scripts.Unit
 {
-    public class WorkerController : UnitBase, IWorkable, ICommandExecutor<WorkerController>
+    public class WorkerController : UnitBase, IWorkable // , ICommandExecutor<WorkerController>
     {
         [SerializeField] private Text _hpText = null;
         [SerializeField] private BuildingsPanelManager _buildingsPanelManager = null;
@@ -62,45 +62,45 @@ namespace Assets.Scripts.Unit
             }
         }
 
-        protected override void ExecuteLastRejectableCommand()
-        {
-            if (BaseRejectableCommandsQueue.Any())
-            {
-                base.ExecuteLastRejectableCommand();
-            }
-            else if(WorkerRejectableCommandsQueue.Any())
-            {
-                var command = WorkerRejectableCommandsQueue.Peek() as ICommand<WorkerController>;
-                command?.Execute(this);
-            }
-        }
+        //protected override void ExecuteLastRejectableCommand()
+        //{
+        //    if (BaseRejectableCommandsQueue.Any())
+        //    {
+        //        base.ExecuteLastRejectableCommand();
+        //    }
+        //    else if(WorkerRejectableCommandsQueue.Any())
+        //    {
+        //        var command = WorkerRejectableCommandsQueue.Peek() as ICommand<WorkerController>;
+        //        command?.Execute(this);
+        //    }
+        //}
 
-        protected override void RejectLastCommand()
-        {
-            if (BaseRejectableCommandsQueue.Any())
-            {
-                base.RejectLastCommand();
+        //protected override void RejectLastCommand()
+        //{
+        //    if (BaseRejectableCommandsQueue.Any())
+        //    {
+        //        base.RejectLastCommand();
 
-            }
-            else if (WorkerRejectableCommandsQueue.Any() && !BaseRejectableCommandsQueue.Any())
-            {
-                var command = WorkerRejectableCommandsQueue.Dequeue();
-                Debug.Log($"{nameof(ICommand<WorkerController>)} was dequeue from worker queue");
-                command.Reject(this);
-            }
-        }
+        //    }
+        //    else if (WorkerRejectableCommandsQueue.Any() && !BaseRejectableCommandsQueue.Any())
+        //    {
+        //        var command = WorkerRejectableCommandsQueue.Dequeue();
+        //        Debug.Log($"{nameof(ICommand<WorkerController>)} was dequeue from worker queue");
+        //        command.Reject(this);
+        //    }
+        //}
 
-        public void Execute(ICommand<WorkerController> command)
-        {
-            if (command is IRejectableCommand<WorkerController> r)
-            {
-                RejectLastCommand();
-                Debug.Log($"{nameof(ICommand<WorkerController>)} was enqueue to worker queue");
-                WorkerRejectableCommandsQueue.Enqueue(r);
-            }
+        //public void Execute(ICommand<WorkerController> command)
+        //{
+        //    if (command is IRejectableCommand<WorkerController> r)
+        //    {
+        //        RejectLastCommand();
+        //        Debug.Log($"{nameof(ICommand<WorkerController>)} was enqueue to worker queue");
+        //        WorkerRejectableCommandsQueue.Enqueue(r);
+        //    }
 
-            command.Execute(this);
-        }
+        //    command.Execute(this);
+        //}
 
         public override void TakeDamage(float value)
         {
@@ -113,20 +113,20 @@ namespace Assets.Scripts.Unit
             _hpText.text = $"{CurrentStats.Health}";
         }
 
-        public override void Select()
+        public override bool Select()
         {
-            if (Selected) return;
+            if (Selected) return true;
 
             _buildingsPanelManager.gameObject.SetActive(true);
-            base.Select();
+            return base.Select();
         }
 
-        public override void Deselect()
+        public override bool Deselect()
         {
-            if (!Selected) return;
+            if (!Selected) return true;
 
             _buildingsPanelManager.gameObject.SetActive(false);
-            base.Deselect();
+            return base.Deselect();
         }
 
         public override void HideUi()
@@ -135,28 +135,25 @@ namespace Assets.Scripts.Unit
             _buildingsPanelManager.gameObject.SetActive(false);
         }
 
-        public override void Delete()
+        public override bool Delete()
         {
             Destroy(gameObject);
             Destroy(_buildingsPanelManager.gameObject);
+
+            return true;
         }
 
-        public void AttachToWork(IWorkplace workplace)
+        public bool AttachToWork(IWorkplace workplace)
         {
             if (_workplace == null)
             {
-                var pos = workplace.GetFreePosition();
-                if (pos == null) return;
-
                 workplace.AttacheUnit(this);
-                base.Execute(new MoveCommand<UnitBase>(pos.Value));
-
                 _workplace = workplace;
-                return;
+                return false;
             }
 
             var position = workplace.GetAttachedUnitPosition(this);
-            if (position == null) return;
+            if (position == null) return true;
 
             var point = position.Value;
 
@@ -176,6 +173,8 @@ namespace Assets.Scripts.Unit
                 var tool = _tools.Single(el => el.WorkplaceName == workplace.WorkKind).Tool;
                 tool.SetActive(true);
             }
+
+            return false;
         }
 
         public void DetachFromWork(IWorkplace workplace)

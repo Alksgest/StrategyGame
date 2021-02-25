@@ -17,16 +17,20 @@ namespace Assets.Scripts.Building
             IsInstantiated = false;
         }
 
-        public override void Select()
+        public override bool Select()
         {
             base.Select();
             _barracksUI.SetActive(true);
+
+            return true;
         }
 
-        public override void Deselect()
+        public override bool Deselect()
         {
             base.Deselect();
             _barracksUI.SetActive(false);
+
+            return true;
         }
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Assets.Scripts.Behaviour.Common;
 using Assets.Scripts.Behaviour.Unit;
 using Assets.Scripts.Commands.Interfaces;
@@ -11,7 +12,7 @@ using UnityEngine.AI;
 
 namespace Assets.Scripts.Unit
 {
-    public abstract class UnitBase : MonoBehaviour, ICommandExecutor<UnitBase>, IUnit, IAttacker 
+    public abstract class UnitBase : MonoBehaviour, IUnit, IAttacker, ICommandExecutor<UnitBase>
     {
         [SerializeField] public string UnitId;
 
@@ -24,12 +25,12 @@ namespace Assets.Scripts.Unit
         protected UnitStats PreviousStats;
         protected GameObject ObjectAttachedTo;
 
-        protected Queue<IRejectableCommand<UnitBase>> BaseRejectableCommandsQueue =
+        protected Queue<IRejectableCommand<UnitBase>> RejectableCommandsQueue =
             new Queue<IRejectableCommand<UnitBase>>();
 
         protected bool IsAttackCoroutineDone = true;
 
-        public bool Selected { get; protected set; } = false;
+        public bool Selected { get; protected set; }
         public bool IsAlive => CurrentStats.Health > 0;
 
         public abstract void HideUi();
@@ -38,10 +39,14 @@ namespace Assets.Scripts.Unit
         {
             if (command is IRejectableCommand<UnitBase> r)
             {
-                Debug.Log($"{nameof(ICommand<UnitBase>)} was enqueue to base queue");
+                Debug.Log($"{command.GetType().Name} was enqueue to base queue");
 
-                this.RejectLastCommand();
-                BaseRejectableCommandsQueue.Enqueue(r);
+                if (r.Interrupt && RejectableCommandsQueue.Any())
+                {
+                    RejectLastCommand();
+                }
+
+                RejectableCommandsQueue.Enqueue(r);
 
             }
 
@@ -50,20 +55,28 @@ namespace Assets.Scripts.Unit
 
         protected virtual void ExecuteLastRejectableCommand()
         {
-            var command = BaseRejectableCommandsQueue.Peek() as ICommand<UnitBase>;
-            command?.Execute(this);
+            if (RejectableCommandsQueue.Any())
+            {
+                var command = RejectableCommandsQueue.Peek() as ICommand<UnitBase>;
+                var result = command.Execute(this);
+                if (result)
+                {
+                    RejectLastCommand();
+                }
+            }
         }
 
         protected virtual void RejectLastCommand()
         {
-            var command = BaseRejectableCommandsQueue.Dequeue();
-            Debug.Log($"{nameof(ICommand<UnitBase>)} was dequeue from base queue");
+            var command = RejectableCommandsQueue.Dequeue();
+            Debug.Log($"{command.GetType().Name} was dequeue from base queue");
             command?.Reject(this);
         }
 
-        public virtual void Attach(GameObject obj)
+        public virtual bool Attach(GameObject obj)
         {
             ObjectAttachedTo = obj;
+            return true;
         }
 
         public virtual void Detach()
@@ -71,12 +84,12 @@ namespace Assets.Scripts.Unit
             ObjectAttachedTo = null;
         }
 
-        public void Attack(GameObject target)
+        public bool Attack(GameObject target)
         {
             if (target == null)
             {
-                RejectLastCommand();
-                return;
+                //RejectLastCommand();
+                return true;
             }
 
             if (AttackTarget == null)
@@ -87,8 +100,8 @@ namespace Assets.Scripts.Unit
             var ias = target.GetComponent<IAttackSusceptible>();
             if (ias == null)
             {
-                RejectLastCommand();
-                return;
+                //RejectLastCommand();
+                return true;
             }
 
             var attackPosition = AttackTarget.transform.position -
@@ -106,6 +119,8 @@ namespace Assets.Scripts.Unit
             {
                 StartCoroutine(routine);
             }
+
+            return false; // TODO: fix this command
         }
 
         private IEnumerator MakeDamage(IAttackSusceptible ias)
@@ -122,7 +137,7 @@ namespace Assets.Scripts.Unit
             AttackTarget = null;
         }
 
-        public virtual void Move(Vector3 point)
+        public virtual bool Move(Vector3 point)
         {
             NavMeshAgent.isStopped = false;
             NavMeshAgent.SetDestination(point);
@@ -135,8 +150,11 @@ namespace Assets.Scripts.Unit
             var z = transform.position.z;
             if (Math.Abs(x - point.x) < 0.1 && Math.Abs(z - point.z) < 0.1)
             {
-                RejectLastCommand();
+                //RejectLastCommand();
+                return true;
             }
+
+            return false;
         }
 
         protected bool Rotate(Vector3 point)
@@ -164,16 +182,20 @@ namespace Assets.Scripts.Unit
             }
         }
 
-        public virtual void Select()
+        public virtual bool Select()
         {
             Selected = true;
             UnitUi.SetActive(true);
+
+            return true;
         }
 
-        public virtual void Deselect()
+        public virtual bool Deselect()
         {
             Selected = false;
             UnitUi.SetActive(false);
+
+            return true;
         }
 
         public virtual void TakeDamage(float value)
@@ -189,9 +211,11 @@ namespace Assets.Scripts.Unit
             PreviousStats = UnitStats.MakeCopy(CurrentStats);
         }
 
-        public virtual void Delete()
+        public virtual bool Delete()
         {
             Destroy(gameObject);
+
+            return true;
         }
     }
 }

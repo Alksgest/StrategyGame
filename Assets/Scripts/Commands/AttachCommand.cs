@@ -1,24 +1,24 @@
-﻿using System;
-using Assets.Scripts.Behaviour;
-using Assets.Scripts.Behaviour.Unit;
+﻿using Assets.Scripts.Behaviour.Unit;
 using Assets.Scripts.Commands.Interfaces;
 using UnityEngine;
 
 namespace Assets.Scripts.Commands
 {
-    public class AttachCommand<T> : ICommand<T>, IRejectableCommand<T> where T : IAttachable
+    public class AttachCommand<T> : IRejectableCommand<T> where T : IAttachable
     {
-
         private readonly GameObject _objectAttachedTo;
 
-        public AttachCommand(GameObject objectAttachedTo)
+        public bool Interrupt { get; protected set; }
+
+        public AttachCommand(GameObject objectAttachedTo, bool interrupt = false)
         {
             _objectAttachedTo = objectAttachedTo;
+            Interrupt = interrupt;
         }
 
-        public void Execute(T obj)
+        public bool Execute(T obj)
         {
-            obj.Attach(_objectAttachedTo);
+            return obj.Attach(_objectAttachedTo);
         }
 
         public void Reject(T obj)

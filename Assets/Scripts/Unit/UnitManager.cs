@@ -156,7 +156,8 @@ namespace Assets.Scripts.Unit
         {
             foreach (var unit in SelectedWorkers)
             {
-                unit.Execute(new SendToWorkCommand<WorkerController>(workplace));
+                unit.Execute(new MoveCommand<UnitBase>(workplace.GetFreePosition() ?? transform.position));
+                unit.Execute(new AttachToWorkCommand<UnitBase>(workplace));
             }
         }
 
