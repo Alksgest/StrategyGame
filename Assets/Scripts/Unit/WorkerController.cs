@@ -1,8 +1,8 @@
 using System;
-using System.Collections;
 using Assets.Scripts.Behaviour.Building;
 using Assets.Scripts.Behaviour.Unit;
 using Assets.Scripts.Commands.Interfaces;
+using Assets.Scripts.Models.Animation;
 using Assets.Scripts.Models.Unit;
 using Assets.Scripts.UI;
 using UnityEngine;
@@ -28,7 +28,10 @@ namespace Assets.Scripts.Unit
             Animator = GetComponent<Animator>();
 
             var meshRenderer = GetComponentInChildren<MeshRenderer>();
-            meshRenderer.material = DefaultMaterial;
+            if (meshRenderer != null)
+            {
+                meshRenderer.material = DefaultMaterial;
+            }
 
             InvokeRepeating(nameof(ExecuteLastRejectableCommand), .01f, 0.1f);
         }
@@ -77,7 +80,7 @@ namespace Assets.Scripts.Unit
                 base.RejectLastCommand();
 
             }
-            else if(_lastRejectableCommand != null)
+            else if (_lastRejectableCommand != null)
             {
                 _lastRejectableCommand.Reject(this);
                 _lastRejectableCommand = null;
@@ -145,6 +148,25 @@ namespace Assets.Scripts.Unit
                 Move(pos.Value);
 
                 _workplace = workplace;
+                return;
+            }
+
+            if (Animator != null)
+            {
+                var position = workplace.GetAttachedUnitPosition(this);
+
+                if (position == null) return;
+
+                var point = position.Value;
+
+                var x = transform.position.x;
+                var z = transform.position.z;
+
+                if (Math.Abs(x - point.x) < 0.3 && Math.Abs(z - point.z) < 0.3)
+                {
+                    Animator.SetBool(AnimationKind.Walking, false);
+                    Animator.SetBool(AnimationMapper.BuildingToAnimation[workplace.WorkKind], true);
+                }
             }
         }
 
@@ -152,6 +174,11 @@ namespace Assets.Scripts.Unit
         {
             workplace.DetachUnit(this);
             _workplace = null;
+
+            if (Animator != null)
+            {
+                Animator.SetBool(AnimationMapper.BuildingToAnimation[workplace.WorkKind], false);
+            }
         }
     }
 }

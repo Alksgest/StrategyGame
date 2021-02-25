@@ -146,9 +146,8 @@ namespace Assets.Scripts.UI
 
         private void OnRightClick(RaycastHit hit)
         {
-            if (this?.gameObject == null)
+            if (this == null ||this.gameObject == null)
             {
-                Destroy(this);
                 return;
             }
 

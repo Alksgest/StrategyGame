@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using Assets.Scripts.Behaviour.Building;
 using Assets.Scripts.Behaviour.Unit;
-using Assets.Scripts.Unit;
+using Assets.Scripts.Models.Building;
 using Assets.Scripts.WorldState;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,11 +12,12 @@ namespace Assets.Scripts.Building
     public class MineController : BuildingBase, IWorkplace
     {
         private GameManager _gameManager;
-
         private Workplace[] _workplaces;
 
-        [SerializeField] private Text[] _edgesText;
-        [SerializeField] private GameObject[] _unitPlaces;
+        public string WorkKind => BuildingsNames.Mine;
+
+        [SerializeField] private Text[] _edgesText = null;
+        [SerializeField] private GameObject[] _unitPlaces = null;
 
         private void Awake()
         {
@@ -85,15 +86,6 @@ namespace Assets.Scripts.Building
             }
         }
 
-        public Vector3? GetFreePosition()
-        {
-            var freeWorkplaces = _workplaces.Where(e => !e.IsBusy).ToList();
-
-            var workplace = freeWorkplaces.FirstOrDefault();
-
-            return workplace?.Position;
-        }
-
         private void DetachUnit(Workplace workplace)
         {
             if (workplace?.AttachedUnit == null) return;
@@ -104,6 +96,22 @@ namespace Assets.Scripts.Building
 
             var index = Array.IndexOf(_workplaces, workplace);
             _edgesText[index].text = workplace.BusyText;
+        }
+
+        public Vector3? GetFreePosition()
+        {
+            var freeWorkplaces = _workplaces.Where(e => !e.IsBusy).ToList();
+
+            var workplace = freeWorkplaces.FirstOrDefault();
+
+            return workplace?.Position;
+        }
+
+        public Vector3? GetAttachedUnitPosition(IWorkable unit)
+        {
+            var workplace = _workplaces.SingleOrDefault(w => w.IsBusy && w.AttachedUnit == unit);
+
+            return workplace?.Position;
         }
 
         private void OnDestroy()

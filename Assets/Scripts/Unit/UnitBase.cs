@@ -1,11 +1,15 @@
 using System;
 using System.Collections;
+using System.Numerics;
 using Assets.Scripts.Behaviour.Common;
 using Assets.Scripts.Behaviour.Unit;
 using Assets.Scripts.Commands.Interfaces;
+using Assets.Scripts.Models.Animation;
 using Assets.Scripts.Models.Unit;
 using UnityEngine;
 using UnityEngine.AI;
+using Quaternion = UnityEngine.Quaternion;
+using Vector3 = UnityEngine.Vector3;
 
 namespace Assets.Scripts.Unit
 {
@@ -17,8 +21,8 @@ namespace Assets.Scripts.Unit
         [SerializeField] protected GameObject UnitUi;
         [SerializeField] protected NavMeshAgent NavMeshAgent;
         [SerializeField] protected UnitStats CurrentStats;
+        [SerializeField] protected Animator Animator;
 
-        protected Animator Animator;
         protected GameObject AttackTarget;
         protected UnitStats PreviousStats;
         protected GameObject ObjectAttachedTo;
@@ -94,7 +98,7 @@ namespace Assets.Scripts.Unit
                 Move(AttackTarget.transform.position -
                      new Vector3(CurrentStats.AttackRange, 0, CurrentStats.AttackRange));
             }
-            else if(IsAttackCoroutineDone)
+            else if (IsAttackCoroutineDone)
             {
                 StartCoroutine(routine);
             }
@@ -118,18 +122,37 @@ namespace Assets.Scripts.Unit
         {
             NavMeshAgent.isStopped = false;
             NavMeshAgent.SetDestination(point);
+            if (Animator != null)
+            {
+                Animator.SetBool(AnimationKind.Walking, true);
+            }
+
+            var x = transform.position.x;
+            var z = transform.position.z;
+            if (Math.Abs(x - point.x) < 0.1 && Math.Abs(z - point.z) < 0.1)
+            {
+                RejectLastCommand();
+            }
         }
 
         public virtual void StopMoving()
         {
             NavMeshAgent.isStopped = true;
+            if (Animator != null)
+            {
+                Animator.SetBool(AnimationKind.Walking, false);
+            }
         }
 
         public virtual void Select()
         {
             Selected = true;
             var meshRenderer = GetComponentInChildren<MeshRenderer>();
-            meshRenderer.material = SelectedMaterial;
+            if (meshRenderer != null)
+            {
+                meshRenderer.material = SelectedMaterial;
+            }
+
             UnitUi.SetActive(true);
         }
 
@@ -137,7 +160,11 @@ namespace Assets.Scripts.Unit
         {
             Selected = false;
             var meshRenderer = GetComponentInChildren<MeshRenderer>();
-            meshRenderer.material = DefaultMaterial;
+            if (meshRenderer != null)
+            {
+                meshRenderer.material = DefaultMaterial;
+            }
+
             UnitUi.SetActive(false);
         }
 

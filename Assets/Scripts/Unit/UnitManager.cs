@@ -84,7 +84,7 @@ namespace Assets.Scripts.Unit
             //         DrawRect(image, hit.point);
             //     }
             // }
-            CheckUnitsAndDelete();
+            //CheckUnitsAndDelete();
         }
 
         private void CheckUnitsAndDelete()

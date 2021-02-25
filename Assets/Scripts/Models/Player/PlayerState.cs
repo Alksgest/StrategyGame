@@ -1,4 +1,4 @@
-namespace Assets.Scripts.WorldState.Models
+namespace Assets.Scripts.Models.Player
 {
     public class PlayerState
     {

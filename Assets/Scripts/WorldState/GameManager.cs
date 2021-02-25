@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Models.Building;
+using Assets.Scripts.Models.Player;
 using Assets.Scripts.Models.Unit;
 using Assets.Scripts.Static;
-using Assets.Scripts.WorldState.Models;
 using UnityEngine;
 using UnityEngine.UI;
 
