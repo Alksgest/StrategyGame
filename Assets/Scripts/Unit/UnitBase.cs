@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Assets.Scripts.Behaviour.Common;
 using Assets.Scripts.Behaviour.Unit;
 using Assets.Scripts.Commands.Interfaces;
@@ -10,7 +11,7 @@ using UnityEngine.AI;
 
 namespace Assets.Scripts.Unit
 {
-    public abstract class UnitBase : MonoBehaviour, ICommandExecutor<UnitBase>, IUnit, IAttacker
+    public abstract class UnitBase : MonoBehaviour, ICommandExecutor<UnitBase>, IUnit, IAttacker 
     {
         [SerializeField] public string UnitId;
 
@@ -22,7 +23,9 @@ namespace Assets.Scripts.Unit
         protected GameObject AttackTarget;
         protected UnitStats PreviousStats;
         protected GameObject ObjectAttachedTo;
-        protected IRejectableCommand<UnitBase> LastRejectableCommand;
+
+        protected Queue<IRejectableCommand<UnitBase>> BaseRejectableCommandsQueue =
+            new Queue<IRejectableCommand<UnitBase>>();
 
         protected bool IsAttackCoroutineDone = true;
 
@@ -35,8 +38,11 @@ namespace Assets.Scripts.Unit
         {
             if (command is IRejectableCommand<UnitBase> r)
             {
-                RejectLastCommand();
-                LastRejectableCommand = r;
+                Debug.Log($"{nameof(ICommand<UnitBase>)} was enqueue to base queue");
+
+                this.RejectLastCommand();
+                BaseRejectableCommandsQueue.Enqueue(r);
+
             }
 
             command.Execute(this);
@@ -44,13 +50,15 @@ namespace Assets.Scripts.Unit
 
         protected virtual void ExecuteLastRejectableCommand()
         {
-            (LastRejectableCommand as ICommand<UnitBase>)?.Execute(this);
+            var command = BaseRejectableCommandsQueue.Peek() as ICommand<UnitBase>;
+            command?.Execute(this);
         }
 
         protected virtual void RejectLastCommand()
         {
-            LastRejectableCommand?.Reject(this);
-            LastRejectableCommand = null;
+            var command = BaseRejectableCommandsQueue.Dequeue();
+            Debug.Log($"{nameof(ICommand<UnitBase>)} was dequeue from base queue");
+            command?.Reject(this);
         }
 
         public virtual void Attach(GameObject obj)
@@ -127,9 +135,24 @@ namespace Assets.Scripts.Unit
             var z = transform.position.z;
             if (Math.Abs(x - point.x) < 0.1 && Math.Abs(z - point.z) < 0.1)
             {
-                transform.LookAt(point);
                 RejectLastCommand();
             }
+        }
+
+        protected bool Rotate(Vector3 point)
+        {
+            var targetRotation = Quaternion.LookRotation(point - transform.position);
+            var angles = targetRotation.eulerAngles;
+            angles.y += 180;
+            targetRotation.eulerAngles = angles;
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 10 * Time.deltaTime);
+
+            if (Mathf.Abs(targetRotation.eulerAngles.y - transform.rotation.eulerAngles.y) <= 2)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         public virtual void StopMoving()

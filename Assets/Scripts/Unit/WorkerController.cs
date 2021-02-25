@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Behaviour.Building;
 using Assets.Scripts.Behaviour.Unit;
+using Assets.Scripts.Commands;
 using Assets.Scripts.Commands.Interfaces;
 using Assets.Scripts.Models.Animation;
 using Assets.Scripts.Models.Player;
@@ -21,8 +22,10 @@ namespace Assets.Scripts.Unit
 
         [SerializeField] private List<WorkerTool> _tools = new List<WorkerTool>();
 
-        private IRejectableCommand<WorkerController> _lastRejectableCommand;
         private IWorkplace _workplace;
+
+        protected Queue<IRejectableCommand<WorkerController>> WorkerRejectableCommandsQueue =
+            new Queue<IRejectableCommand<WorkerController>>();
 
         public bool IsBuilding { get; set; }
 
@@ -61,28 +64,29 @@ namespace Assets.Scripts.Unit
 
         protected override void ExecuteLastRejectableCommand()
         {
-            if (LastRejectableCommand != null)
+            if (BaseRejectableCommandsQueue.Any())
             {
                 base.ExecuteLastRejectableCommand();
-
             }
-            else
+            else if(WorkerRejectableCommandsQueue.Any())
             {
-                (_lastRejectableCommand as ICommand<WorkerController>)?.Execute(this);
+                var command = WorkerRejectableCommandsQueue.Peek() as ICommand<WorkerController>;
+                command?.Execute(this);
             }
         }
 
         protected override void RejectLastCommand()
         {
-            if (LastRejectableCommand != null)
+            if (BaseRejectableCommandsQueue.Any())
             {
                 base.RejectLastCommand();
 
             }
-            else if (_lastRejectableCommand != null)
+            else if (WorkerRejectableCommandsQueue.Any() && !BaseRejectableCommandsQueue.Any())
             {
-                _lastRejectableCommand.Reject(this);
-                _lastRejectableCommand = null;
+                var command = WorkerRejectableCommandsQueue.Dequeue();
+                Debug.Log($"{nameof(ICommand<WorkerController>)} was dequeue from worker queue");
+                command.Reject(this);
             }
         }
 
@@ -91,7 +95,8 @@ namespace Assets.Scripts.Unit
             if (command is IRejectableCommand<WorkerController> r)
             {
                 RejectLastCommand();
-                _lastRejectableCommand = r;
+                Debug.Log($"{nameof(ICommand<WorkerController>)} was enqueue to worker queue");
+                WorkerRejectableCommandsQueue.Enqueue(r);
             }
 
             command.Execute(this);
@@ -144,30 +149,32 @@ namespace Assets.Scripts.Unit
                 if (pos == null) return;
 
                 workplace.AttacheUnit(this);
-                Move(pos.Value);
+                base.Execute(new MoveCommand<UnitBase>(pos.Value));
 
                 _workplace = workplace;
                 return;
             }
 
-            if (Animator != null)
+            var position = workplace.GetAttachedUnitPosition(this);
+            if (position == null) return;
+
+            var point = position.Value;
+
+            var x = transform.position.x;
+            var z = transform.position.z;
+
+            if (Math.Abs(x - point.x) < 0.3 && Math.Abs(z - point.z) < 0.3)
             {
-                var position = workplace.GetAttachedUnitPosition(this);
-
-                if (position == null) return;
-
-                var point = position.Value;
-
-                var x = transform.position.x;
-                var z = transform.position.z;
-
-                if (Math.Abs(x - point.x) < 0.3 && Math.Abs(z - point.z) < 0.3)
+                if (Animator != null)
                 {
                     Animator.SetBool(AnimationKind.Walking, false);
+                    //InvokeRepeating(nameof(Rotate), .01f, 1.0f);
+                    //CancelInvoke(nameof(Rotate));
                     Animator.SetBool(AnimationMapper.BuildingToAnimation[workplace.WorkKind], true);
-                    var tool = _tools.Single(el => el.WorkplaceName == workplace.WorkKind).Tool;
-                    tool.SetActive(true);
                 }
+
+                var tool = _tools.Single(el => el.WorkplaceName == workplace.WorkKind).Tool;
+                tool.SetActive(true);
             }
         }
 
