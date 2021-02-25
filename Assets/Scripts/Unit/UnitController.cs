@@ -16,9 +16,6 @@ namespace Assets.Scripts.Unit
 
             Animator = GetComponent<Animator>();
 
-            var meshRenderer = GetComponentInChildren<MeshRenderer>();
-            meshRenderer.material = DefaultMaterial;
-
             PreviousStats = CurrentStats;
         }
 

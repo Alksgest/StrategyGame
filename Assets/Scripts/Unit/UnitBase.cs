@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Numerics;
 using Assets.Scripts.Behaviour.Common;
 using Assets.Scripts.Behaviour.Unit;
 using Assets.Scripts.Commands.Interfaces;
@@ -8,16 +7,13 @@ using Assets.Scripts.Models.Animation;
 using Assets.Scripts.Models.Unit;
 using UnityEngine;
 using UnityEngine.AI;
-using Quaternion = UnityEngine.Quaternion;
-using Vector3 = UnityEngine.Vector3;
 
 namespace Assets.Scripts.Unit
 {
-    public abstract class UnitBase : MonoBehaviour, IEquatable<UnitBase>, ICommandExecutor<UnitBase>, IUnit, IAttacker
+    public abstract class UnitBase : MonoBehaviour, ICommandExecutor<UnitBase>, IUnit, IAttacker
     {
-        [SerializeField] protected string UnitId;
-        [SerializeField] protected Material DefaultMaterial;
-        [SerializeField] protected Material SelectedMaterial;
+        [SerializeField] public string UnitId;
+
         [SerializeField] protected GameObject UnitUi;
         [SerializeField] protected NavMeshAgent NavMeshAgent;
         [SerializeField] protected UnitStats CurrentStats;
@@ -131,6 +127,7 @@ namespace Assets.Scripts.Unit
             var z = transform.position.z;
             if (Math.Abs(x - point.x) < 0.1 && Math.Abs(z - point.z) < 0.1)
             {
+                transform.LookAt(point);
                 RejectLastCommand();
             }
         }
@@ -147,24 +144,12 @@ namespace Assets.Scripts.Unit
         public virtual void Select()
         {
             Selected = true;
-            var meshRenderer = GetComponentInChildren<MeshRenderer>();
-            if (meshRenderer != null)
-            {
-                meshRenderer.material = SelectedMaterial;
-            }
-
             UnitUi.SetActive(true);
         }
 
         public virtual void Deselect()
         {
             Selected = false;
-            var meshRenderer = GetComponentInChildren<MeshRenderer>();
-            if (meshRenderer != null)
-            {
-                meshRenderer.material = DefaultMaterial;
-            }
-
             UnitUi.SetActive(false);
         }
 
@@ -184,16 +169,6 @@ namespace Assets.Scripts.Unit
         public virtual void Delete()
         {
             Destroy(gameObject);
-        }
-
-        public bool Equals(UnitBase other)
-        {
-            return UnitId == other?.UnitId;
-        }
-
-        public override int GetHashCode()
-        {
-            return UnitId.GetHashCode();
         }
     }
 }

@@ -27,12 +27,6 @@ namespace Assets.Scripts.Unit
 
             Animator = GetComponent<Animator>();
 
-            var meshRenderer = GetComponentInChildren<MeshRenderer>();
-            if (meshRenderer != null)
-            {
-                meshRenderer.material = DefaultMaterial;
-            }
-
             InvokeRepeating(nameof(ExecuteLastRejectableCommand), .01f, 0.1f);
         }
 
