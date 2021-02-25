@@ -1,8 +1,11 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Assets.Scripts.Behaviour.Building;
 using Assets.Scripts.Behaviour.Unit;
 using Assets.Scripts.Commands.Interfaces;
 using Assets.Scripts.Models.Animation;
+using Assets.Scripts.Models.Player;
 using Assets.Scripts.Models.Unit;
 using Assets.Scripts.UI;
 using UnityEngine;
@@ -15,6 +18,8 @@ namespace Assets.Scripts.Unit
     {
         [SerializeField] private Text _hpText = null;
         [SerializeField] private BuildingsPanelManager _buildingsPanelManager = null;
+
+        [SerializeField] private List<WorkerTool> _tools = new List<WorkerTool>();
 
         private IRejectableCommand<WorkerController> _lastRejectableCommand;
         private IWorkplace _workplace;
@@ -160,6 +165,8 @@ namespace Assets.Scripts.Unit
                 {
                     Animator.SetBool(AnimationKind.Walking, false);
                     Animator.SetBool(AnimationMapper.BuildingToAnimation[workplace.WorkKind], true);
+                    var tool = _tools.Single(el => el.WorkplaceName == workplace.WorkKind).Tool;
+                    tool.SetActive(true);
                 }
             }
         }
@@ -172,6 +179,8 @@ namespace Assets.Scripts.Unit
             if (Animator != null)
             {
                 Animator.SetBool(AnimationMapper.BuildingToAnimation[workplace.WorkKind], false);
+                var tool = _tools.Single(el => el.WorkplaceName == workplace.WorkKind).Tool;
+                tool.SetActive(false);
             }
         }
     }
