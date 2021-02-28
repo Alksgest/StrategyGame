@@ -43,5 +43,12 @@ namespace Assets.Scripts.Util
 
             return x && z;
         }
+
+        public static Vector3 GetCorrectDestination(Vector3 objectTo, Vector3 objectFrom, float coefficient = 0.05f)
+        {
+            var ff = (objectTo - objectFrom).normalized * coefficient;
+
+            return objectFrom + ff;
+        }
     }
 }

@@ -93,7 +93,7 @@ namespace Assets.Scripts.UI
             //    child.isTrigger = true;
             //}
 
-            _worker.IsBuilding = true;
+            _worker.IsSettingBuilding = true;
 
             StartCoroutine(WaitForPlaceBuilding(0.5f));
         }
@@ -105,7 +105,7 @@ namespace Assets.Scripts.UI
             ObjectToCreate = null;
             IsBuildSelected = false;
             _buildingManager.AddBuilding(building);
-            _worker.IsBuilding = false;
+            _worker.IsSettingBuilding = false;
         }
 
         public void RemoveUnsettedBuilding()
@@ -115,7 +115,7 @@ namespace Assets.Scripts.UI
                 Destroy(ObjectToCreate.gameObject);
                 ObjectToCreate = null;
                 IsBuildSelected = false;
-                _worker.IsBuilding = false;
+                _worker.IsSettingBuilding = false;
             }
         }
 

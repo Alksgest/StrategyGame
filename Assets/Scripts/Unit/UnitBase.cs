@@ -7,6 +7,7 @@ using Assets.Scripts.Behaviour.Unit;
 using Assets.Scripts.Commands.Interfaces;
 using Assets.Scripts.Models.Animation;
 using Assets.Scripts.Models.Unit;
+using Assets.Scripts.Util;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -88,7 +89,6 @@ namespace Assets.Scripts.Unit
         {
             if (target == null)
             {
-                //RejectLastCommand();
                 return true;
             }
 
@@ -100,27 +100,27 @@ namespace Assets.Scripts.Unit
             var ias = target.GetComponent<IAttackSusceptible>();
             if (ias == null)
             {
-                //RejectLastCommand();
                 return true;
             }
-
-            var attackPosition = AttackTarget.transform.position -
-                                 new Vector3(CurrentStats.AttackRange, 0, CurrentStats.AttackRange);
-
+            
             var routine = MakeDamage(ias);
 
-            if (transform.position != attackPosition)
+            var dist = Vector3.Distance(transform.position, AttackTarget.transform.position);
+
+            // TODO: add attack range using
+            if (dist > 2f)
             {
                 StopCoroutine(routine);
-                Move(AttackTarget.transform.position -
-                     new Vector3(CurrentStats.AttackRange, 0, CurrentStats.AttackRange));
+                Move(AttackTarget.transform.position);
+                Debug.Log($"dist: {dist}");
             }
             else if (IsAttackCoroutineDone)
             {
+                StopMoving();
                 StartCoroutine(routine);
             }
 
-            return false; // TODO: fix this command
+            return !ias.IsAlive;
         }
 
         private IEnumerator MakeDamage(IAttackSusceptible ias)
@@ -130,6 +130,7 @@ namespace Assets.Scripts.Unit
             ias.TakeDamage(CurrentStats.Attack);
             yield return new WaitForSeconds(CurrentStats.AttackSpeed / 2);
             IsAttackCoroutineDone = true;
+            Debug.Log("Attack!");
         }
 
         public void StopAttacking()
@@ -150,7 +151,6 @@ namespace Assets.Scripts.Unit
             var z = transform.position.z;
             if (Math.Abs(x - point.x) < 0.1 && Math.Abs(z - point.z) < 0.1)
             {
-                //RejectLastCommand();
                 return true;
             }
 
@@ -211,9 +211,18 @@ namespace Assets.Scripts.Unit
             PreviousStats = UnitStats.MakeCopy(CurrentStats);
         }
 
+        public virtual void Death()
+        {
+            if (Animator != null)
+            {
+                Animator.SetBool(AnimationKind.IsDead, true);
+            }
+        }
+
         public virtual bool Delete()
         {
-            Destroy(gameObject);
+            // Death();
+            Destroy(gameObject, 5000f);
 
             return true;
         }

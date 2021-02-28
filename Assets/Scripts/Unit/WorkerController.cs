@@ -15,7 +15,7 @@ using UnityEngine.UI;
 
 namespace Assets.Scripts.Unit
 {
-    public class WorkerController : UnitBase, IWorkable // , ICommandExecutor<WorkerController>
+    public class WorkerController : UnitBase, IWorker // , ICommandExecutor<WorkerController>
     {
         [SerializeField] private Text _hpText = null;
         [SerializeField] private BuildingsPanelManager _buildingsPanelManager = null;
@@ -27,6 +27,7 @@ namespace Assets.Scripts.Unit
         protected Queue<IRejectableCommand<WorkerController>> WorkerRejectableCommandsQueue =
             new Queue<IRejectableCommand<WorkerController>>();
 
+        public bool IsSettingBuilding { get; set; }
         public bool IsBuilding { get; set; }
 
         private void Start()
@@ -51,6 +52,14 @@ namespace Assets.Scripts.Unit
             }
         }
 
+        private void Update()
+        {
+            if (!IsAlive)
+            {
+                Death();
+            }
+        }
+
         private void FixedUpdate()
         {
             if (!Equals(CurrentStats, PreviousStats))
@@ -61,46 +70,6 @@ namespace Assets.Scripts.Unit
                 NavMeshAgent.speed = CurrentStats.Speed;
             }
         }
-
-        //protected override void ExecuteLastRejectableCommand()
-        //{
-        //    if (BaseRejectableCommandsQueue.Any())
-        //    {
-        //        base.ExecuteLastRejectableCommand();
-        //    }
-        //    else if(WorkerRejectableCommandsQueue.Any())
-        //    {
-        //        var command = WorkerRejectableCommandsQueue.Peek() as ICommand<WorkerController>;
-        //        command?.Execute(this);
-        //    }
-        //}
-
-        //protected override void RejectLastCommand()
-        //{
-        //    if (BaseRejectableCommandsQueue.Any())
-        //    {
-        //        base.RejectLastCommand();
-
-        //    }
-        //    else if (WorkerRejectableCommandsQueue.Any() && !BaseRejectableCommandsQueue.Any())
-        //    {
-        //        var command = WorkerRejectableCommandsQueue.Dequeue();
-        //        Debug.Log($"{nameof(ICommand<WorkerController>)} was dequeue from worker queue");
-        //        command.Reject(this);
-        //    }
-        //}
-
-        //public void Execute(ICommand<WorkerController> command)
-        //{
-        //    if (command is IRejectableCommand<WorkerController> r)
-        //    {
-        //        RejectLastCommand();
-        //        Debug.Log($"{nameof(ICommand<WorkerController>)} was enqueue to worker queue");
-        //        WorkerRejectableCommandsQueue.Enqueue(r);
-        //    }
-
-        //    command.Execute(this);
-        //}
 
         public override void TakeDamage(float value)
         {
@@ -187,6 +156,24 @@ namespace Assets.Scripts.Unit
                 Animator.SetBool(AnimationMapper.BuildingToAnimation[workplace.WorkKind], false);
                 var tool = _tools.Single(el => el.WorkplaceName == workplace.WorkKind).Tool;
                 tool.SetActive(false);
+            }
+        }
+
+        public bool Build(IBuildable building)
+        {
+            if (Animator != null)
+            {
+                Animator.SetBool(AnimationKind.IsBuilding, true);
+            }
+
+            return false;
+        }
+
+        public void DetachFromBuilding()
+        {
+            if (Animator != null)
+            {
+                Animator.SetBool(AnimationKind.IsBuilding, false);
             }
         }
     }

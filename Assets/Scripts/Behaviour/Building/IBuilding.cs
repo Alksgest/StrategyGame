@@ -2,7 +2,7 @@
 
 namespace Assets.Scripts.Behaviour.Building
 {
-    public interface IBuilding : IDeletable, ISelectable
+    public interface IBuilding : IDeletable, ISelectable, IBuildable
     {
     }
 }

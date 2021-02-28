@@ -13,10 +13,10 @@ namespace Assets.Scripts.Building
         protected GameObject Ui;
 
         public string Owner { get; protected set; } = "mainPlayer";
-
         public bool CanBePlaced { get; protected set; } = true;
-
         public bool Selected { get; protected set; } = false;
+        public float BuildingProgress => 100f;
+        public Vector3 Destination => this.transform.position;
 
         public virtual void Instantiate()
         {

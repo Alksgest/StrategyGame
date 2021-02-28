@@ -1,17 +1,18 @@
 fileFormatVersion: 2
-guid: 41a9fb76ac1fcae4382b0eff7662abc7
+guid: de0794401672c6f4f9ba513c089843f2
 ModelImporter:
   serializedVersion: 20101
   internalIDToNameTable:
   - first:
-      74: 1989289236423521904
-    second: Default Take
-  externalObjects:
+      74: 9190803608667365959
+    second: 1H@Death01_A
   - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Mat__VillagerTexture_png
-    second: {fileID: 2100000, guid: 1bd378ce85ef1024d89dd1e4dfbd1a55, type: 2}
+      74: -4666826649468341709
+    second: 1H@Death01_B
+  - first:
+      74: 598102516664407287
+    second: 1H@Death01_C
+  externalObjects: {}
   materials:
     materialImportMode: 1
     materialName: 0
@@ -31,7 +32,7 @@ ModelImporter:
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
     importConstraints: 0
-    animationCompression: 1
+    animationCompression: 3
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
@@ -96,13 +97,13 @@ ModelImporter:
     globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
-    hasExtraRoot: 0
+    hasExtraRoot: 1
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   autoGenerateAvatarMappingIfUnspecified: 1
-  animationType: 2
+  animationType: 3
   humanoidOversampling: 1
-  avatarSetup: 0
+  avatarSetup: 1
   additionalBone: 0
   userData: 
   assetBundleName: 

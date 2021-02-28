@@ -20,9 +20,8 @@ namespace Assets.Scripts.Unit
         public IEnumerable<WorkerController> SelectedWorkers => SelectedUnits
             .OfType<WorkerController>();
 
+        private bool _isSelecting;
         private GameManager _gameManager;
-
-        private bool _isSelecting = false;
         private Vector3 _startMousePosition;
 
         private void OnGUI()
@@ -102,7 +101,7 @@ namespace Assets.Scripts.Unit
 
         private void OnLeftClick(RaycastHit hit)
         {
-            var isWorkerBusy = SelectedWorkers.Any(el => el.IsBuilding);
+            var isWorkerBusy = SelectedWorkers.Any(el => el.IsSettingBuilding);
 
             var unit = hit.transform.gameObject.GetComponent<UnitBase>();
             if (unit != null)
@@ -125,15 +124,7 @@ namespace Assets.Scripts.Unit
             switch (hit.transform.root.tag)
             {
                 case "BuildingManager":
-                    var wp = FindHelper.GetOfType<IWorkplace>(hit.transform.gameObject);
-                    if (wp != null)
-                    {
-                        SendToWork(wp);
-                    }
-                    else
-                    {
-                        AttachUnit(hit.transform.parent.gameObject);
-                    }
+                    HandleBuildingClick(hit.transform.gameObject);
                     break;
                 case "UnitManager":
                     AttackObject(hit.transform.gameObject);
@@ -141,6 +132,32 @@ namespace Assets.Scripts.Unit
                 default:
                     MoveUnitsToPoint(hit.point);
                     break;
+            }
+        }
+
+        private void HandleBuildingClick(GameObject obj)
+        {
+            var building = FindHelper.GetOfType<IBuildable>(obj);
+            if (building != null && building.BuildingProgress < 100)
+            {
+                SendToBuild(building);
+            }
+
+            var wp = FindHelper.GetOfType<IWorkplace>(obj);
+            if (wp != null)
+            {
+                SendToWork(wp);
+            }
+        }
+
+        private void SendToBuild(IBuildable building)
+        {
+            foreach (var unit in SelectedWorkers)
+            {
+                unit.Execute(
+                    new MoveCommand<UnitBase>(
+                        CalculationHelper.GetCorrectDestination(building.Destination, unit.transform.position)));
+                unit.Execute(new BuildCommand<UnitBase>(building, false));
             }
         }
 
@@ -156,8 +173,12 @@ namespace Assets.Scripts.Unit
         {
             foreach (var unit in SelectedWorkers)
             {
-                unit.Execute(new MoveCommand<UnitBase>(workplace.GetFreePosition() ?? transform.position));
-                unit.Execute(new AttachToWorkCommand<UnitBase>(workplace));
+                var position = workplace.GetFreePosition();
+                if (position != null)
+                {
+                    unit.Execute(new MoveCommand<UnitBase>(position.GetValueOrDefault()));
+                    unit.Execute(new AttachToWorkCommand<UnitBase>(workplace));
+                }
             }
         }
 
