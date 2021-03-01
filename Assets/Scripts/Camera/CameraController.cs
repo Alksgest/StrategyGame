@@ -10,7 +10,7 @@ namespace Assets.Scripts.Camera
         private UnityEngine.Camera _camera;
 
         [SerializeField]
-        private float _scrollCoefficient = 500.0f;
+        private float _scrollCoefficient = 100.0f;
         [SerializeField]
         private float _moveCoefficient = 300.0f;
         [SerializeField]
@@ -34,15 +34,21 @@ namespace Assets.Scripts.Camera
 
         private void HandleInput()
         {
+            //float x = Input.GetAxis("Horizontal");
+            //float z = Input.GetAxis("Vertical");
+
+            //Vector3 moveDirection = new Vector3(x, 0f, z) * _moveCoefficient * Time.deltaTime;
+
+            //transform.position += transform.TransformDirection(moveDirection);
             if (Input.GetKey(KeyCode.W))
             {
                 var z = _moveCoefficient * Time.deltaTime;
-                _camera.transform.Translate(0, z, 0);
+                _camera.transform.position = new Vector3(_camera.transform.position.x, _camera.transform.position.y, _camera.transform.position.z - z);
             }
             if (Input.GetKey(KeyCode.S))
             {
                 var z = _moveCoefficient * Time.deltaTime;
-                _camera.transform.Translate(0, -z, 0);
+                _camera.transform.position = new Vector3(_camera.transform.position.x, _camera.transform.position.y, _camera.transform.position.z + z);
             }
             if (Input.GetKey(KeyCode.A))
             {
@@ -56,6 +62,8 @@ namespace Assets.Scripts.Camera
             }
         }
 
+        public Vector2 mouseLook;
+
         private void RotateCamera()
         {
             if (Input.GetMouseButton((int)MouseButton.LeftMouseButton) &&
@@ -66,6 +74,14 @@ namespace Assets.Scripts.Camera
 
                 _rotationX = Mathf.Clamp(_rotationX, 20, 90);
                 _camera.transform.localEulerAngles = new Vector3(_rotationX, _rotationY, 0);
+                //float horizontal = Input.GetAxis("Mouse X");
+                //float vertical = Input.GetAxis("Mouse Y");
+
+                //Vector2 look = new Vector2(horizontal, vertical);
+                //mouseLook += look * _rotateCoefficient;
+
+                //transform.localRotation = Quaternion.AngleAxis(mouseLook.x, transform.up);
+                //transform.localRotation = Quaternion.AngleAxis(mouseLook.y, transform.right);
 
             }
         }
@@ -83,12 +99,18 @@ namespace Assets.Scripts.Camera
 
         private void ScrollCamera()
         {
-            if (Mathf.Abs(Input.mouseScrollDelta.y) > 0)
-            {
-                var newY = _camera.transform.position.y - (Input.mouseScrollDelta.y * _scrollCoefficient * Time.deltaTime);
-                newY = Mathf.Clamp(newY, 20, 300);
-                _camera.transform.position = new Vector3(_camera.transform.position.x, newY, _camera.transform.position.z);
-            }
+            var zoom = Input.GetAxis("Mouse ScrollWheel") * _scrollCoefficient;
+
+            _camera.fieldOfView += -zoom;
+
+            _camera.fieldOfView = Mathf.Clamp(_camera.fieldOfView, 30f, 100f);
+
+            //if (Mathf.Abs(Input.mouseScrollDelta.y) > 0)
+            //{
+            //    var newY = _camera.transform.position.y - (Input.mouseScrollDelta.y * _scrollCoefficient * Time.deltaTime);
+            //    newY = Mathf.Clamp(newY, 20, 300);
+            //    _camera.transform.position = new Vector3(_camera.transform.position.x, newY, _camera.transform.position.z);
+            //}
         }
     }
 }
