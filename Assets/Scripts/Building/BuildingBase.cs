@@ -6,16 +6,14 @@ namespace Assets.Scripts.Building
 {
     public abstract class BuildingBase : MonoBehaviour, ICommandExecutor<BuildingBase>, IBuilding
     {
-        [SerializeField]
-        protected bool IsInstantiated = false;
-
-        [SerializeField]
-        protected GameObject Ui;
+        [SerializeField] protected bool IsInstantiated = false;
+        [SerializeField] protected GameObject Ui;
+        [SerializeField] protected float BuildingProgressInner = 100f;
 
         public string Owner { get; protected set; } = "mainPlayer";
         public bool CanBePlaced { get; protected set; } = true;
         public bool Selected { get; protected set; } = false;
-        public float BuildingProgress => 100f;
+        public float BuildingProgress => BuildingProgressInner;
         public Vector3 Destination => this.transform.position;
 
         public virtual void Instantiate()

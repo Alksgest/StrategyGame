@@ -108,11 +108,10 @@ namespace Assets.Scripts.Unit
             var dist = Vector3.Distance(transform.position, AttackTarget.transform.position);
 
             // TODO: add attack range using
-            if (dist > 2f)
+            if (dist > CurrentStats.AttackRange)
             {
                 StopCoroutine(routine);
                 Move(AttackTarget.transform.position);
-                Debug.Log($"dist: {dist}");
             }
             else if (IsAttackCoroutineDone)
             {
@@ -125,12 +124,21 @@ namespace Assets.Scripts.Unit
 
         private IEnumerator MakeDamage(IAttackSusceptible ias)
         {
+            if (Animator != null)
+            {
+                Animator.SetBool(AnimationKind.IsAttacking, true);
+            }
+
+            if (Animator != null)
+            {
+                Animator.SetBool(AnimationKind.IsAttacking, false);
+            }
+
             IsAttackCoroutineDone = false;
             yield return new WaitForSeconds(CurrentStats.AttackSpeed / 2);
             ias.TakeDamage(CurrentStats.Attack);
             yield return new WaitForSeconds(CurrentStats.AttackSpeed / 2);
             IsAttackCoroutineDone = true;
-            Debug.Log("Attack!");
         }
 
         public void StopAttacking()

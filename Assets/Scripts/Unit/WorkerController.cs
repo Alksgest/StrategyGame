@@ -164,6 +164,9 @@ namespace Assets.Scripts.Unit
             if (Animator != null)
             {
                 Animator.SetBool(AnimationKind.IsBuilding, true);
+
+                var tool = _tools.Single(el => el.WorkplaceName == "Building").Tool;
+                tool.SetActive(true);
             }
 
             return false;
@@ -174,6 +177,9 @@ namespace Assets.Scripts.Unit
             if (Animator != null)
             {
                 Animator.SetBool(AnimationKind.IsBuilding, false);
+
+                var tool = _tools.Single(el => el.WorkplaceName == "Building").Tool;
+                tool.SetActive(false);
             }
         }
     }

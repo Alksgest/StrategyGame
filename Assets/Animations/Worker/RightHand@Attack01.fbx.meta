@@ -1,17 +1,11 @@
 fileFormatVersion: 2
-guid: de0794401672c6f4f9ba513c089843f2
+guid: 42a30f426b75dc4458f85c352b1ba43f
 ModelImporter:
   serializedVersion: 20101
   internalIDToNameTable:
   - first:
-      74: 9190803608667365959
-    second: Death01
-  - first:
-      74: -4666826649468341709
-    second: 1H@Death01_B
-  - first:
-      74: 598102516664407287
-    second: 1H@Death01_C
+      74: -5464671574365771810
+    second: Attack01
   externalObjects: {}
   materials:
     materialImportMode: 1
@@ -41,11 +35,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Death01
-      takeName: 1H@Death01_A
+      name: Attack01
+      takeName: 1H@Attack01
       internalID: 0
       firstFrame: 0
-      lastFrame: 38
+      lastFrame: 42
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -57,64 +51,6 @@ ModelImporter:
       loopBlendOrientation: 0
       loopBlendPositionY: 1
       loopBlendPositionXZ: 1
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
-    - serializedVersion: 16
-      name: 1H@Death01_B
-      takeName: 1H@Death01_B
-      internalID: 0
-      firstFrame: 0
-      lastFrame: 38
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 0
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
-    - serializedVersion: 16
-      name: 1H@Death01_C
-      takeName: 1H@Death01_C
-      internalID: 0
-      firstFrame: 0
-      lastFrame: 38
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 0
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
       keepOriginalOrientation: 0
       keepOriginalPositionY: 1
       keepOriginalPositionXZ: 0
@@ -932,11 +868,12 @@ ModelImporter:
     hasTranslationDoF: 0
     hasExtraRoot: 1
     skeletonHasParents: 1
-  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: de0794401672c6f4f9ba513c089843f2,
+    type: 3}
   autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 3
   humanoidOversampling: 1
-  avatarSetup: 1
+  avatarSetup: 2
   additionalBone: 0
   userData: 
   assetBundleName: 

@@ -103,6 +103,7 @@ namespace Assets.Scripts.Unit
         {
             var isWorkerBusy = SelectedWorkers.Any(el => el.IsSettingBuilding);
 
+            //var unit = hit.transform.gameObject.GetComponent<UnitBase>();
             var unit = hit.transform.gameObject.GetComponent<UnitBase>();
             if (unit != null)
             {
@@ -141,12 +142,14 @@ namespace Assets.Scripts.Unit
             if (building != null && building.BuildingProgress < 100)
             {
                 SendToBuild(building);
+                return;
             }
 
             var wp = FindHelper.GetOfType<IWorkplace>(obj);
             if (wp != null)
             {
                 SendToWork(wp);
+                return;
             }
         }
 
@@ -154,9 +157,11 @@ namespace Assets.Scripts.Unit
         {
             foreach (var unit in SelectedWorkers)
             {
+                //unit.Execute(
+                //    new MoveCommand<UnitBase>(
+                //        CalculationHelper.GetCorrectDestination(building.Destination, unit.transform.position, 0.2f)));
                 unit.Execute(
-                    new MoveCommand<UnitBase>(
-                        CalculationHelper.GetCorrectDestination(building.Destination, unit.transform.position)));
+                    new MoveCommand<UnitBase>(building.Destination - Vector3.one + new Vector3(0, 1, 0))); // TODO: replace with more beautiful code
                 unit.Execute(new BuildCommand<UnitBase>(building, false));
             }
         }

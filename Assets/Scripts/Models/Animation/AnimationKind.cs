@@ -13,6 +13,7 @@ namespace Assets.Scripts.Models.Animation
         public static readonly string IsDead = "IsDead";
         public static readonly string BuildingProgress = "BuildingProgress";
         public static readonly string IsBuilding = "IsBuilding";
+        public static readonly string IsAttacking = "IsAttacking";
     }
 
     public static class AnimationMapper
