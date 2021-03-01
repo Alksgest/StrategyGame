@@ -8,6 +8,7 @@ using Assets.Scripts.Static;
 using Assets.Scripts.Util;
 using Assets.Scripts.WorldState;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.Unit
 {
@@ -183,31 +184,51 @@ namespace Assets.Scripts.Unit
             }
         }
 
+
+        // TODO: create formation types later
+        // by default let it be rectangle
         private void MoveUnitsToPoint(Vector3 point)
         {
             var units = SelectedUnits.ToList();
-            var count = units.Count;
+            var unitsCount = units.Count;
+
+            if (unitsCount == 0) return;
+
+            var firstPosition = units.First().transform.position;
+
+            var columnDirection = Mathf.Abs(point.x - firstPosition.x) > Mathf.Abs(point.z - firstPosition.z)
+                ? Vector3.back
+                : Vector3.left;
+
+            var rowDirection = columnDirection == Vector3.back ? Vector3.left : Vector3.back;
+
+            var columnCount = 4;
+            var rowCount = unitsCount / columnCount;
+
+            if (unitsCount % columnCount != 0)
+            {
+                ++rowCount;
+            }
 
             var unitPositions = new List<Vector3>();
 
-            var leftSide = Vector3.left * (count / 2f);
-            var currentCol = 0;
+            var leftSide = Vector3.left * (unitsCount / 2f);
 
-            for (var i = 0; i < count; i++)
+            for (var i = 0; i < columnCount; ++i)
             {
-                var fakeDest = point + leftSide + Vector3.right * count;
-                fakeDest += Vector3.back * currentCol;
+                for (var j = 0; j < rowCount; ++j)
+                {
+                    var realDestination = point + leftSide + Vector3.right * columnCount;
+                    realDestination += columnDirection * i;
+                    realDestination += rowDirection * j;
 
-                unitPositions.Add(fakeDest);
-
-                currentCol++;
+                    unitPositions.Add(realDestination);
+                }
             }
 
             for (var i = 0; i < units.Count; i++)
             {
                 units[i].Execute(new MoveCommand<UnitBase>(unitPositions[i]));
-
-                Debug.Log(unitPositions[i]);
             }
         }
 
