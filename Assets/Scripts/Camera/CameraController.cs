@@ -62,18 +62,18 @@ namespace Assets.Scripts.Camera
             }
         }
 
-        public Vector2 mouseLook;
-
         private void RotateCamera()
         {
-            if (Input.GetMouseButton((int)MouseButton.LeftMouseButton) &&
-                Input.GetMouseButton((int)MouseButton.RightMouseButton))
+            if (Input.GetMouseButton((int) MouseButton.LeftMouseButton) &&
+                Input.GetMouseButton((int) MouseButton.RightMouseButton))
             {
                 _rotationY += (Input.GetAxis("Mouse X") * _rotateCoefficient * Time.deltaTime);
                 _rotationX += (Input.GetAxis("Mouse Y") * _rotateCoefficient * Time.deltaTime * -1);
 
                 _rotationX = Mathf.Clamp(_rotationX, 20, 90);
                 _camera.transform.localEulerAngles = new Vector3(_rotationX, _rotationY, 0);
+
+                //private Vector2 _mouseLook;
                 //float horizontal = Input.GetAxis("Mouse X");
                 //float vertical = Input.GetAxis("Mouse Y");
 

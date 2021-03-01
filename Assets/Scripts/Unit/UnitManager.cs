@@ -185,9 +185,29 @@ namespace Assets.Scripts.Unit
 
         private void MoveUnitsToPoint(Vector3 point)
         {
-            foreach (var unit in SelectedUnits)
+            var units = SelectedUnits.ToList();
+            var count = units.Count;
+
+            var unitPositions = new List<Vector3>();
+
+            var leftSide = Vector3.left * (count / 2f);
+            var currentCol = 0;
+
+            for (var i = 0; i < count; i++)
             {
-                unit.Execute(new MoveCommand<UnitBase>(point));
+                var fakeDest = point + leftSide + Vector3.right * count;
+                fakeDest += Vector3.back * currentCol;
+
+                unitPositions.Add(fakeDest);
+
+                currentCol++;
+            }
+
+            for (var i = 0; i < units.Count; i++)
+            {
+                units[i].Execute(new MoveCommand<UnitBase>(unitPositions[i]));
+
+                Debug.Log(unitPositions[i]);
             }
         }
 
