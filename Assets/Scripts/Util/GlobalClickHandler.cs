@@ -26,7 +26,7 @@ namespace Assets.Scripts.Util
         {
             if (Input.GetMouseButtonDown((int)MouseButton.RightMouseButton))
             {
-                Ray ray = UnityEngine.Camera.main.ScreenPointToRay(Input.mousePosition);
+                var ray = UnityEngine.Camera.main.ScreenPointToRay(Input.mousePosition);
 
                 if (Physics.Raycast(ray, out RaycastHit hit))
                 {
@@ -42,7 +42,7 @@ namespace Assets.Scripts.Util
         {
             if (Input.GetMouseButton((int)MouseButton.RightMouseButton))
             {
-                Ray ray = UnityEngine.Camera.main.ScreenPointToRay(Input.mousePosition);
+                var ray = UnityEngine.Camera.main.ScreenPointToRay(Input.mousePosition);
 
                 if (Physics.Raycast(ray, out RaycastHit hit))
                 {
@@ -58,7 +58,7 @@ namespace Assets.Scripts.Util
         {
             if (Input.GetMouseButtonDown((int)MouseButton.LeftMouseButton))
             {
-                Ray ray = UnityEngine.Camera.main.ScreenPointToRay(Input.mousePosition);
+                var ray = UnityEngine.Camera.main.ScreenPointToRay(Input.mousePosition);
 
                 if (Physics.Raycast(ray, out RaycastHit hit))
                 {
@@ -74,7 +74,7 @@ namespace Assets.Scripts.Util
         {
             if (Input.GetMouseButton((int)MouseButton.LeftMouseButton))
             {
-                Ray ray = UnityEngine.Camera.main.ScreenPointToRay(Input.mousePosition);
+                var ray = UnityEngine.Camera.main.ScreenPointToRay(Input.mousePosition);
 
                 if (Physics.Raycast(ray, out RaycastHit hit))
                 {
@@ -90,7 +90,7 @@ namespace Assets.Scripts.Util
         {
             if (Input.GetMouseButtonUp((int)MouseButton.RightMouseButton))
             {
-                Ray ray = UnityEngine.Camera.main.ScreenPointToRay(Input.mousePosition);
+                var ray = UnityEngine.Camera.main.ScreenPointToRay(Input.mousePosition);
 
                 if (Physics.Raycast(ray, out RaycastHit hit))
                 {
@@ -106,7 +106,7 @@ namespace Assets.Scripts.Util
         {
             if (Input.GetMouseButtonUp((int)MouseButton.LeftMouseButton))
             {
-                Ray ray = UnityEngine.Camera.main.ScreenPointToRay(Input.mousePosition);
+                var ray = UnityEngine.Camera.main.ScreenPointToRay(Input.mousePosition);
 
                 if (Physics.Raycast(ray, out RaycastHit hit))
                 {

@@ -22,17 +22,15 @@ namespace Assets.Scripts.Unit
 
         private bool _isSelecting;
         private GameManager _gameManager;
-        private Vector3 _startMousePosition;
+        private Vector3 _startSelectionMousePosition;
 
         private void OnGUI()
         {
-            if (_isSelecting)
-            {
-                // Create a rect from both mouse positions
-                var rect = RectangleUtil.GetScreenRect(_startMousePosition, Input.mousePosition);
-                RectangleUtil.DrawScreenRect(rect, new Color(0.8f, 0.8f, 0.95f, 0.25f));
-                RectangleUtil.DrawScreenRectBorder(rect, 2, new Color(0.8f, 0.8f, 0.95f));
-            }
+            if (!_isSelecting) return;
+
+            var rect = RectangleUtil.GetScreenRect(_startSelectionMousePosition, Input.mousePosition);
+            RectangleUtil.DrawScreenRect(rect, new Color(0.8f, 0.8f, 0.95f, 0.25f));
+            RectangleUtil.DrawScreenRectBorder(rect, 2, new Color(0.8f, 0.8f, 0.95f));
         }
 
         private void Start()
@@ -42,6 +40,8 @@ namespace Assets.Scripts.Unit
             var units = Resources.FindObjectsOfTypeAll<UnitBase>();
             _unitControllers = new List<UnitBase>();
 
+            var unitTemplates = StaticData.GetUnitTemplates();
+
             foreach (var unitBase in units)
             {
                 if (string.IsNullOrEmpty(unitBase.UnitId) ||
@@ -50,41 +50,16 @@ namespace Assets.Scripts.Unit
                     continue;
                 }
 
+                var t = unitTemplates.SingleOrDefault(el => el.UnitName == unitBase.tag);
+                unitBase.Instantiate(t.UnitStats);
+
                 _unitControllers.Add(unitBase);
             }
 
-            var unitTemplates = StaticData.GetUnitTemplates();
-
-            foreach (var unit in _unitControllers)
-            {
-                var t = unitTemplates.SingleOrDefault(el => el.UnitName == unit.tag);
-                if (t != null)
-                {
-                    unit.Instantiate(t.UnitStats);
-                }
-            }
-
             var gch = FindObjectOfType<GlobalClickHandler>();
-            gch.LeftMouseButtonUp += OnLeftClick;
-            gch.RightMouseButtonUp += OnRightClick;
-        }
-
-        private void Update()
-        {
-            // If we press the left mouse button, save mouse location and begin selection
-            if (Input.GetMouseButtonDown((int) MouseButton.LeftMouseButton) &&
-                !Input.GetMouseButtonDown((int) MouseButton.RightMouseButton))
-            {
-                _isSelecting = true;
-                _startMousePosition = Input.mousePosition;
-            }
-
-            // If we let go of the left mouse button, end selection
-            if (Input.GetMouseButtonUp((int) MouseButton.LeftMouseButton))
-            {
-                SelectAllUnitsInArea();
-                _isSelecting = false;
-            }
+            gch.LeftMouseButtonUp += OnLeftMouseButtonUp;
+            gch.RightMouseButtonUp += OnRightMouseButtonUp;
+            gch.LeftMouseButtonDown += OnLeftClickDown;
         }
 
         private void CheckUnitsAndDelete()
@@ -99,11 +74,26 @@ namespace Assets.Scripts.Unit
             }
         }
 
-        private void OnLeftClick(RaycastHit hit)
+        private void OnLeftClickDown(RaycastHit _)
         {
+            if (!Input.GetMouseButton((int) MouseButton.RightMouseButton) &&
+                !Input.GetMouseButtonDown((int) MouseButton.RightMouseButton) &&
+                !Input.GetMouseButtonUp((int) MouseButton.RightMouseButton))
+            {
+                _isSelecting = true;
+                _startSelectionMousePosition = Input.mousePosition;
+            }
+        }
+
+        private void OnLeftMouseButtonUp(RaycastHit hit)
+        {
+            var isSelected = SelectAllUnitsInArea();
+            _isSelecting = false;
+
+            if (isSelected) return;
+
             var isWorkerBusy = SelectedWorkers.Any(el => el.IsSettingBuilding);
 
-            //var unit = hit.transform.gameObject.GetComponent<UnitBase>();
             var unit = hit.transform.gameObject.GetComponent<UnitBase>();
             if (unit != null)
             {
@@ -120,7 +110,7 @@ namespace Assets.Scripts.Unit
             }
         }
 
-        private void OnRightClick(RaycastHit hit)
+        private void OnRightMouseButtonUp(RaycastHit hit)
         {
             switch (hit.transform.root.tag)
             {
@@ -157,11 +147,9 @@ namespace Assets.Scripts.Unit
         {
             foreach (var unit in SelectedWorkers)
             {
-                //unit.Execute(
-                //    new MoveCommand<UnitBase>(
-                //        CalculationHelper.GetCorrectDestination(building.Destination, unit.transform.position, 0.2f)));
                 unit.Execute(
-                    new MoveCommand<UnitBase>(building.Destination - Vector3.one + new Vector3(0, 1, 0))); // TODO: replace with more beautiful code
+                    new MoveCommand<UnitBase>(building.Destination -
+                                              new Vector3(1f, 0f, 1f))); // TODO: replace with more beautiful code
                 unit.Execute(new BuildCommand<UnitBase>(building, false));
             }
         }
@@ -233,14 +221,16 @@ namespace Assets.Scripts.Unit
             }
         }
 
-        private void SelectAllUnitsInArea()
+        private bool SelectAllUnitsInArea()
         {
             if (!_isSelecting)
-                return;
+                return false;
+
+            var isSelected = false;
 
             var camera = UnityEngine.Camera.main;
             var viewportBounds =
-                RectangleUtil.GetViewportBounds(UnityEngine.Camera.main, _startMousePosition, Input.mousePosition);
+                RectangleUtil.GetViewportBounds(UnityEngine.Camera.main, _startSelectionMousePosition, Input.mousePosition);
 
             foreach (var unit in _unitControllers)
             {
@@ -248,8 +238,11 @@ namespace Assets.Scripts.Unit
                 if (viewportBounds.Contains(unitPosition))
                 {
                     unit.Execute(new SelectCommand<UnitBase>());
+                    isSelected = true;
                 }
             }
+
+            return isSelected;
         }
     }
 }
