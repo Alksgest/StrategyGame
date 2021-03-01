@@ -40,8 +40,6 @@ namespace Assets.Scripts.Unit
         {
             if (command is IRejectableCommand<UnitBase> r)
             {
-                Debug.Log($"{command.GetType().Name} was enqueue to base queue");
-
                 if (r.Interrupt && RejectableCommandsQueue.Any())
                 {
                     RejectLastCommand();
@@ -70,7 +68,6 @@ namespace Assets.Scripts.Unit
         protected virtual void RejectLastCommand()
         {
             var command = RejectableCommandsQueue.Dequeue();
-            Debug.Log($"{command.GetType().Name} was dequeue from base queue");
             command?.Reject(this);
         }
 

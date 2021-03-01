@@ -196,11 +196,11 @@ namespace Assets.Scripts.Unit
 
             var firstPosition = units.First().transform.position;
 
-            var columnDirection = Mathf.Abs(point.x - firstPosition.x) > Mathf.Abs(point.z - firstPosition.z)
-                ? Vector3.back
-                : Vector3.left;
+            //var columnDirection = Mathf.Abs(point.x - firstPosition.x) > Mathf.Abs(point.z - firstPosition.z)
+            //    ? Vector3.back
+            //    : Vector3.left;
 
-            var rowDirection = columnDirection == Vector3.back ? Vector3.left : Vector3.back;
+            //var rowDirection = columnDirection == Vector3.back ? Vector3.left : Vector3.back;
 
             var columnCount = 4;
             var rowCount = unitsCount / columnCount;
@@ -214,13 +214,21 @@ namespace Assets.Scripts.Unit
 
             var leftSide = Vector3.left * (unitsCount / 2f);
 
-            for (var i = 0; i < columnCount; ++i)
+            // true - x, false - z;
+            var direction = (Mathf.Abs(point.x - firstPosition.x) > Mathf.Abs(point.z - firstPosition.z));
+
+            var farLeftOrFarTop = (direction ? Vector3.back : Vector3.left) * (unitsCount / 2f);
+            var farRightOrFarBottom = (direction ? Vector3.forward : Vector3.right) * (unitsCount / 2f);
+
+            var columnBalancer = direction ? Vector3.forward : Vector3.right;
+            var rowBalancer = direction ? Vector3.left : Vector3.back;
+
+            for (var currentColumn = 0; currentColumn < columnCount; ++currentColumn)
             {
-                for (var j = 0; j < rowCount; ++j)
+                for (var currentRow = 0; currentRow < rowCount; ++currentRow)
                 {
-                    var realDestination = point + leftSide + Vector3.right * columnCount;
-                    realDestination += columnDirection * i;
-                    realDestination += rowDirection * j;
+                    var realDestination = point + farLeftOrFarTop + columnBalancer * currentColumn +
+                                          farRightOrFarBottom + rowBalancer * currentRow;
 
                     unitPositions.Add(realDestination);
                 }
@@ -229,6 +237,7 @@ namespace Assets.Scripts.Unit
             for (var i = 0; i < units.Count; i++)
             {
                 units[i].Execute(new MoveCommand<UnitBase>(unitPositions[i]));
+                Debug.Log(unitPositions[i]);
             }
         }
 
