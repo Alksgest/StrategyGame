@@ -889,6 +889,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2135174449}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1606562302 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4302992042364936497, guid: c8c5291659bdf9240a6fc49a77720aa7,
+    type: 3}
+  m_PrefabInstance: {fileID: 7194515288525083274}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1644685149
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1641,6 +1647,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: SelectionSricle
       objectReference: {fileID: 0}
+    - target: {fileID: 4302992042364936497, guid: c8c5291659bdf9240a6fc49a77720aa7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7194515287702682954, guid: c8c5291659bdf9240a6fc49a77720aa7,
+        type: 3}
+      propertyPath: SelectionCircle
+      value: 
+      objectReference: {fileID: 1606562302}
     - target: {fileID: 7229039313158134490, guid: c8c5291659bdf9240a6fc49a77720aa7,
         type: 3}
       propertyPath: m_LocalPosition.x

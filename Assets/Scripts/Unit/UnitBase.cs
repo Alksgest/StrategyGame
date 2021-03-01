@@ -7,7 +7,6 @@ using Assets.Scripts.Behaviour.Unit;
 using Assets.Scripts.Commands.Interfaces;
 using Assets.Scripts.Models.Animation;
 using Assets.Scripts.Models.Unit;
-using Assets.Scripts.Util;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -21,6 +20,7 @@ namespace Assets.Scripts.Unit
         [SerializeField] protected NavMeshAgent NavMeshAgent;
         [SerializeField] protected UnitStats CurrentStats;
         [SerializeField] protected Animator Animator;
+        [SerializeField] protected GameObject SelectionCircle;
 
         protected GameObject AttackTarget;
         protected UnitStats PreviousStats;
@@ -195,6 +195,8 @@ namespace Assets.Scripts.Unit
             Selected = true;
             UnitUi.SetActive(true);
 
+            SelectionCircle.SetActive(true);
+
             return true;
         }
 
@@ -202,6 +204,8 @@ namespace Assets.Scripts.Unit
         {
             Selected = false;
             UnitUi.SetActive(false);
+
+            SelectionCircle.SetActive(false);
 
             return true;
         }

@@ -726,12 +726,12 @@ GameObject:
   - component: {fileID: 3599127706137050897}
   - component: {fileID: 7513581605070031289}
   m_Layer: 0
-  m_Name: SelectionSricle___2
+  m_Name: SelectionSricle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3599127706137050897
 Transform:
   m_ObjectHideFlags: 0
@@ -739,13 +739,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4302992042364936497}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -93.84782, y: 0, z: -75.70239}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0.1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7229039313158134490}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!212 &7513581605070031289
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2061,6 +2061,7 @@ MonoBehaviour:
     AttackRange: 0
     AttackSpeed: 0
   Animator: {fileID: 7194515287702682933}
+  SelectionCircle: {fileID: 4302992042364936497}
   _hpText: {fileID: 4127022803369149304}
   _buildingsPanelManager: {fileID: 3310595678343798730}
   _tools:
