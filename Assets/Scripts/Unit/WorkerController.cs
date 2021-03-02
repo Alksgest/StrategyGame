@@ -34,8 +34,6 @@ namespace Assets.Scripts.Unit
             UnitId = Guid.NewGuid().ToString();
 
             Animator = GetComponent<Animator>();
-
-            InvokeRepeating(nameof(ExecuteLastRejectableCommand), .01f, 0.1f);
         }
 
         private void Awake()
@@ -59,6 +57,8 @@ namespace Assets.Scripts.Unit
             {
                 Death();
             }
+
+            ExecuteLastRejectableCommand();
         }
 
         private void FixedUpdate()

@@ -18,6 +18,10 @@ namespace Assets.Scripts.Building
 
         [SerializeField] private Text[] _edgesText = null;
         [SerializeField] private GameObject[] _unitPlaces = null;
+        [SerializeField] private GameObject _objectToRotate = null;
+
+        public GameObject ObjectToRotate => _objectToRotate;
+
 
         private void Awake()
         {

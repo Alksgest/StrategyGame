@@ -7,6 +7,8 @@ namespace Assets.Scripts.Behaviour.Building
     {
         string WorkKind { get; }
 
+        GameObject ObjectToRotate { get; }
+
         void AttacheUnit(IWorkable unit);
         void DetachUnit(IWorkable unit);
 

@@ -47,6 +47,7 @@ namespace Assets.Scripts.Unit
                     RejectLastCommand();
                 }
 
+                Debug.Log($"Added: {command.GetType().Name}");
                 RejectableCommandsQueue.Enqueue(r);
 
             }
@@ -62,6 +63,7 @@ namespace Assets.Scripts.Unit
                 var result = command.Execute(this);
                 if (result)
                 {
+                    Debug.Log($"Removed: {command.GetType().Name}");
                     RejectLastCommand();
                 }
             }
@@ -105,6 +107,9 @@ namespace Assets.Scripts.Unit
             var routine = MakeDamage(ias);
 
             var dist = Vector3.Distance(transform.position, AttackTarget.transform.position);
+
+            //var newDirection = Vector3.RotateTowards(transform.forward, target.transform.position, 5, 0.0f);
+            //transform.rotation = Quaternion.LookRotation(newDirection);
 
             if (dist > CurrentStats.AttackRange)
             {
@@ -164,18 +169,28 @@ namespace Assets.Scripts.Unit
             return false;
         }
 
-        protected bool Rotate(Vector3 point)
+        [SerializeField] private float degreeStep = 45f;
+        [SerializeField] private float followSpeed = 2f;
+
+        public bool Rotate(Vector3 point)
         {
             var targetRotation = Quaternion.LookRotation(point - transform.position);
-            var angles = targetRotation.eulerAngles;
-            angles.y += 180;
-            targetRotation.eulerAngles = angles;
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 10 * Time.deltaTime);
 
-            if (Mathf.Abs(targetRotation.eulerAngles.y - transform.rotation.eulerAngles.y) <= 2)
+            var selfY = transform.rotation.y;
+            var targetY = targetRotation.y;
+
+            // Smoothly rotate towards the target point.
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 5 * Time.deltaTime);
+
+            Debug.Log(selfY);
+            Debug.Log(targetY);
+
+            if (Math.Abs(selfY - targetY) < 0.1)
             {
                 return true;
             }
+
+            //transform.LookAt(point);
 
             return false;
         }
@@ -254,6 +269,9 @@ namespace Assets.Scripts.Unit
 
                 CancelInvoke(nameof(ExecuteLastRejectableCommand));
             }
+
+            NavMeshAgent.enabled = false;
+            GetComponent<CapsuleCollider>().enabled = false;
 
             Deselect();
         }

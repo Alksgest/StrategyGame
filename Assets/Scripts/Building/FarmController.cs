@@ -16,6 +16,10 @@ namespace Assets.Scripts.Building
         public string WorkKind => BuildingsNames.Farm;
 
         [SerializeField] private Transform[] _unitPlaces = null;
+        [SerializeField] private GameObject _objectToRotate = null;
+
+        public GameObject ObjectToRotate => _objectToRotate;
+
 
         private void Awake()
         {

@@ -149,8 +149,7 @@ namespace Assets.Scripts.Unit
             foreach (var unit in SelectedWorkers)
             {
                 unit.Execute(
-                    new MoveCommand<UnitBase>(building.Destination -
-                                              new Vector3(1f, 0f, 1f))); // TODO: replace with more beautiful code
+                    new MoveCommand<UnitBase>(building.Destination - new Vector3(1f, 0f, 1f)));
                 unit.Execute(new BuildCommand<UnitBase>(building, false));
             }
         }
@@ -171,6 +170,10 @@ namespace Assets.Scripts.Unit
                 if (position != null)
                 {
                     unit.Execute(new MoveCommand<UnitBase>(position.GetValueOrDefault()));
+                    if (workplace.ObjectToRotate != null)
+                    {
+                        unit.Execute(new RotateCommand<UnitBase>(workplace.ObjectToRotate.transform.position));
+                    }
                     unit.Execute(new AttachToWorkCommand<UnitBase>(workplace));
                 }
             }
