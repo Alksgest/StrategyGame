@@ -34,7 +34,7 @@ namespace Assets.Scripts.Static
                         Health = 5f,
                         Speed = 2f,
                         AttackRange = 2f,
-                        AttackSpeed = 0.5f
+                        AttackSpeed = 1f
                     }
                 }
             });

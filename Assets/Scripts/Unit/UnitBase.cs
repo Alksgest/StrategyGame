@@ -38,6 +38,8 @@ namespace Assets.Scripts.Unit
 
         public virtual void Execute(ICommand<UnitBase> command)
         {
+            if (!IsAlive) return;
+
             if (command is IRejectableCommand<UnitBase> r)
             {
                 if (r.Interrupt && RejectableCommandsQueue.Any())
@@ -104,7 +106,6 @@ namespace Assets.Scripts.Unit
 
             var dist = Vector3.Distance(transform.position, AttackTarget.transform.position);
 
-            // TODO: add attack range using
             if (dist > CurrentStats.AttackRange)
             {
                 StopCoroutine(routine);
@@ -126,16 +127,17 @@ namespace Assets.Scripts.Unit
                 Animator.SetBool(AnimationKind.IsAttacking, true);
             }
 
-            if (Animator != null)
-            {
-                Animator.SetBool(AnimationKind.IsAttacking, false);
-            }
-
             IsAttackCoroutineDone = false;
             yield return new WaitForSeconds(CurrentStats.AttackSpeed / 2);
             ias.TakeDamage(CurrentStats.Attack);
             yield return new WaitForSeconds(CurrentStats.AttackSpeed / 2);
             IsAttackCoroutineDone = true;
+
+            if (Animator != null)
+            {
+                Animator.SetBool(AnimationKind.IsAttacking, false);
+            }
+
         }
 
         public void StopAttacking()
@@ -209,9 +211,25 @@ namespace Assets.Scripts.Unit
 
         public virtual void TakeDamage(float value)
         {
+            if (Animator != null)
+            {
+                Animator.SetBool(AnimationKind.IsTackingDamage, true);
+            }
+
+            StartCoroutine(StopTackingDamageAnimation());
+
             var damage = (value - CurrentStats.Armor) / CurrentStats.Defence;
             PreviousStats = UnitStats.MakeCopy(CurrentStats);
             CurrentStats.Health -= damage;
+        }
+
+        private IEnumerator StopTackingDamageAnimation()
+        {
+            yield return new WaitForSeconds(1);
+            if (Animator != null)
+            {
+                Animator.SetBool(AnimationKind.IsTackingDamage, false);
+            }
         }
 
         public virtual void Instantiate(UnitStats stats)
@@ -226,6 +244,18 @@ namespace Assets.Scripts.Unit
             {
                 Animator.SetBool(AnimationKind.IsDead, true);
             }
+
+            if (RejectableCommandsQueue.Any())
+            {
+                foreach (var command in RejectableCommandsQueue)
+                {
+                    command.Reject(this);
+                }
+
+                CancelInvoke(nameof(ExecuteLastRejectableCommand));
+            }
+
+            Deselect();
         }
 
         public virtual bool Delete()

@@ -180,7 +180,10 @@ namespace Assets.Scripts.Unit
         {
             foreach (var unit in SelectedUnits)
             {
-                unit.Execute(new AttackCommand<UnitBase>(obj));
+                if (unit.gameObject != obj)
+                {
+                    unit.Execute(new AttackCommand<UnitBase>(obj));
+                }
             }
         }
 
@@ -189,55 +192,87 @@ namespace Assets.Scripts.Unit
         // by default let it be rectangle
         private void MoveUnitsToPoint(Vector3 point)
         {
-            var units = SelectedUnits.ToList();
+            var units = SelectedUnits.OrderBy(el => Vector3.Distance(el.transform.position, point)).ToList();
             var unitsCount = units.Count;
 
             if (unitsCount == 0) return;
 
             var firstPosition = units.First().transform.position;
 
-            //var columnDirection = Mathf.Abs(point.x - firstPosition.x) > Mathf.Abs(point.z - firstPosition.z)
-            //    ? Vector3.back
-            //    : Vector3.left;
-
-            //var rowDirection = columnDirection == Vector3.back ? Vector3.left : Vector3.back;
-
             var columnCount = 4;
             var rowCount = unitsCount / columnCount;
+
+            var unitPositions = new List<Vector3>();
+
+            var direction = Mathf.Abs(point.x - firstPosition.x) > Mathf.Abs(point.z - firstPosition.z);
 
             if (unitsCount % columnCount != 0)
             {
                 ++rowCount;
             }
 
-            var unitPositions = new List<Vector3>();
-
-            var leftSide = Vector3.left * (unitsCount / 2f);
-
-            // true - x, false - z;
-            var direction = (Mathf.Abs(point.x - firstPosition.x) > Mathf.Abs(point.z - firstPosition.z));
-
-            var farLeftOrFarTop = (direction ? Vector3.back : Vector3.left) * (unitsCount / 2f);
-            var farRightOrFarBottom = (direction ? Vector3.forward : Vector3.right) * (unitsCount / 2f);
-
-            var columnBalancer = direction ? Vector3.forward : Vector3.right;
-            var rowBalancer = direction ? Vector3.left : Vector3.back;
-
-            for (var currentColumn = 0; currentColumn < columnCount; ++currentColumn)
+            if (direction)
             {
-                for (var currentRow = 0; currentRow < rowCount; ++currentRow)
-                {
-                    var realDestination = point + farLeftOrFarTop + columnBalancer * currentColumn +
-                                          farRightOrFarBottom + rowBalancer * currentRow;
+                columnCount += rowCount;
+                rowCount = columnCount - rowCount;
+                columnCount -= rowCount;
+            }
 
-                    unitPositions.Add(realDestination);
+            for (int i = 0; i < columnCount; i++)
+            {
+                for (int j = 0; j < rowCount; j++)
+                {
+                    var dest = point + Vector3.right * i + Vector3.back * j;
+                    unitPositions.Add(dest);
                 }
             }
+
+            // true - x, false - z;
+            //var direction = Mathf.Abs(point.x - firstPosition.x) > Mathf.Abs(point.z - firstPosition.z);
+
+            //// top - true, bottom - false
+            //var top = point.z > firstPosition.z;
+            //// left - true, right - false
+            //var left = point.x > firstPosition.z;
+
+            //var farLeftOrFarTop = (direction ? Vector3.back : Vector3.left) * (unitsCount / 2f);
+            //var farRightOrFarBottom = (direction ? Vector3.forward : Vector3.right) * (unitsCount / 2f);
+
+            //var columnBalancer = direction ? Vector3.forward : Vector3.right;
+            //var rowBalancer = direction ? Vector3.left : Vector3.back;
+
+            //columnBalancer = top ? columnBalancer : columnBalancer * -1;
+            //rowBalancer = left ? rowBalancer : rowBalancer * -1;
+
+            //for (int column = 0; column < columnCount; ++column)
+            //{
+            //    for (int row = rowCount / 2; row > 0; --row)
+            //    {
+            //        var realDestinationL = point + farLeftOrFarTop + columnBalancer * column +
+            //                              farRightOrFarBottom + rowBalancer * row;
+
+            //        var realDestinationR = point + farLeftOrFarTop + columnBalancer * column +
+            //                               farRightOrFarBottom + rowBalancer * (rowCount - row);
+
+            //        unitPositions.Add(realDestinationL);
+            //        unitPositions.Add(realDestinationR);
+            //    }
+            //}
+
+            //for (var currentColumn = 0; currentColumn < columnCount; ++currentColumn)
+            //{
+            //    for (var currentRow = 0; currentRow < rowCount; ++currentRow)
+            //    {
+            //        var realDestination = point + farLeftOrFarTop + columnBalancer * currentColumn +
+            //                              farRightOrFarBottom + rowBalancer * currentRow;
+
+            //        unitPositions.Add(realDestination);
+            //    }
+            //}
 
             for (var i = 0; i < units.Count; i++)
             {
                 units[i].Execute(new MoveCommand<UnitBase>(unitPositions[i]));
-                Debug.Log(unitPositions[i]);
             }
         }
 

@@ -49,6 +49,8 @@ namespace Assets.Scripts.Unit
             {
                 UpdateUi();
             }
+
+            Physics.IgnoreLayerCollision(0, 9);
         }
 
         private void Update()
